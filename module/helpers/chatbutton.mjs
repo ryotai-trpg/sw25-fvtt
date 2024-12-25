@@ -278,7 +278,6 @@ export async function chatButton(chatMessage, buttonType) {
         speaker: speaker,
         flavor: label,
         rollMode: rollMode,
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
         rolls: [roll],
       };
 
@@ -400,7 +399,6 @@ export async function chatButton(chatMessage, buttonType) {
         speaker: speaker,
         flavor: label,
         rollMode: rollMode,
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
         rolls: [roll.fakeResult],
       };
 
@@ -1503,7 +1501,6 @@ export async function chatButton(chatMessage, buttonType) {
       speaker: speaker,
       flavor: label,
       rollMode: rollMode,
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       rolls: [roll],
     };
 
@@ -1643,7 +1640,6 @@ export async function chatButton(chatMessage, buttonType) {
       speaker: speaker,
       flavor: label,
       rollMode: rollMode,
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       rolls: [roll],
     };
 
@@ -1680,7 +1676,7 @@ export async function chatButton(chatMessage, buttonType) {
       const content = actor.system.canceldialog;
       let chatData = {
         speaker: ChatMessage.getSpeaker({ actor: actor }),
-        type: CONST.CHAT_MESSAGE_TYPES.IC,
+        type: CONST.CHAT_MESSAGE_STYLES.IC,
         content: content,
       };
       ChatMessage.create(chatData);
@@ -1689,7 +1685,7 @@ export async function chatButton(chatMessage, buttonType) {
         const content = item.system.dialog;
         let chatData = {
           speaker: ChatMessage.getSpeaker({ actor: actor }),
-          type: CONST.CHAT_MESSAGE_TYPES.IC,
+          type: CONST.CHAT_MESSAGE_STYLES.IC,
           content: content,
         };
         ChatMessage.create(chatData);
