@@ -747,34 +747,22 @@
             <span class="grid-span-3" style="text-align: right;">{{localize "SW25.Selectherbskill"}}</span>
             <span class="grid-span-3" style="text-align: left;">
               <select name="system.herbskill">
-                {{#select system.herbskill}}
                 <option value="-">{{localize "SW25.Item.None"}}</option>
-                {{#each skills as |item id|}}
-                <option value="{{item.name}}">{{item.name}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions skills selected=system.herbskill valueAttr="name" labelAttr="name"}}
               </select>
             </span>
             <span class="grid-span-3" style="text-align: right;">{{localize "SW25.Selectpotionskill"}}</span>
             <span class="grid-span-3" style="text-align: left;">
               <select name="system.potionskill">
-                {{#select system.potionskill}}
                 <option value="-">{{localize "SW25.Item.None"}}</option>
-                {{#each skills as |item id|}}
-                <option value="{{item.name}}">{{item.name}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions skills selected=system.potionskill valueAttr="name" labelAttr="name"}}
               </select>
             </span>
             <span class="grid-span-3" style="text-align: right;">{{localize "SW25.Selectrepairskill"}}</span>
             <span class="grid-span-3" style="text-align: left;">
               <select name="system.repairskill">
-                {{#select system.repairskill}}
                 <option value="-">{{localize "SW25.Item.None"}}</option>
-                {{#each skills as |item id|}}
-                <option value="{{item.name}}">{{item.name}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions skills selected=system.repairskill valueAttr="name" labelAttr="name"}}
               </select>
             </span>
           </div>
