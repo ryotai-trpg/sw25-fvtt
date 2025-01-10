@@ -276,20 +276,12 @@
         <span class="grid-span-2" style="text-align: right;"><label for="{{actor._id}}system.attributes.dmod"><b>D{{localize "SW25.Modifier"}}</b></label> <input id="{{actor._id}}system.attributes.dmod" style="max-width: calc(40% - 7px); text-align: center;" type="text" name="system.attributes.dmod" value="{{system.attributes.dmod}}" data-dtype="Number"/></span>
         <span class="grid-span-8" style="text-align: right;">
           <select name="system.hitweapon">
-            {{#select system.hitweapon}}
             <option value="-">{{localize "SW25.Selecthitweapon"}}</option>
-            {{#each battleweapons as |item id|}}
-            <option value="{{item.name}}">{{item.name}}</option>
-            {{/each}}
-            {{/select}}
+            {{selectOptions battleweapons selected=system.hitweapon valueAttr="name" labelAttr="name"}}
           </select>
           <select name="system.attackskill">
-            {{#select system.attackskill}}
             <option value="-">{{localize "SW25.Selectattackskill"}}</option>
-            {{#each skills as |item id|}}
-            <option value="{{item.name}}">{{item.name}}</option>
-            {{/each}}
-            {{/select}}
+            {{selectOptions skills selected=system.attackskill valueAttr="name" labelAttr="name"}}
           </select>
 
         </span>
@@ -299,12 +291,8 @@
         <span class="grid-span-2" style="text-align: right;"><label for="{{actor._id}}system.attributes.dreduce"><b>D{{localize "SW25.Reduce"}}</b></label> <input id="{{actor._id}}system.attributes.dreduce" style="max-width: calc(40% - 7px); text-align: center;" type="text" name="system.attributes.dreduce" value="{{system.attributes.dreduce}}" data-dtype="Number"/></span>
         <span class="grid-span-4" style="text-align: right;">
           <select name="system.dodgeskill">
-            {{#select system.dodgeskill}}
             <option value="-">{{localize "SW25.Selectdodgeskill"}}</option>
-            {{#each skills as |item id|}}
-            <option value="{{item.name}}">{{item.name}}</option>
-            {{/each}}
-            {{/select}}
+            {{selectOptions skills selected=system.dodgeskill valueAttr="name" labelAttr="name"}}
           </select>
         </span>
       </div>
