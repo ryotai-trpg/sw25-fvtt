@@ -1614,11 +1614,9 @@ export class SW25Item extends Item {
     // Make modifications to data here. For example:
     const systemData = itemData.system;
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(`SW25.Item.Item.${i18ntype}`);
-    } else systemData.typename = game.i18n.localize(`SW25.Item.Item.General`);
+    systemData.typename = (systemData.type != "-") 
+      ? game.i18n.localize(`SW25.Item.Item.${systemData.type.capitalize()}`) 
+      : game.i18n.localize(`SW25.Item.Item.General`);
 
     if (itemData.actor !== null) {
       const actorData = itemData.actor.system;
@@ -1741,27 +1739,17 @@ export class SW25Item extends Item {
     // Make modifications to data here. For example:
     const systemData = itemData.system;
 
-    if (systemData.category != "-") {
-      const i18ncat =
-        systemData.category.charAt(0).toUpperCase() +
-        systemData.category.slice(1);
-      systemData.categoryname = game.i18n.localize(
-        `SW25.Item.Weapon.${i18ncat}`
-      );
-    } else systemData.categoryname = "-";
+    systemData.categoryname = (systemData.category != "-") 
+      ? game.i18n.localize(`SW25.Item.Weapon.${systemData.category.capitalize()}`) 
+      : "-";
 
-    if (systemData.usage != "-") {
-      const i18nusage = systemData.usage;
-      systemData.usagename = game.i18n.localize(
-        `SW25.Item.Weapon.${i18nusage}`
-      );
-    } else systemData.usage = "-";
+    systemData.usagename = (systemData.usage != "-") 
+      ? game.i18n.localize(`SW25.Item.Weapon.${systemData.usage}`) 
+      : "-";
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(`SW25.Item.Weapon.${i18ntype}`);
-    } else systemData.typename = "";
+    systemData.typename = (systemData.type != "-") 
+      ? game.i18n.localize(`SW25.Item.Weapon.${systemData.type.capitalize()}`) 
+      : "-";
 
     if (systemData.checkskill == systemData.powerskill) {
       systemData.showskill = systemData.checkskill;
@@ -1806,14 +1794,9 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.accpart != "-") {
-      const i18npart =
-        systemData.accpart.charAt(0).toUpperCase() +
-        systemData.accpart.slice(1);
-      systemData.accpartname = game.i18n.localize(
-        `SW25.Item.Accessory.${i18npart}`
-      );
-    } else systemData.accpartname = "-";
+    systemData.accpartname = (systemData.accpart != "-") 
+      ? game.i18n.localize(`SW25.Item.Accessory.${systemData.accpart.capitalize()}`) 
+      : "-";
 
     if (systemData.deffect != "-") {
       systemData.deffectname = ":" + systemData.deffect.toUpperCase();
@@ -1831,14 +1814,9 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.category != "-") {
-      const i18ncat =
-        systemData.category.charAt(0).toUpperCase() +
-        systemData.category.slice(1);
-      systemData.categoryname = game.i18n.localize(
-        `SW25.Item.Armor.${i18ncat}`
-      );
-    } else systemData.categoryname = "-";
+    systemData.categoryname = (systemData.category != "-") 
+      ? game.i18n.localize(`SW25.Item.Armor.${systemData.category.capitalize()}`) 
+      : "-";
   }
 
   _prepareCombatabilityData(itemData) {
@@ -1852,22 +1830,13 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(
-        `SW25.Item.Combatability.${i18ntype}`
-      );
-    } else systemData.typename = "-";
+    systemData.typename = (systemData.type != "-") ? 
+      game.i18n.localize(`SW25.Item.Combatability.${systemData.type.capitalize()}`) 
+      : "-";
 
-    if (systemData.condtype != "-") {
-      const i18ncondtype =
-        systemData.condtype.charAt(0).toUpperCase() +
-        systemData.condtype.slice(1);
-      systemData.condtypename = game.i18n.localize(
-        `SW25.Item.Combatability.${i18ncondtype}`
-      );
-    } else systemData.condtypename = "-";
+    systemData.condtypename = (systemData.condtype != "-") 
+      ? game.i18n.localize(`SW25.Item.Combatability.${systemData.condtype.capitalize()}`) 
+      : "-";
   }
 
   _prepareEnhanceartsData(itemData) {}
@@ -1883,25 +1852,17 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(
-        `SW25.Item.Magicalsong.${i18ntype}`
-      );
-    } else systemData.typename = "-";
+    systemData.typename = (systemData.type != "-") 
+      ? game.i18n.localize(`SW25.Item.Magicalsong.${systemData.type.capitalize()}`) 
+      : "-";
 
-    if (systemData.resist != "-") {
-      const i18nresist =
-        systemData.resist.charAt(0).toUpperCase() + systemData.resist.slice(1);
-      systemData.resistname = game.i18n.localize(`SW25.Item.${i18nresist}`);
-    } else systemData.resistname = "-";
+    systemData.resistname = (systemData.resist != "-") ? 
+      game.i18n.localize(`SW25.Item.${systemData.resist.capitalize()}`) 
+      : "-";
 
-    if (systemData.prop != "-") {
-      const i18nprop =
-        systemData.prop.charAt(0).toUpperCase() + systemData.prop.slice(1);
-      systemData.propname = game.i18n.localize(`SW25.Item.${i18nprop}`);
-    } else systemData.propname = "-";
+    systemData.propname = (systemData.prop != "-") 
+      ? game.i18n.localize(`SW25.Item.${systemData.prop.capitalize()}`) 
+      : "-";
 
     if (systemData.upget == null) systemData.upget = 0;
     if (systemData.downget == null) systemData.downget = 0;
@@ -1930,11 +1891,9 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.resist != "-") {
-      const i18nresist =
-        systemData.resist.charAt(0).toUpperCase() + systemData.resist.slice(1);
-      systemData.resistname = game.i18n.localize(`SW25.Item.${i18nresist}`);
-    } else systemData.resistname = "-";
+    systemData.resistname = (systemData.resist != "-") 
+      ? game.i18n.localize(`SW25.Item.${systemData.resist.capitalize()}`) 
+      : "-";
 
     if (systemData.red == null) systemData.red = 0;
     if (systemData.green == null) systemData.green = 0;
@@ -1954,19 +1913,13 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(
-        `SW25.Item.Phasearea.${i18ntype}`
-      );
-    } else systemData.typename = "-";
+    systemData.typename = (systemData.type != "-") 
+      ? game.i18n.localize(`SW25.Item.Phasearea.${systemData.type.capitalize()}`) 
+      : "-";
 
-    if (systemData.prop != "-") {
-      const i18nprop =
-        systemData.prop.charAt(0).toUpperCase() + systemData.prop.slice(1);
-      systemData.propname = game.i18n.localize(`SW25.Item.${i18nprop}`);
-    } else systemData.propname = "-";
+    systemData.propname = (systemData.prop != "-") 
+      ? game.i18n.localize(`SW25.Item.${systemData.prop.capitalize()}`) 
+      : "-";
 
     if (systemData.mincost == null) systemData.mincost = 0;
     if (systemData.maxcost == null) systemData.maxcost = 0;
@@ -1983,17 +1936,13 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(`SW25.Item.Tactics.${i18ntype}`);
-    } else systemData.typename = "-";
+    systemData.typename = (systemData.type != "-") 
+      ? game.i18n.localize(`SW25.Item.Tactics.${systemData.type.capitalize()}`) 
+      : "-";
 
-    if (systemData.line != "-") {
-      const i18nline =
-        systemData.line.charAt(0).toUpperCase() + systemData.line.slice(1);
-      systemData.linename = game.i18n.localize(`SW25.Item.Tactics.${i18nline}`);
-    } else systemData.linename = "-";
+    systemData.linename = (systemData.line != "-") 
+      ? game.i18n.localize(`SW25.Item.Tactics.${systemData.line.capitalize()}`) 
+      : "-";
   }
 
   _prepareInfusionData(itemData) {}
@@ -2009,11 +1958,9 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
     }
 
-    if (systemData.resist != "-") {
-      const i18nresist =
-        systemData.resist.charAt(0).toUpperCase() + systemData.resist.slice(1);
-      systemData.resistname = game.i18n.localize(`SW25.Item.${i18nresist}`);
-    } else systemData.resistname = "-";
+    systemData.resistname = (systemData.resist != "-") 
+      ? game.i18n.localize(`SW25.Item.${systemData.resist.capitalize()}`) 
+      : "-";
   }
 
   _prepareEssenceweaveData(itemData) {}
@@ -2027,41 +1974,25 @@ export class SW25Item extends Item {
     // Make modifications to data here. For example:
     const systemData = itemData.system;
 
-    if (systemData.type != "-") {
-      const i18ntype =
-        systemData.type.charAt(0).toUpperCase() + systemData.type.slice(1);
-      systemData.typename = game.i18n.localize(`SW25.Item.Spell.${i18ntype}`);
-    } else systemData.typename = "-";
+    systemData.typename = (systemData.type != "-") 
+      ? game.i18n.localize(`SW25.Item.Spell.${systemData.type.capitalize()}`) 
+      : "-";
 
-    if (systemData.resist != "-") {
-      const i18nresist =
-        systemData.resist.charAt(0).toUpperCase() + systemData.resist.slice(1);
-      systemData.resistname = game.i18n.localize(`SW25.Item.${i18nresist}`);
-    } else systemData.resistname = "-";
+    systemData.resistname = (systemData.resist != "-") 
+      ? game.i18n.localize(`SW25.Item.${systemData.resist.capitalize()}`) 
+      : "-";
 
-    if (systemData.prop != "-") {
-      const i18nprop =
-        systemData.prop.charAt(0).toUpperCase() + systemData.prop.slice(1);
-      systemData.propname = game.i18n.localize(`SW25.Item.${i18nprop}`);
-    } else systemData.propname = "-";
+    systemData.propname = (systemData.prop != "-") 
+      ? game.i18n.localize(`SW25.Item.${systemData.prop.capitalize()}`) 
+      : "-";
 
-    if (systemData.fairytype != "-") {
-      const i18nfairytype =
-        systemData.fairytype.charAt(0).toUpperCase() +
-        systemData.fairytype.slice(1);
-      systemData.fairytypename = game.i18n.localize(
-        `SW25.Item.Spell.${i18nfairytype}`
-      );
-    } else systemData.fairytypename = "-";
+    systemData.fairytypename = (systemData.fairytype != "-") 
+      ? game.i18n.localize(`SW25.Item.Spell.${systemData.fairytype.capitalize()}`) 
+      : "-";
 
-    if (systemData.fairyprop != "-") {
-      const i18nfairyprop =
-        systemData.fairyprop.charAt(0).toUpperCase() +
-        systemData.fairyprop.slice(1);
-      systemData.fairypropname = game.i18n.localize(
-        `SW25.Item.Spell.${i18nfairyprop}`
-      );
-    } else systemData.fairypropname = "-";
+    systemData.fairypropname = (systemData.fairyprop != "-") 
+      ? game.i18n.localize(`SW25.Item.Spell.${systemData.fairyprop.capitalize()}`) 
+      : "-";
 
     if (itemData.actor !== null) {
       const actorData = itemData.actor.system;
