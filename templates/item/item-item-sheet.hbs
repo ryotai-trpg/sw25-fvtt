@@ -176,15 +176,8 @@
             </span>
             <span class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Power"}}{{localize "SW25.Abilityname"}}</b><br>
               <select name="system.powerabi">
-                {{#select system.powerabi}}
                 <option value="-">-</option>
-                <option value="dex">{{localize "SW25.Ability.Dex.long"}}</option>
-                <option value="agi">{{localize "SW25.Ability.Agi.long"}}</option>
-                <option value="str">{{localize "SW25.Ability.Str.long"}}</option>
-                <option value="vit">{{localize "SW25.Ability.Vit.long"}}</option>
-                <option value="int">{{localize "SW25.Ability.Int.long"}}</option>
-                <option value="mnd">{{localize "SW25.Ability.Mnd.long"}}</option>
-                {{/select}}
+                {{selectOptions config.abilities selected=system.powerabi localize=true}}
               </select>
             </span>
             <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.powermod"><b>{{localize "SW25.Item.Power"}}{{localize "SW25.Check"}}{{localize "SW25.Modifier"}}</b></label><br>
