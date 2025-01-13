@@ -235,8 +235,8 @@ export class SW25Item extends Item {
       systemData.checkabi == "str" ||
       systemData.checkabi == "vit" ||
       systemData.checkabi == "int" ||
-      systemData.checkabi == "mnd" ||
-    )
+      systemData.checkabi == "mnd"
+    ) {
       abimod = Math.floor(
         (actorData.abilities[systemData.checkabi].racevalue +
           actorData.abilities[systemData.checkabi].valuebase +
@@ -246,6 +246,7 @@ export class SW25Item extends Item {
           6 +
           Number(actorData.abilities[systemData.checkabi].efmodify)
       );
+    }
 
     if (!actorData.effect) systemData.efckmod = 0;
     else {
@@ -711,181 +712,25 @@ export class SW25Item extends Item {
       systemData.powerbase =
         Number(systemData.powerbase) + Number(systemData.efallmgpmod);
 
-      switch (systemData.type) {
-        case "sorcerer":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.scmod) +
-            Number(actorData.attributes.efscmod) +
-            Number(actorData.attributes.efscckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.scmod) +
-            Number(actorData.attributes.efscmod) +
-            Number(actorData.attributes.efscpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpsc) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "conjurer":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.cnmod) +
-            Number(actorData.attributes.efcnmod) +
-            Number(actorData.attributes.efcnckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.cnmod) +
-            Number(actorData.attributes.efcnmod) +
-            Number(actorData.attributes.efcnpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpcn) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "wizard":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.wzmod) +
-            Number(actorData.attributes.efwzmod) +
-            Number(actorData.attributes.efwzckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.wzmod) +
-            Number(actorData.attributes.efwzmod) +
-            Number(actorData.attributes.efwzpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpwz) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "priest":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.prmod) +
-            Number(actorData.attributes.efprmod) +
-            Number(actorData.attributes.efprckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.prmod) +
-            Number(actorData.attributes.efprmod) +
-            Number(actorData.attributes.efprpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmppr) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "magitech":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.mtmod) +
-            Number(actorData.attributes.efmtmod) +
-            Number(actorData.attributes.efmtckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.mtmod) +
-            Number(actorData.attributes.efmtmod) +
-            Number(actorData.attributes.efmtpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpmt) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "fairy":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.frmod) +
-            Number(actorData.attributes.effrmod) +
-            Number(actorData.attributes.effrckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.frmod) +
-            Number(actorData.attributes.effrmod) +
-            Number(actorData.attributes.effrpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpfr) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "druid":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.drmod) +
-            Number(actorData.attributes.efdrmod) +
-            Number(actorData.attributes.efdrckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.drmod) +
-            Number(actorData.attributes.efdrmod) +
-            Number(actorData.attributes.efdrpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpdr) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "daemon":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.dmmod) +
-            Number(actorData.attributes.efdmmod) +
-            Number(actorData.attributes.efdmckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.dmmod) +
-            Number(actorData.attributes.efdmmod) +
-            Number(actorData.attributes.efdmpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpdm) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "abyssal":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.abmod) +
-            Number(actorData.attributes.efabmod) +
-            Number(actorData.attributes.efabckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.abmod) +
-            Number(actorData.attributes.efabmod) +
-            Number(actorData.attributes.efabpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpab) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        default:
-          break;
+      function calculateSkillValues(type) {
+        const mod = actorData.attributes[`${type}mod`];
+        const efMod = actorData.attributes[`ef${type}mod`];
+        const efCheckMod = actorData.attributes[`ef${type}ckmod`];
+        const efPowerMod = actorData.attributes[`ef${type}pwmod`];
+        const efMPCostMod = actorData.attributes[`efmp${type}`];
+        const efMPWall = actorData.attributes.efmpwall;
+        const efMCkAll = actorData.attributes.efmckall;
+
+        systemData.checkbase = Number(mod) + Number(efMod) + Number(efCheckMod) + Number(efMCkAll);
+        systemData.powerbase = Number(mod) + Number(efMod) + Number(efPowerMod) + Number(efMPWall);
+        systemData.mpcost = Number(systemData.basempcost) - Number(efMPCostMod) - Number(actorData.attributes.efmpall);
+
+        if (systemData.mpcost < 1) systemData.mpcost = 1;
       }
+
+      const validTypes = ["sc", "cn", "wz", "pr", "mt", "fr", "dr", "dm", "ab"];
+
+      if (validTypes.includes(systemData.type)) calculateSkillValues(systemData.type);
     }
 
     if (itemData.type == "magicalsong") {
@@ -1751,95 +1596,46 @@ export class SW25Item extends Item {
       const actoritemData = itemData.actor.items;
 
       // Set default skill and ability
-      if (systemData.type == "sorcerer") {
-        if (actorData.scskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.scskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.scskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
+      function setDefaultSkillAndAbility(type, skillKey, ability = "int") {
+        const skill = actorData[skillKey];
+        if (skill !== "-") {
+          if (systemData.checkskill === "-") systemData.checkskill = skill;
+          if (systemData.checkabi === "-") systemData.checkabi = ability;
+          if (systemData.powerskill === "-") systemData.powerskill = skill;
+          if (systemData.powerabi === "-") systemData.powerabi = ability;
         }
       }
-      if (systemData.type == "conjurer") {
-        if (actorData.cnskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.cnskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.cnskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "wizard") {
-        if (actorData.wzskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.wzskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.wzskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "priest") {
-        if (actorData.prskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.prskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.prskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "magitech") {
-        if (actorData.mtskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.mtskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.mtskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "fairy") {
-        if (actorData.frskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.frskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.frskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "druid") {
-        if (actorData.drskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.drskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.drskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "daemon") {
-        if (actorData.dmskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.dmskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.dmskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
-      }
-      if (systemData.type == "abyssal") {
-        if (actorData.abskill != "-") {
-          if (systemData.checkskill == "-")
-            systemData.checkskill = actorData.abskill;
-          if (systemData.checkabi == "-") systemData.checkabi = "int";
-          if (systemData.powerskill == "-")
-            systemData.powerskill = actorData.abskill;
-          if (systemData.powerabi == "-") systemData.powerabi = "int";
-        }
+
+      switch (systemData.type) {
+        case "sorcerer":
+          setDefaultSkillAndAbility("sorcerer", "scskill");
+          break;
+        case "conjurer":
+          setDefaultSkillAndAbility("conjurer", "cnskill");
+          break;
+        case "wizard":
+          setDefaultSkillAndAbility("wizard", "wzskill");
+          break;
+        case "priest":
+          setDefaultSkillAndAbility("priest", "prskill");
+          break;
+        case "magitech":
+          setDefaultSkillAndAbility("magitech", "mtskill");
+          break;
+        case "fairy":
+          setDefaultSkillAndAbility("fairy", "frskill");
+          break;
+        case "druid":
+          setDefaultSkillAndAbility("druid", "drskill");
+          break;
+        case "daemon":
+          setDefaultSkillAndAbility("daemon", "dmskill");
+          break;
+        case "abyssal":
+          setDefaultSkillAndAbility("abyssal", "abskill");
+          break;
+        default:
+          break;
       }
     }
   }
