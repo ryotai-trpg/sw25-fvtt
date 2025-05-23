@@ -9,7 +9,7 @@ import { targetRollDialog, targetSelectDialog } from "../helpers/dialogs.mjs";
 export async function chatButton(chatMessage, buttonType) {
   const actorId = chatMessage.speaker.actor;
   const actor = game.actors.get(actorId);
-  const itemId = chatMessage.flags.itemid;
+  const itemId = chatMessage.flags.sw25.itemid;
   const item = actor ? actor.items.get(itemId) : null;
 
   // Item roll button
@@ -28,6 +28,7 @@ export async function chatButton(chatMessage, buttonType) {
     if (buttonType == "buttoncheck2") apply = item.system.applycheck2;
     if (buttonType == "buttoncheck3") apply = item.system.applycheck3;
     if (buttonType == "buttonpower") apply = item.system.applypower;
+    console.log("func roll")
     if (apply == "-" || targetTokens.size === 0) {
       await chatRoll();
       return;
@@ -92,7 +93,9 @@ export async function chatButton(chatMessage, buttonType) {
           flavor: `${label} - <b>${game.i18n.localize("SW25.Applyall")}</b>`,
         };
         chatData.flags = {
-          targetMessage: chatMessageId,
+          sw25: {
+            targetMessage: chatMessageId,
+          }
         };
         chatData.content = await renderTemplate(
           "systems/sw25/templates/roll/roll-applyall.hbs",
@@ -108,6 +111,7 @@ export async function chatButton(chatMessage, buttonType) {
       }
     }
 
+    console.log("pre roll")
     await chatRoll();
   }
   async function chatRoll(targetTokens) {
@@ -304,11 +308,13 @@ export async function chatButton(chatMessage, buttonType) {
       }
 
       chatData.flags = {
-        total: chatTotal,
-        apply: chatapply,
-        rolls: roll,
-        checktype: checktype,
-        target,
+        sw25: {
+          total: chatTotal,
+          apply: chatapply,
+          rolls: roll,
+          checktype: checktype,
+          target,
+        }
       };
 
       chatData.content = await renderTemplate(
@@ -428,30 +434,32 @@ export async function chatButton(chatMessage, buttonType) {
       }
 
       chatData.flags = {
-        formula: chatFormula,
-        tooltip: await roll.fakeResult.getTooltip(),
-        power: chatPower,
-        lethalTech: chatLethalTech,
-        criticalRay: chatCriticalRay,
-        pharmTool: chatPharmTool,
-        powup: chatPowup,
-        result: chatResult,
-        mod: chatMod,
-        modTotal: chatModTotal,
-        half: chatHalf,
-        results: chatResults,
-        total: chatTotal,
-        extraRoll: chatExtraRoll,
-        fumble: chatFumble,
-        orghalf: roll.halfPowMod,
-        orgtotal: chatTotal,
-        orgextraRoll: chatExtraRoll,
-        showhalf: showhalf,
-        shownoc: shownoc,
-        apply: chatapply,
-        powertype: powertype,
-        target,
-        targetName: targetName,
+        sw25: {
+          formula: chatFormula,
+          tooltip: await roll.fakeResult.getTooltip(),
+          power: chatPower,
+          lethalTech: chatLethalTech,
+          criticalRay: chatCriticalRay,
+          pharmTool: chatPharmTool,
+          powup: chatPowup,
+          result: chatResult,
+          mod: chatMod,
+          modTotal: chatModTotal,
+          half: chatHalf,
+          results: chatResults,
+          total: chatTotal,
+          extraRoll: chatExtraRoll,
+          fumble: chatFumble,
+          orghalf: roll.halfPowMod,
+          orgtotal: chatTotal,
+          orgextraRoll: chatExtraRoll,
+          showhalf: showhalf,
+          shownoc: shownoc,
+          apply: chatapply,
+          powertype: powertype,
+          target,
+          targetName: targetName,
+        }
       };
 
       chatData.content = await renderTemplate(
@@ -489,12 +497,12 @@ export async function chatButton(chatMessage, buttonType) {
   }
   if (buttonType == "buttonhalf") {
     let halftotal =
-      Math.ceil((chatMessage.flags.result[0] + chatMessage.flags.mod) / 2) +
-      chatMessage.flags.orghalf;
+      Math.ceil((chatMessage.flags.sw25.result[0] + chatMessage.flags.sw25.mod) / 2) +
+      chatMessage.flags.sw25.orghalf;
     let newextraRoll = null;
-    let aftermod = chatMessage.flags.aftermod ?? 0;
+    let aftermod = chatMessage.flags.sw25.aftermod ?? 0;
 
-    if (chatMessage.flags.dohalf == false || chatMessage.flags.dohalf == null) {
+    if (chatMessage.flags.sw25.dohalf == false || chatMessage.flags.sw25.dohalf == null) {
       let newtotal = halftotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
@@ -503,38 +511,40 @@ export async function chatButton(chatMessage, buttonType) {
           `;
       let chatData = {
         flags: {
-          dohalf: true,
-          dohalfc: false,
-          noc: false,
-          apply: chatMessage.flags.apply,
-          total: newtotal,
-          aftermod: aftermod,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          sw25: {
+            dohalf: true,
+            dohalfc: false,
+            noc: false,
+            apply: chatMessage.flags.sw25.apply,
+            total: newtotal,
+            aftermod: aftermod,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-power.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            power: chatMessage.flags.power,
-            lethalTech: chatMessage.flags.lethalTech,
-            criticalRay: chatMessage.flags.criticalRay,
-            pharmTool: chatMessage.flags.pharmTool,
-            result: chatMessage.flags.result,
-            mod: chatMessage.flags.mod,
-            half: chatMessage.flags.orghalf,
-            results: chatMessage.flags.results,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            power: chatMessage.flags.sw25.power,
+            lethalTech: chatMessage.flags.sw25.lethalTech,
+            criticalRay: chatMessage.flags.sw25.criticalRay,
+            pharmTool: chatMessage.flags.sw25.pharmTool,
+            result: chatMessage.flags.sw25.result,
+            mod: chatMessage.flags.sw25.mod,
+            half: chatMessage.flags.sw25.orghalf,
+            results: chatMessage.flags.sw25.results,
             total: newtotaltext,
             extraRoll: newextraRoll,
-            fumble: chatMessage.flags.fumble,
+            fumble: chatMessage.flags.sw25.fumble,
             halfdone: true,
-            showhalf: chatMessage.flags.showhalf,
-            nocdone: chatMessage.flags.nocdone,
-            shownoc: chatMessage.flags.shownoc,
-            apply: chatMessage.flags.apply,
-            powertype: chatMessage.flags.powertype,
-            targetName: chatMessage.flags.targetName,
+            showhalf: chatMessage.flags.sw25.showhalf,
+            nocdone: chatMessage.flags.sw25.nocdone,
+            shownoc: chatMessage.flags.sw25.shownoc,
+            apply: chatMessage.flags.sw25.apply,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
           }
         ),
       };
@@ -548,47 +558,49 @@ export async function chatButton(chatMessage, buttonType) {
 
       return;
     }
-    if (chatMessage.flags.dohalf == true) {
-      let newtotal = chatMessage.flags.orgtotal + Number(aftermod);
+    if (chatMessage.flags.sw25.dohalf == true) {
+      let newtotal = chatMessage.flags.sw25.orgtotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
         newtotaltext = `
-            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.orgtotal}${aftermod})</span>
+            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.sw25.orgtotal}${aftermod})</span>
           `;
       let chatData = {
         flags: {
-          dohalf: false,
-          dohalfc: false,
-          noc: false,
-          apply: chatMessage.flags.apply,
-          total: chatMessage.flags.orgtotal,
-          aftermod: aftermod,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          sw25: {
+            dohalf: false,
+            dohalfc: false,
+            noc: false,
+            apply: chatMessage.flags.sw25.apply,
+            total: chatMessage.flags.sw25.orgtotal,
+            aftermod: aftermod,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-power.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            power: chatMessage.flags.power,
-            lethalTech: chatMessage.flags.lethalTech,
-            criticalRay: chatMessage.flags.criticalRay,
-            pharmTool: chatMessage.flags.pharmTool,
-            result: chatMessage.flags.result,
-            mod: chatMessage.flags.modTotal,
-            half: chatMessage.flags.half,
-            results: chatMessage.flags.results,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            power: chatMessage.flags.sw25.power,
+            lethalTech: chatMessage.flags.sw25.lethalTech,
+            criticalRay: chatMessage.flags.sw25.criticalRay,
+            pharmTool: chatMessage.flags.sw25.pharmTool,
+            result: chatMessage.flags.sw25.result,
+            mod: chatMessage.flags.sw25.modTotal,
+            half: chatMessage.flags.sw25.half,
+            results: chatMessage.flags.sw25.results,
             total: newtotaltext,
-            extraRoll: chatMessage.flags.extraRoll,
-            fumble: chatMessage.flags.fumble,
+            extraRoll: chatMessage.flags.sw25.extraRoll,
+            fumble: chatMessage.flags.sw25.fumble,
             halfdone: false,
-            showhalf: chatMessage.flags.showhalf,
-            nocdone: chatMessage.flags.nocdone,
-            shownoc: chatMessage.flags.shownoc,
-            apply: chatMessage.flags.apply,
-            powertype: chatMessage.flags.powertype,
-            targetName: chatMessage.flags.targetName,
+            showhalf: chatMessage.flags.sw25.showhalf,
+            nocdone: chatMessage.flags.sw25.nocdone,
+            shownoc: chatMessage.flags.sw25.shownoc,
+            apply: chatMessage.flags.sw25.apply,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
           }
         ),
       };
@@ -605,14 +617,14 @@ export async function chatButton(chatMessage, buttonType) {
   }
   if (buttonType == "buttonhalfc") {
     let halfctoal =
-      Math.ceil((chatMessage.flags.results + chatMessage.flags.mod) / 2) +
-      chatMessage.flags.orghalf;
-    let newextraRoll = chatMessage.flags.extraRoll;
-    let aftermod = chatMessage.flags.aftermod ?? 0;
+      Math.ceil((chatMessage.flags.sw25.results + chatMessage.flags.sw25.mod) / 2) +
+      chatMessage.flags.sw25.orghalf;
+    let newextraRoll = chatMessage.flags.sw25.extraRoll;
+    let aftermod = chatMessage.flags.sw25.aftermod ?? 0;
 
     if (
-      chatMessage.flags.dohalfc == false ||
-      chatMessage.flags.dohalfc == null
+      chatMessage.flags.sw25.dohalfc == false ||
+      chatMessage.flags.sw25.dohalfc == null
     ) {
       let newtotal = halfctoal + Number(aftermod);
       let newtotaltext = newtotal;
@@ -622,38 +634,40 @@ export async function chatButton(chatMessage, buttonType) {
           `;
       let chatData = {
         flags: {
-          dohalf: false,
-          dohalfc: true,
-          noc: false,
-          apply: chatMessage.flags.apply,
-          total: halfctoal,
-          aftermod: aftermod,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          sw25: {
+            dohalf: false,
+            dohalfc: true,
+            noc: false,
+            apply: chatMessage.flags.sw25.apply,
+            total: halfctoal,
+            aftermod: aftermod,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-power.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            power: chatMessage.flags.power,
-            lethalTech: chatMessage.flags.lethalTech,
-            criticalRay: chatMessage.flags.criticalRay,
-            pharmTool: chatMessage.flags.pharmTool,
-            result: chatMessage.flags.result,
-            mod: chatMessage.flags.mod,
-            half: chatMessage.flags.orghalf,
-            results: chatMessage.flags.results,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            power: chatMessage.flags.sw25.power,
+            lethalTech: chatMessage.flags.sw25.lethalTech,
+            criticalRay: chatMessage.flags.sw25.criticalRay,
+            pharmTool: chatMessage.flags.sw25.pharmTool,
+            result: chatMessage.flags.sw25.result,
+            mod: chatMessage.flags.sw25.mod,
+            half: chatMessage.flags.sw25.orghalf,
+            results: chatMessage.flags.sw25.results,
             total: newtotaltext,
             extraRoll: newextraRoll,
-            fumble: chatMessage.flags.fumble,
+            fumble: chatMessage.flags.sw25.fumble,
             halfcdone: true,
-            showhalf: chatMessage.flags.showhalf,
-            nocdone: chatMessage.flags.nocdone,
-            shownoc: chatMessage.flags.shownoc,
-            apply: chatMessage.flags.apply,
-            powertype: chatMessage.flags.powertype,
-            targetName: chatMessage.flags.targetName,
+            showhalf: chatMessage.flags.sw25.showhalf,
+            nocdone: chatMessage.flags.sw25.nocdone,
+            shownoc: chatMessage.flags.sw25.shownoc,
+            apply: chatMessage.flags.sw25.apply,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
           }
         ),
       };
@@ -663,47 +677,49 @@ export async function chatButton(chatMessage, buttonType) {
       });
       return;
     }
-    if (chatMessage.flags.dohalfc == true) {
-      let newtotal = chatMessage.flags.orgtotal + Number(aftermod);
+    if (chatMessage.flags.sw25.dohalfc == true) {
+      let newtotal = chatMessage.flags.sw25.orgtotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
         newtotaltext = `
-            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.orgtotal}${aftermod})</span>
+            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.sw25.orgtotal}${aftermod})</span>
           `;
       let chatData = {
         flags: {
-          dohalf: false,
-          dohalfc: false,
-          noc: false,
-          apply: chatMessage.flags.apply,
-          total: chatMessage.flags.orgtotal,
-          aftermod: aftermod,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          sw25: {
+            dohalf: false,
+            dohalfc: false,
+            noc: false,
+            apply: chatMessage.flags.sw25.apply,
+            total: chatMessage.flags.sw25.orgtotal,
+            aftermod: aftermod,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-power.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            power: chatMessage.flags.power,
-            lethalTech: chatMessage.flags.lethalTech,
-            criticalRay: chatMessage.flags.criticalRay,
-            pharmTool: chatMessage.flags.pharmTool,
-            result: chatMessage.flags.result,
-            mod: chatMessage.flags.modTotal,
-            half: chatMessage.flags.half,
-            results: chatMessage.flags.results,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            power: chatMessage.flags.sw25.power,
+            lethalTech: chatMessage.flags.sw25.lethalTech,
+            criticalRay: chatMessage.flags.sw25.criticalRay,
+            pharmTool: chatMessage.flags.sw25.pharmTool,
+            result: chatMessage.flags.sw25.result,
+            mod: chatMessage.flags.sw25.modTotal,
+            half: chatMessage.flags.sw25.half,
+            results: chatMessage.flags.sw25.results,
             total: newtotaltext,
-            extraRoll: chatMessage.flags.extraRoll,
-            fumble: chatMessage.flags.fumble,
+            extraRoll: chatMessage.flags.sw25.extraRoll,
+            fumble: chatMessage.flags.sw25.fumble,
             halfcdone: false,
-            showhalf: chatMessage.flags.showhalf,
-            nocdone: chatMessage.flags.nocdone,
-            shownoc: chatMessage.flags.shownoc,
-            apply: chatMessage.flags.apply,
-            powertype: chatMessage.flags.powertype,
-            targetName: chatMessage.flags.targetName,
+            showhalf: chatMessage.flags.sw25.showhalf,
+            nocdone: chatMessage.flags.sw25.nocdone,
+            shownoc: chatMessage.flags.sw25.shownoc,
+            apply: chatMessage.flags.sw25.apply,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
           }
         ),
       };
@@ -715,11 +731,11 @@ export async function chatButton(chatMessage, buttonType) {
     }
   }
   if (buttonType == "buttonnoc") {
-    let noctotal = chatMessage.flags.result[0] + chatMessage.flags.mod;
+    let noctotal = chatMessage.flags.sw25.result[0] + chatMessage.flags.sw25.mod;
     let newextraRoll = null;
-    let aftermod = chatMessage.flags.aftermod ?? 0;
+    let aftermod = chatMessage.flags.sw25.aftermod ?? 0;
 
-    if (chatMessage.flags.noc == false || chatMessage.flags.noc == null) {
+    if (chatMessage.flags.sw25.noc == false || chatMessage.flags.sw25.noc == null) {
       let newtotal = noctotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
@@ -728,38 +744,40 @@ export async function chatButton(chatMessage, buttonType) {
           `;
       let chatData = {
         flags: {
-          dohalf: false,
-          dohalfc: false,
-          noc: true,
-          apply: chatMessage.flags.apply,
-          total: noctotal,
-          aftermod: aftermod,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          sw25: {
+            dohalf: false,
+            dohalfc: false,
+            noc: true,
+            apply: chatMessage.flags.sw25.apply,
+            total: noctotal,
+            aftermod: aftermod,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-power.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            power: chatMessage.flags.power,
-            lethalTech: chatMessage.flags.lethalTech,
-            criticalRay: chatMessage.flags.criticalRay,
-            pharmTool: chatMessage.flags.pharmTool,
-            result: chatMessage.flags.result,
-            mod: chatMessage.flags.mod,
-            half: chatMessage.flags.half,
-            results: chatMessage.flags.results,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            power: chatMessage.flags.sw25.power,
+            lethalTech: chatMessage.flags.sw25.lethalTech,
+            criticalRay: chatMessage.flags.sw25.criticalRay,
+            pharmTool: chatMessage.flags.sw25.pharmTool,
+            result: chatMessage.flags.sw25.result,
+            mod: chatMessage.flags.sw25.mod,
+            half: chatMessage.flags.sw25.half,
+            results: chatMessage.flags.sw25.results,
             total: newtotaltext,
             extraRoll: newextraRoll,
-            fumble: chatMessage.flags.fumble,
-            halfdone: chatMessage.flags.halfdone,
-            showhalf: chatMessage.flags.showhalf,
+            fumble: chatMessage.flags.sw25.fumble,
+            halfdone: chatMessage.flags.sw25.halfdone,
+            showhalf: chatMessage.flags.sw25.showhalf,
             nocdone: true,
-            shownoc: chatMessage.flags.shownoc,
-            apply: chatMessage.flags.apply,
-            powertype: chatMessage.flags.powertype,
-            targetName: chatMessage.flags.targetName,
+            shownoc: chatMessage.flags.sw25.shownoc,
+            apply: chatMessage.flags.sw25.apply,
+            powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
           }
         ),
       };
@@ -769,45 +787,47 @@ export async function chatButton(chatMessage, buttonType) {
       });
       return;
     }
-    if (chatMessage.flags.noc == true) {
-      let newtotal = chatMessage.flags.orgtotal + Number(aftermod);
+    if (chatMessage.flags.sw25.noc == true) {
+      let newtotal = chatMessage.flags.sw25.orgtotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
         newtotaltext = `
-            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.orgtotal}${aftermod})</span>
+            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.sw25.orgtotal}${aftermod})</span>
           `;
       let chatData = {
         flags: {
-          dohalf: false,
-          dohalfc: false,
-          noc: false,
-          apply: chatMessage.flags.apply,
-          total: chatMessage.flags.orgtotal,
-          aftermod: aftermod,
-          powertype: chatMessage.flags.powertype,
+          sw25: {
+            dohalf: false,
+            dohalfc: false,
+            noc: false,
+            apply: chatMessage.flags.sw25.apply,
+            total: chatMessage.flags.sw25.orgtotal,
+            aftermod: aftermod,
+            powertype: chatMessage.flags.sw25.powertype,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-power.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            power: chatMessage.flags.power,
-            lethalTech: chatMessage.flags.lethalTech,
-            criticalRay: chatMessage.flags.criticalRay,
-            pharmTool: chatMessage.flags.pharmTool,
-            result: chatMessage.flags.result,
-            mod: chatMessage.flags.mod,
-            half: chatMessage.flags.half,
-            results: chatMessage.flags.results,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            power: chatMessage.flags.sw25.power,
+            lethalTech: chatMessage.flags.sw25.lethalTech,
+            criticalRay: chatMessage.flags.sw25.criticalRay,
+            pharmTool: chatMessage.flags.sw25.pharmTool,
+            result: chatMessage.flags.sw25.result,
+            mod: chatMessage.flags.sw25.mod,
+            half: chatMessage.flags.sw25.half,
+            results: chatMessage.flags.sw25.results,
             total: newtotaltext,
-            extraRoll: chatMessage.flags.extraRoll,
-            fumble: chatMessage.flags.fumble,
-            halfdone: chatMessage.flags.halfdone,
-            showhalf: chatMessage.flags.showhalf,
+            extraRoll: chatMessage.flags.sw25.extraRoll,
+            fumble: chatMessage.flags.sw25.fumble,
+            halfdone: chatMessage.flags.sw25.halfdone,
+            showhalf: chatMessage.flags.sw25.showhalf,
             nocdone: false,
-            shownoc: chatMessage.flags.shownoc,
-            apply: chatMessage.flags.apply,
-            powertype: chatMessage.flags.powertype,
+            shownoc: chatMessage.flags.sw25.shownoc,
+            apply: chatMessage.flags.sw25.apply,
+            powertype: chatMessage.flags.sw25.powertype,
           }
         ),
       };
@@ -821,30 +841,30 @@ export async function chatButton(chatMessage, buttonType) {
 
   if (buttonType == "buttondecrease") {
     let aftermod = -1;
-    if (chatMessage.flags.aftermod)
-      aftermod = Number(chatMessage.flags.aftermod) - 1;
+    if (chatMessage.flags.sw25.aftermod)
+      aftermod = Number(chatMessage.flags.sw25.aftermod) - 1;
     if (aftermod > 0) aftermod = `+${aftermod}`;
 
-    let orgtotal = chatMessage.flags.orgtotal;
+    let orgtotal = chatMessage.flags.sw25.orgtotal;
     let halfdone = false;
     let halfcdone = false;
     let nocdone = false;
-    let newextraRoll = chatMessage.flags.extraRoll;
-    if (chatMessage.flags.dohalf) {
+    let newextraRoll = chatMessage.flags.sw25.extraRoll;
+    if (chatMessage.flags.sw25.dohalf) {
       orgtotal =
-        Math.ceil((chatMessage.flags.result[0] + chatMessage.flags.mod) / 2) +
-        chatMessage.flags.orghalf;
+        Math.ceil((chatMessage.flags.sw25.result[0] + chatMessage.flags.sw25.mod) / 2) +
+        chatMessage.flags.sw25.orghalf;
       halfdone = true;
       newextraRoll = null;
     }
-    if (chatMessage.flags.dohalfc) {
+    if (chatMessage.flags.sw25.dohalfc) {
       orgtotal =
-        Math.ceil((chatMessage.flags.results + chatMessage.flags.mod) / 2) +
-        chatMessage.flags.orghalf;
+        Math.ceil((chatMessage.flags.sw25.results + chatMessage.flags.sw25.mod) / 2) +
+        chatMessage.flags.sw25.orghalf;
       halfcdone = true;
     }
-    if (chatMessage.flags.noc) {
-      orgtotal = chatMessage.flags.result[0] + chatMessage.flags.mod;
+    if (chatMessage.flags.sw25.noc) {
+      orgtotal = chatMessage.flags.sw25.result[0] + chatMessage.flags.sw25.mod;
       nocdone = true;
       newextraRoll = null;
     }
@@ -858,35 +878,37 @@ export async function chatButton(chatMessage, buttonType) {
 
     let chatData = {
       flags: {
-        total: newtotal,
-        aftermod: aftermod,
-        powertype: chatMessage.flags.powertype,
-        targetName: chatMessage.flags.targetName,
+        sw25: {
+          total: newtotal,
+          aftermod: aftermod,
+          powertype: chatMessage.flags.sw25.powertype,
+          targetName: chatMessage.flags.sw25.targetName,
+        }
       },
       content: await renderTemplate(
         "systems/sw25/templates/roll/roll-power.hbs",
         {
-          formula: chatMessage.flags.formula,
-          tooltip: chatMessage.flags.tooltip,
-          power: chatMessage.flags.power,
-          lethalTech: chatMessage.flags.lethalTech,
-          criticalRay: chatMessage.flags.criticalRay,
-          pharmTool: chatMessage.flags.pharmTool,
-          result: chatMessage.flags.result,
-          mod: chatMessage.flags.mod,
-          half: chatMessage.flags.orghalf,
-          results: chatMessage.flags.results,
+          formula: chatMessage.flags.sw25.formula,
+          tooltip: chatMessage.flags.sw25.tooltip,
+          power: chatMessage.flags.sw25.power,
+          lethalTech: chatMessage.flags.sw25.lethalTech,
+          criticalRay: chatMessage.flags.sw25.criticalRay,
+          pharmTool: chatMessage.flags.sw25.pharmTool,
+          result: chatMessage.flags.sw25.result,
+          mod: chatMessage.flags.sw25.mod,
+          half: chatMessage.flags.sw25.orghalf,
+          results: chatMessage.flags.sw25.results,
           total: newtotaltext,
           extraRoll: newextraRoll,
-          fumble: chatMessage.flags.fumble,
+          fumble: chatMessage.flags.sw25.fumble,
           halfdone: halfdone,
           halfcdone: halfcdone,
           nocdone: nocdone,
-          showhalf: chatMessage.flags.showhalf,
-          shownoc: chatMessage.flags.shownoc,
-          apply: chatMessage.flags.apply,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          showhalf: chatMessage.flags.sw25.showhalf,
+          shownoc: chatMessage.flags.sw25.shownoc,
+          apply: chatMessage.flags.sw25.apply,
+          powertype: chatMessage.flags.sw25.powertype,
+          targetName: chatMessage.flags.sw25.targetName,
         }
       ),
     };
@@ -903,30 +925,30 @@ export async function chatButton(chatMessage, buttonType) {
 
   if (buttonType == "buttonincrease") {
     let aftermod = 1;
-    if (chatMessage.flags.aftermod)
-      aftermod = Number(chatMessage.flags.aftermod) + 1;
+    if (chatMessage.flags.sw25.aftermod)
+      aftermod = Number(chatMessage.flags.sw25.aftermod) + 1;
     if (aftermod > 0) aftermod = `+${aftermod}`;
 
-    let orgtotal = chatMessage.flags.orgtotal;
+    let orgtotal = chatMessage.flags.sw25.orgtotal;
     let halfdone = false;
     let halfcdone = false;
     let nocdone = false;
-    let newextraRoll = chatMessage.flags.extraRoll;
-    if (chatMessage.flags.dohalf) {
+    let newextraRoll = chatMessage.flags.sw25.extraRoll;
+    if (chatMessage.flags.sw25.dohalf) {
       orgtotal =
-        Math.ceil((chatMessage.flags.result[0] + chatMessage.flags.mod) / 2) +
-        chatMessage.flags.orghalf;
+        Math.ceil((chatMessage.flags.sw25.result[0] + chatMessage.flags.sw25.mod) / 2) +
+        chatMessage.flags.sw25.orghalf;
       halfdone = true;
       newextraRoll = null;
     }
-    if (chatMessage.flags.dohalfc) {
+    if (chatMessage.flags.sw25.dohalfc) {
       orgtotal =
-        Math.ceil((chatMessage.flags.results + chatMessage.flags.mod) / 2) +
-        chatMessage.flags.orghalf;
+        Math.ceil((chatMessage.flags.sw25.results + chatMessage.flags.sw25.mod) / 2) +
+        chatMessage.flags.sw25.orghalf;
       halfcdone = true;
     }
-    if (chatMessage.flags.noc) {
-      orgtotal = chatMessage.flags.result[0] + chatMessage.flags.mod;
+    if (chatMessage.flags.sw25.noc) {
+      orgtotal = chatMessage.flags.sw25.result[0] + chatMessage.flags.sw25.mod;
       nocdone = true;
       newextraRoll = null;
     }
@@ -940,35 +962,37 @@ export async function chatButton(chatMessage, buttonType) {
 
     let chatData = {
       flags: {
-        total: newtotal,
-        aftermod: aftermod,
-        powertype: chatMessage.flags.powertype,
-        targetName: chatMessage.flags.targetName,
+        sw25: {
+          total: newtotal,
+          aftermod: aftermod,
+          powertype: chatMessage.flags.sw25.powertype,
+          targetName: chatMessage.flags.sw25.targetName,
+        }
       },
       content: await renderTemplate(
         "systems/sw25/templates/roll/roll-power.hbs",
         {
-          formula: chatMessage.flags.formula,
-          tooltip: chatMessage.flags.tooltip,
-          power: chatMessage.flags.power,
-          lethalTech: chatMessage.flags.lethalTech,
-          criticalRay: chatMessage.flags.criticalRay,
-          pharmTool: chatMessage.flags.pharmTool,
-          result: chatMessage.flags.result,
-          mod: chatMessage.flags.mod,
-          half: chatMessage.flags.orghalf,
-          results: chatMessage.flags.results,
+          formula: chatMessage.flags.sw25.formula,
+          tooltip: chatMessage.flags.sw25.tooltip,
+          power: chatMessage.flags.sw25.power,
+          lethalTech: chatMessage.flags.sw25.lethalTech,
+          criticalRay: chatMessage.flags.sw25.criticalRay,
+          pharmTool: chatMessage.flags.sw25.pharmTool,
+          result: chatMessage.flags.sw25.result,
+          mod: chatMessage.flags.sw25.mod,
+          half: chatMessage.flags.sw25.orghalf,
+          results: chatMessage.flags.sw25.results,
           total: newtotaltext,
           extraRoll: newextraRoll,
-          fumble: chatMessage.flags.fumble,
+          fumble: chatMessage.flags.sw25.fumble,
           halfdone: halfdone,
           halfcdone: halfcdone,
           nocdone: nocdone,
-          showhalf: chatMessage.flags.showhalf,
-          shownoc: chatMessage.flags.shownoc,
-          apply: chatMessage.flags.apply,
-          powertype: chatMessage.flags.powertype,
-          targetName: chatMessage.flags.targetName,
+          showhalf: chatMessage.flags.sw25.showhalf,
+          shownoc: chatMessage.flags.sw25.shownoc,
+          apply: chatMessage.flags.sw25.apply,
+          powertype: chatMessage.flags.sw25.powertype,
+          targetName: chatMessage.flags.sw25.targetName,
         }
       ),
     };
@@ -984,9 +1008,9 @@ export async function chatButton(chatMessage, buttonType) {
   }
 
   if (buttonType == "checkhalf") {
-    let halftotal = Math.ceil(chatMessage.flags.orgtotal / 2);
-    let aftermod = chatMessage.flags.aftermod ?? 0;
-    let roll = chatMessage.flags.rolls;
+    let halftotal = Math.ceil(chatMessage.flags.sw25.orgtotal / 2);
+    let aftermod = chatMessage.flags.sw25.aftermod ?? 0;
+    let roll = chatMessage.flags.sw25.rolls;
     let rollTotal =
       roll.terms[0].results[0].result + roll.terms[0].results[1].result;
     let chatCritical = null;
@@ -994,7 +1018,7 @@ export async function chatButton(chatMessage, buttonType) {
     if (rollTotal == 12) chatCritical = 1;
     if (rollTotal == 2) chatFumble = 1;
 
-    if (chatMessage.flags.dohalf == false || chatMessage.flags.dohalf == null) {
+    if (chatMessage.flags.sw25.dohalf == false || chatMessage.flags.sw25.dohalf == null) {
       let newtotal = halftotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
@@ -1003,26 +1027,28 @@ export async function chatButton(chatMessage, buttonType) {
           `;
       let chatData = {
         flags: {
-          dohalf: true,
-          apply: chatMessage.flags.apply,
-          total: newtotal,
-          aftermod: aftermod,
-          critical: chatCritical,
-          fumble: chatFumble,
-          checktype: chatMessage.flags.checktype,
+          sw25: {
+            dohalf: true,
+            apply: chatMessage.flags.sw25.apply,
+            total: newtotal,
+            aftermod: aftermod,
+            critical: chatCritical,
+            fumble: chatFumble,
+            checktype: chatMessage.flags.sw25.checktype,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-check.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            result: chatMessage.flags.result,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            result: chatMessage.flags.sw25.result,
             total: newtotaltext,
             critical: chatCritical,
             fumble: chatFumble,
             halfdone: true,
-            apply: chatMessage.flags.apply,
-            checktype: chatMessage.flags.checktype,
+            apply: chatMessage.flags.sw25.apply,
+            checktype: chatMessage.flags.sw25.checktype,
           }
         ),
       };
@@ -1036,35 +1062,37 @@ export async function chatButton(chatMessage, buttonType) {
 
       return;
     }
-    if (chatMessage.flags.dohalf == true) {
-      let newtotal = chatMessage.flags.orgtotal + Number(aftermod);
+    if (chatMessage.flags.sw25.dohalf == true) {
+      let newtotal = chatMessage.flags.sw25.orgtotal + Number(aftermod);
       let newtotaltext = newtotal;
       if (aftermod != 0)
         newtotaltext = `
-            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.orgtotal}${aftermod})</span>
+            ${newtotal}<span style="font-size: 0.6em;"> (${chatMessage.flags.sw25.orgtotal}${aftermod})</span>
           `;
       let chatData = {
         flags: {
-          dohalf: false,
-          apply: chatMessage.flags.apply,
-          total: chatMessage.flags.orgtotal,
-          aftermod: aftermod,
-          critical: chatCritical,
-          fumble: chatFumble,
-          checktype: chatMessage.flags.checktype,
+          sw25: {
+            dohalf: false,
+            apply: chatMessage.flags.sw25.apply,
+            total: chatMessage.flags.sw25.orgtotal,
+            aftermod: aftermod,
+            critical: chatCritical,
+            fumble: chatFumble,
+            checktype: chatMessage.flags.sw25.checktype,
+          }
         },
         content: await renderTemplate(
           "systems/sw25/templates/roll/roll-check.hbs",
           {
-            formula: chatMessage.flags.formula,
-            tooltip: chatMessage.flags.tooltip,
-            result: chatMessage.flags.result,
+            formula: chatMessage.flags.sw25.formula,
+            tooltip: chatMessage.flags.sw25.tooltip,
+            result: chatMessage.flags.sw25.result,
             total: newtotaltext,
             critical: chatCritical,
             fumble: chatFumble,
             halfdone: false,
-            apply: chatMessage.flags.apply,
-            checktype: chatMessage.flags.checktype,
+            apply: chatMessage.flags.sw25.apply,
+            checktype: chatMessage.flags.sw25.checktype,
           }
         ),
       };
@@ -1085,13 +1113,13 @@ export async function chatButton(chatMessage, buttonType) {
     if (buttonType == "checkdecrease") aftermod = -1;
     if (buttonType == "checkincrease") aftermod = 1;
 
-    if (chatMessage.flags.aftermod)
-      aftermod = Number(chatMessage.flags.aftermod) + aftermod;
+    if (chatMessage.flags.sw25.aftermod)
+      aftermod = Number(chatMessage.flags.sw25.aftermod) + aftermod;
     if (aftermod > 0) aftermod = `+${aftermod}`;
 
-    let orgtotal = chatMessage.flags.orgtotal;
-    if (chatMessage.flags.dohalf)
-      orgtotal = Math.ceil(chatMessage.flags.orgtotal / 2);
+    let orgtotal = chatMessage.flags.sw25.orgtotal;
+    if (chatMessage.flags.sw25.dohalf)
+      orgtotal = Math.ceil(chatMessage.flags.sw25.orgtotal / 2);
 
     let newtotal = Number(orgtotal) + Number(aftermod);
     let newtotaltext = newtotal;
@@ -1100,45 +1128,47 @@ export async function chatButton(chatMessage, buttonType) {
           ${newtotal}<span style="font-size: 0.6em;"> (${orgtotal}${aftermod})</span>
         `;
 
-    let roll = chatMessage.flags.rolls;
+    let roll = chatMessage.flags.sw25.rolls;
     let rollTotal =
       roll.terms[0].results[0].result + roll.terms[0].results[1].result;
     let chatCritical = null;
     let chatFumble = null;
     if (rollTotal == 12) chatCritical = 1;
     if (rollTotal == 2) chatFumble = 1;
-    let halfdone = chatMessage.flags.dohalf ? chatMessage.flags.dohalf : false;
+    let halfdone = chatMessage.flags.sw25.dohalf ? chatMessage.flags.sw25.dohalf : false;
 
     let chatData = {
       flags: {
-        total: newtotal,
-        apply: chatMessage.flags.apply,
-        spell: chatMessage.flags.spell,
-        rolls: chatMessage.flags.rolls,
-        formula: chatMessage.flags.formula,
-        tooltip: chatMessage.flags.tooltip,
-        orgtotal: chatMessage.flags.orgtotal,
-        critical: chatCritical,
-        fumble: chatFumble,
-        dohalf: halfdone,
-        aftermod: aftermod,
-        checktype: chatMessage.flags.checktype,
-        targetName: chatMessage.flags.targetName,
+        sw25: {
+          total: newtotal,
+          apply: chatMessage.flags.sw25.apply,
+          spell: chatMessage.flags.sw25.spell,
+          rolls: chatMessage.flags.sw25.rolls,
+          formula: chatMessage.flags.sw25.formula,
+          tooltip: chatMessage.flags.sw25.tooltip,
+          orgtotal: chatMessage.flags.sw25.orgtotal,
+          critical: chatCritical,
+          fumble: chatFumble,
+          dohalf: halfdone,
+          aftermod: aftermod,
+          checktype: chatMessage.flags.sw25.checktype,
+          targetName: chatMessage.flags.sw25.targetName,
+        }
       },
       content: await renderTemplate(
         "systems/sw25/templates/roll/roll-check.hbs",
         {
-          formula: chatMessage.flags.formula,
-          tooltip: chatMessage.flags.tooltip,
+          formula: chatMessage.flags.sw25.formula,
+          tooltip: chatMessage.flags.sw25.tooltip,
           critical: chatCritical,
           fumble: chatFumble,
-          result: chatMessage.flags.result,
+          result: chatMessage.flags.sw25.result,
           total: newtotaltext,
           halfdone: halfdone,
-          apply: chatMessage.flags.apply,
-          spell: chatMessage.flags.spell,
-          checktype: chatMessage.flags.checktype,
-          targetName: chatMessage.flags.targetName,
+          apply: chatMessage.flags.sw25.apply,
+          spell: chatMessage.flags.sw25.spell,
+          checktype: chatMessage.flags.sw25.checktype,
+          targetName: chatMessage.flags.sw25.targetName,
         }
       ),
     };
@@ -1161,7 +1191,7 @@ export async function chatButton(chatMessage, buttonType) {
     buttonType == "buttonmr"
   ) {
     let targetTokenId;
-    if (!chatMessage.flags.target) {
+    if (!chatMessage.flags.sw25.target) {
       const targetTokens = game.user.targets;
 
       // if no target,show dialog
@@ -1201,8 +1231,8 @@ export async function chatButton(chatMessage, buttonType) {
         await applyExec(targetTokenId);
       }
     } else {
-      for (let i = 0; i < chatMessage.flags.target.length; i++) {
-        const targetToken = canvas.tokens.get(chatMessage.flags.target[i]);
+      for (let i = 0; i < chatMessage.flags.sw25.target.length; i++) {
+        const targetToken = canvas.tokens.get(chatMessage.flags.sw25.target[i]);
         targetTokenId = targetToken.id;
         await applyExec(targetTokenId);
       }
@@ -1233,7 +1263,7 @@ export async function chatButton(chatMessage, buttonType) {
       let resultHP = targetHP;
       let resultMP = targetMP;
 
-      let resultValue = chatMessage.flags.total;
+      let resultValue = chatMessage.flags.sw25.total;
       let differenceValue = 0;
 
       if (buttonType == "buttonpd") {
@@ -1360,8 +1390,12 @@ export async function chatButton(chatMessage, buttonType) {
           const transferEffect = duplicate(effect);
           transferEffect.disabled = false;
           transferEffect.sourceName = orgActor;
-          transferEffect.flags.sourceName = orgActor;
-          transferEffect.flags.sourceId = `Actor.${orgId}`;
+          transferEffect.flags = {
+            sw25: {
+              sourceName: orgActor,
+              sourceId: `Actor.${orgId}`
+            }
+          };
           targetActor.createEmbeddedDocuments("ActiveEffect", [transferEffect]);
         });
       });
@@ -1413,7 +1447,7 @@ export async function chatButton(chatMessage, buttonType) {
     buttonType == "buttonhrall" ||
     buttonType == "buttonmrall"
   ) {
-    const targetMessages = chatMessage.flags.targetMessage;
+    const targetMessages = chatMessage.flags.sw25.targetMessage;
     let type = "";
     switch (buttonType) {
       case "buttonpdall":
@@ -1508,27 +1542,27 @@ export async function chatButton(chatMessage, buttonType) {
   }
 
   if (buttonType == "buttonmeta") {
-    let token = canvas.tokens.get(chatMessage.flags.tokenId);
-    let cost = chatMessage.flags.cost;
-    let name = chatMessage.flags.name;
-    let type = chatMessage.flags.type;
+    let token = canvas.tokens.get(chatMessage.flags.sw25.tokenId);
+    let cost = chatMessage.flags.sw25.cost;
+    let name = chatMessage.flags.sw25.name;
+    let type = chatMessage.flags.sw25.type;
     let meta;
-    if (chatMessage.flags.meta == false) meta = 1;
-    else meta = Number(chatMessage.flags.meta) + 1;
+    if (chatMessage.flags.sw25.meta == false) meta = 1;
+    else meta = Number(chatMessage.flags.sw25.meta) + 1;
     let chat = chatMessage;
-    let base = chatMessage.flags.base;
+    let base = chatMessage.flags.sw25.base;
 
     mpCost(token, cost, name, type, meta, chat, base);
   }
 
   if (buttonType == "buttonmpcancel") {
-    let token = canvas.tokens.get(chatMessage.flags.tokenId);
-    let cost = chatMessage.flags.cost;
-    let name = chatMessage.flags.name;
-    let type = chatMessage.flags.type;
+    let token = canvas.tokens.get(chatMessage.flags.sw25.tokenId);
+    let cost = chatMessage.flags.sw25.cost;
+    let name = chatMessage.flags.sw25.name;
+    let type = chatMessage.flags.sw25.type;
     let meta = 0;
     let chat = chatMessage;
-    let base = chatMessage.flags.base;
+    let base = chatMessage.flags.sw25.base;
 
     // Apply MP cost
     if (game.user.isGM) {
@@ -1538,7 +1572,7 @@ export async function chatButton(chatMessage, buttonType) {
     } else {
       game.socket.emit("system.sw25", {
         method: "applyMp",
-        targetToken: chatMessage.flags.tokenId,
+        targetToken: chatMessage.flags.sw25.tokenId,
         resultMP: base,
       });
     }
@@ -1557,8 +1591,10 @@ export async function chatButton(chatMessage, buttonType) {
     let chatData = {
       flavor: label,
       flags: {
-        meta: meta,
-        type: type,
+        sw25: {
+          meta: meta,
+          type: type,
+        }
       },
     };
     chatData.content = await renderTemplate(
@@ -1582,7 +1618,7 @@ export async function chatButton(chatMessage, buttonType) {
       return;
     }
     const lootActor = selectedTokens[0].actor;
-    const lootItems = chatMessage.flags.loot;
+    const lootItems = chatMessage.flags.sw25.loot;
     const speaker = ChatMessage.getSpeaker({ actor: lootActor });
     const rollMode = game.settings.get("core", "rollMode");
     const rollData = lootActor.getRollData();
@@ -1647,11 +1683,11 @@ export async function chatButton(chatMessage, buttonType) {
     const flags = chatMessage.flags;
 
     let checkItem = "";
-    let checkName = flags.checkName;
-    if (checkName == "di") checkName = flags.inputName;
+    let checkName = flags.sw25.checkName;
+    if (checkName == "di") checkName = flags.sw25.inputName;
 
     for (const item of selectActor.items) {
-      if (item.type == flags.method && checkName == item.name) {
+      if (item.type == flags.sw25.method && checkName == item.name) {
         checkItem = item;
         break;
       }
@@ -1661,31 +1697,31 @@ export async function chatButton(chatMessage, buttonType) {
     const itemData = item.system;
     let checkbase;
 
-    if (flags.method == "skill") {
+    if (flags.sw25.method == "skill") {
       let skillbase;
       if (checkName == "adv") {
         checkName = `${game.i18n.localize("SW25.Attributes.Advlevel")}`;
-        skillbase = selectActor.system.abilities[flags.refAbility].advbase;
+        skillbase = selectActor.system.abilities[flags.sw25.refAbility].advbase;
       } else if (itemData) {
-        skillbase = itemData.skillbase[flags.refAbility];
+        skillbase = itemData.skillbase[flags.sw25.refAbility];
       } else checkbase = 0;
       if (skillbase >= 0) checkbase = `+ ${skillbase}`;
       if (skillbase < 0) checkbase = `${skillbase}`;
-      if (flags.refAbility != "-") {
+      if (flags.sw25.refAbility != "-") {
         let i18ncat =
-          flags.refAbility.charAt(0).toUpperCase() + flags.refAbility.slice(1);
+          flags.sw25.refAbility.charAt(0).toUpperCase() + flags.sw25.refAbility.slice(1);
         let abi = " + " + game.i18n.localize(`SW25.Ability.${i18ncat}.abbr`);
         checkName = `${checkName}${abi}`;
       }
     }
-    if (flags.method == "check") {
+    if (flags.sw25.method == "check") {
       if (itemData) {
         if (itemData.checkbase >= 0) checkbase = `+ ${itemData.checkbase}`;
         if (itemData.checkbase < 0) checkbase = `${itemData.checkbase}`;
       } else checkbase = 0;
     }
 
-    let flagMod = parseInt(flags.modifier, 10);
+    let flagMod = parseInt(flags.sw25.modifier, 10);
     if (0 < flagMod) {
       checkbase += `+ ${flagMod}`;
     } else if (flagMod < 0) {
@@ -1693,7 +1729,7 @@ export async function chatButton(chatMessage, buttonType) {
     }
 
     let formula = item ? itemData.formula + checkbase : "2d6";
-    if (flags.checkName == "adv") formula = "2d6" + checkbase;
+    if (flags.sw25.checkName == "adv") formula = "2d6" + checkbase;
 
     let roll = new Roll(formula, rollData);
     await roll.evaluate();
@@ -1702,11 +1738,11 @@ export async function chatButton(chatMessage, buttonType) {
     const rollMode = game.settings.get("core", "rollMode");
     let label = `${game.i18n.localize("SW25.Check")}`;
     if (checkName) label = `${checkName} (${game.i18n.localize("SW25.Check")})`;
-    if (checkName && !item && flags.checkName != "adv")
+    if (checkName && !item && flags.sw25.checkName != "adv")
       label = `${game.i18n.localize(
         "SW25.StraightRoll"
       )} - ${checkName} (${game.i18n.localize("SW25.Check")})`;
-    label += flags.targetValue ? "/" + flags.targetValue : "";
+    label += flags.sw25.targetValue ? "/" + flags.sw25.targetValue : "";
 
     let resultText = "";
     let fumble =
@@ -1718,13 +1754,13 @@ export async function chatButton(chatMessage, buttonType) {
 
     let targetValues;
 
-    if (flags.targetValue) {
-      if (typeof flags.targetValue === "number") {
-        targetValues = [flags.targetValue];
-      } else if (typeof flags.targetValue === "string") {
-        targetValues = flags.targetValue.match(/[/,／， 　]/) 
-         ? flags.targetValue.split(/[/,／， 　]/).map(v => parseInt(v, 10)).filter(v => !isNaN(v)) 
-         : [parseInt(flags.targetValue, 10)].filter(v => !isNaN(v));
+    if (flags.sw25.targetValue) {
+      if (typeof flags.sw25.targetValue === "number") {
+        targetValues = [flags.sw25.targetValue];
+      } else if (typeof flags.sw25.targetValue === "string") {
+        targetValues = flags.sw25.targetValue.match(/[/,／， 　]/) 
+         ? flags.sw25.targetValue.split(/[/,／， 　]/).map(v => parseInt(v, 10)).filter(v => !isNaN(v)) 
+         : [parseInt(flags.sw25.targetValue, 10)].filter(v => !isNaN(v));
       } else {
         targetValues = [];
       }
@@ -1767,8 +1803,8 @@ export async function chatButton(chatMessage, buttonType) {
     };
 
     let chatFormula = roll.formula;
-    if (flags.targetValue)
-      chatFormula = roll.formula + ` >= ${parseInt(flags.targetValue, 10)}`;
+    if (flags.sw25.targetValue)
+      chatFormula = roll.formula + ` >= ${parseInt(flags.sw25.targetValue, 10)}`;
     let chatTotal = roll.total;
     if (critical)
       chatTotal = `${Number(

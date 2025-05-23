@@ -113,7 +113,7 @@ export class SW25Item extends Item {
   prepareDerivedData() {
     const itemData = this;
     const systemData = itemData.system;
-    const flags = itemData.flags.sw25 || {};
+    const flags = itemData.flags || {};
     const actor = itemData.actor ? game.actors.get(itemData.actor._id) : null;
     if (actor) {
       this._prepareSkillData(itemData, actor);
@@ -2309,7 +2309,9 @@ export class SW25Item extends Item {
             flavor: `${label} - <b>${game.i18n.localize("SW25.Applyall")}</b>`,
           };
           chatData.flags = {
-            targetMessage: chatMessageId,
+            sw25: {
+              targetMessage: chatMessageId,
+            }
           };
           chatData.content = await renderTemplate(
             "systems/sw25/templates/roll/roll-applyall.hbs",
@@ -2400,6 +2402,12 @@ export class SW25Item extends Item {
         }
       }
 
+      chatData.flags = {
+        sw25: {
+          itemid: this._id,
+        }
+      };
+
       chatData.content = await renderTemplate(
         "systems/sw25/templates/roll/roll-item.hbs",
         {
@@ -2424,9 +2432,6 @@ export class SW25Item extends Item {
         }
       );
 
-      chatData.flags = {
-        itemid: item._id,
-      };
 
       ChatMessage.create(chatData);
     }
@@ -2496,15 +2501,17 @@ export class SW25Item extends Item {
       }
 
       chatData.flags = {
-        total: chatTotal,
-        orgtotal: chatTotal,
-        formula: roll.formula,
-        rolls: roll,
-        tooltip: await roll.getTooltip(),
-        apply: chatapply,
-        checktype: checktype,
-        target,
-        targetName: targetName,
+        sw25: {
+          total: chatTotal,
+          orgtotal: chatTotal,
+          formula: roll.formula,
+          rolls: roll,
+          tooltip: await roll.getTooltip(),
+          apply: chatapply,
+          checktype: checktype,
+          target,
+          targetName: targetName,
+        }
       };
 
       chatData.content = await renderTemplate(
@@ -2620,30 +2627,32 @@ export class SW25Item extends Item {
       }
 
       chatData.flags = {
-        formula: chatFormula,
-        tooltip: await roll.fakeResult.getTooltip(),
-        power: chatPower,
-        lethalTech: chatLethalTech,
-        criticalRay: chatCriticalRay,
-        pharmTool: chatPharmTool,
-        powup: chatPowup,
-        result: chatResult,
-        mod: chatMod,
-        modTotal: chatModTotal,
-        half: chatHalf,
-        results: chatResults,
-        total: chatTotal,
-        extraRoll: chatExtraRoll,
-        fumble: chatFumble,
-        orghalf: roll.halfPowMod,
-        orgtotal: chatTotal,
-        orgextraRoll: chatExtraRoll,
-        showhalf: showhalf,
-        shownoc: shownoc,
-        apply: chatapply,
-        powertype: powertype,
-        target,
-        targetName: targetName,
+        sw25: {
+          formula: chatFormula,
+          tooltip: await roll.fakeResult.getTooltip(),
+          power: chatPower,
+          lethalTech: chatLethalTech,
+          criticalRay: chatCriticalRay,
+          pharmTool: chatPharmTool,
+          powup: chatPowup,
+          result: chatResult,
+          mod: chatMod,
+          modTotal: chatModTotal,
+          half: chatHalf,
+          results: chatResults,
+          total: chatTotal,
+          extraRoll: chatExtraRoll,
+          fumble: chatFumble,
+          orghalf: roll.halfPowMod,
+          orgtotal: chatTotal,
+          orgextraRoll: chatExtraRoll,
+          showhalf: showhalf,
+          shownoc: shownoc,
+          apply: chatapply,
+          powertype: powertype,
+          target,
+          targetName: targetName,
+        }
       };
 
       chatData.content = await renderTemplate(
