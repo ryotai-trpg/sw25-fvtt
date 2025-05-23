@@ -60,48 +60,67 @@
     <div class="tab details" data-group="primary" data-tab="details">
       <div class="flexcol">
         <div class="flexrow grid grid-10col nogapmargin">
-          <span class="grid-span-3" style="text-align: center;"><b>{{localize "SW25.Item.Clickitem"}}</b><br>
+          <span class="grid-span-3 form-group">
+            <label>{{localize "SW25.Item.Clickitem"}}</label>
             <select name="system.clickitem">
               {{selectOptions clickitemOptions selected=system.clickitem localize=true}}
             </select>
           </span>
           <div class="grid-span-3"></div>
-          <span class="grid-span-2"  style="text-align: center;"><label for="{{item._id}}system.usedice"><b>{{localize "SW25.Item.Usedice"}}</b></label><br>
-            <input id="{{item._id}}system.usedice" type="checkbox" name="system.usedice" data-dtype="Boolean" {{#if system.usedice}} checked {{/if}}/></span>
-          <span class="grid-span-2"  style="text-align: center;"><label for="{{item._id}}system.usepower"><b>{{localize "SW25.Item.Usepower"}}</b></label><br>
-            <input id="{{item._id}}system.usepower" type="checkbox" name="system.usepower" data-dtype="Boolean" {{#if system.usepower}} checked {{/if}}/></span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.usedice">{{localize "SW25.Item.Usedice"}}</label>
+            <input id="{{item._id}}system.usedice" type="checkbox" name="system.usedice" data-dtype="Boolean" {{#if system.usedice}} checked {{/if}}/>
+          </span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.usepower">{{localize "SW25.Item.Usepower"}}</label>
+            <input id="{{item._id}}system.usepower" type="checkbox" name="system.usepower" data-dtype="Boolean" {{#if system.usepower}} checked {{/if}}/>
+          </span>
         </div>
         <div class="flexrow grid grid-8col">
-          <span class="grid-span-3" style="text-align: center;"><b>{{localize "SW25.Item.Category"}}</b><br>
+          <span class="grid-span-3 form-group">
+            <label>{{localize "SW25.Item.Category"}}</label>
             <select name="system.category">
               {{selectOptions config.weaponCategories selected=system.category localize=true blank="-"}}
             </select>
           </span>
-          <span style="text-align: center;"><b>{{localize "SW25.Item.Rank"}}</b><br>
+          <span class="form-group">
+            <label>{{localize "SW25.Item.Rank"}}</label>
             <select name="system.rank">
               {{selectOptions config.ranks selected=system.rank blank="-"}}
             </select>
           </span>
-          <span class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Weapon.Type"}}</b><br>
+          <span class="grid-span-2 form-group">
+            <label>{{localize "SW25.Item.Weapon.Type"}}</label>
             <select name="system.type">
               {{selectOptions config.weaponTypes selected=system.type localize=true blank="-"}}
             </select>
           </span>
-          <span style="text-align: center;"><b>{{localize "SW25.Item.Weapon.Usage"}}</b><br>
+          <span class="form-group">
+            <label>{{localize "SW25.Item.Weapon.Usage"}}</label>
             <select name="system.usage">
               {{selectOptions config.weaponUsages selected=system.usage localize=true blank="-"}}
             </select>
           </span>
-          <span style="text-align: center;"><label for="{{item._id}}system.dedicated"><b>{{localize "SW25.Item.Dedicated"}}</b></label><br>
-            <input id="{{item._id}}system.dedicated" type="checkbox" name="system.dedicated" data-dtype="Boolean" {{#if system.dedicated}} checked {{/if}}/></span>
-          <span style="text-align: center;"><label for="{{item._id}}system.reqstr"><b>{{localize "SW25.Item.Reqstr"}}</b></label><br>
-            <input id="{{item._id}}system.reqstr" type="text" name="system.reqstr" value="{{system.reqstr}}" data-dtype="Number"/></span>
-          <span style="text-align: center;"><label for="{{item._id}}system.hit"><b>{{localize "SW25.Item.Weapon.Hit"}}</b></label><br>
-            <input id="{{item._id}}system.hit" type="text" name="system.hit" value="{{system.hit}}" data-dtype="Number"/></span>
-          <span style="text-align: center;"><label for="{{item._id}}system.dmod"><b>{{localize "SW25.Item.Weapon.Dmod"}}</b></label><br>
-            <input id="{{item._id}}system.dmod" type="text" name="system.dmod" value="{{system.dmod}}" data-dtype="Number"/></span>
-          <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.range"><b>{{localize "SW25.Item.Weapon.Range"}}</b></label><br>
-            <input id="{{item._id}}system.range" type="text" name="system.range" value="{{system.range}}" data-dtype="String"/></span>
+          <span class="form-group">
+            <label for="{{item._id}}system.dedicated">{{localize "SW25.Item.Dedicated"}}</label>
+            <input id="{{item._id}}system.dedicated" type="checkbox" name="system.dedicated" data-dtype="Boolean" {{#if system.dedicated}} checked {{/if}}/>
+          </span>
+          <span class="form-group">
+            <label for="{{item._id}}system.reqstr">{{localize "SW25.Item.Reqstr"}}</label>
+            <input id="{{item._id}}system.reqstr" type="text" name="system.reqstr" value="{{system.reqstr}}" data-dtype="Number"/>
+          </span>
+          <span class="form-group">
+            <label for="{{item._id}}system.hit">{{localize "SW25.Item.Weapon.Hit"}}</label>
+            <input id="{{item._id}}system.hit" type="text" name="system.hit" value="{{system.hit}}" data-dtype="Number"/>
+          </span>
+          <span class="form-group">
+            <label for="{{item._id}}system.dmod">{{localize "SW25.Item.Weapon.Dmod"}}</label>
+            <input id="{{item._id}}system.dmod" type="text" name="system.dmod" value="{{system.dmod}}" data-dtype="Number"/>
+          </span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.range">{{localize "SW25.Item.Weapon.Range"}}</label>
+            <input id="{{item._id}}system.range" type="text" name="system.range" value="{{system.range}}" data-dtype="String"/>
+          </span>
         </div>
         <div class="flexcol grid grid-8col nogapmargin">
           <div class="grid-span-1" style="display: flex; align-items: center; justify-content: center; text-align: center;">

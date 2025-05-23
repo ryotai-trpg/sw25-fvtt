@@ -47,25 +47,32 @@
     <div class="tab details" data-group="primary" data-tab="details">
       <div class="flexcol">
         <div class="flexrow grid grid-10col nogapmargin">
-          <span class="grid-span-3" style="text-align: center;"><b>{{localize "SW25.Item.Clickitem"}}</b><br>
+          <span class="grid-span-3 form-group">
+            <label>{{localize "SW25.Item.Clickitem"}}</label>
             <select name="system.clickitem">
               {{selectOptions clickitemOptions selected=system.clickitem localize=true}}
             </select>
           </span>
           <div class="grid-span-3"></div>
-          <span class="grid-span-2"  style="text-align: center;"><label for="{{item._id}}system.usedice"><b>{{localize "SW25.Item.Usedice"}}</b></label><br>
-            <input id="{{item._id}}system.usedice" type="checkbox" name="system.usedice" data-dtype="Boolean" {{#if system.usedice}} checked {{/if}}/></span>
-          <span class="grid-span-2"  style="text-align: center;"><label for="{{item._id}}system.usepower"><b>{{localize "SW25.Item.Usepower"}}</b></label><br>
-            <input id="{{item._id}}system.usepower" type="checkbox" name="system.usepower" data-dtype="Boolean" {{#if system.usepower}} checked {{/if}}/></span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.usedice">{{localize "SW25.Item.Usedice"}}</label>
+            <input id="{{item._id}}system.usedice" type="checkbox" name="system.usedice" data-dtype="Boolean" {{#if system.usedice}} checked {{/if}}/>
+          </span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.usepower">{{localize "SW25.Item.Usepower"}}</label>
+            <input id="{{item._id}}system.usepower" type="checkbox" name="system.usepower" data-dtype="Boolean" {{#if system.usepower}} checked {{/if}}/>
+          </span>
         </div>
         <div class="flexrow grid grid-8col">
-          <span class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Accessory.Part"}}</b><br>
+          <span class="grid-span-2 form-group"><label>{{localize "SW25.Item.Accessory.Part"}}</label>
             <select name="system.accpart">
               {{selectOptions config.accparts selected=system.accpart localize=true blank="-"}}
             </select>
           </span>
-          <span style="text-align: center;"><label for="{{item._id}}system.dedicated"><b>{{localize "SW25.Item.Dedicated"}}</b></label><br>
-            <input id="{{item._id}}system.dedicated" type="checkbox" name="system.dedicated" data-dtype="Boolean" {{#if system.dedicated}} checked {{/if}}/></span>
+          <span class="form-group">
+            <label for="{{item._id}}system.dedicated">{{localize "SW25.Item.Dedicated"}}</label>
+            <input id="{{item._id}}system.dedicated" type="checkbox" name="system.dedicated" data-dtype="Boolean" {{#if system.dedicated}} checked {{/if}}/>
+          </span>
           <span class="grid-span-2" style="display: {{#if system.dedicated}}block{{else}}none{{/if}};"><br>
             <select name="system.deffect">
               {{selectOptions config.deffects selected=system.deffect localize=true blank="-"}}

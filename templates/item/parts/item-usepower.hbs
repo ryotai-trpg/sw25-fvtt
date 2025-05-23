@@ -1,53 +1,61 @@
+<fieldset>
+  <legend>{{localize "SW25.Item.Powertable"}}{{localize "SW25.Setting"}}</legend>
 <div class="flexrow grid grid-10col">
-  <span class="resource-label grid-span-2" style="text-decoration: underline;">{{localize "SW25.Item.Powertable"}}{{localize "SW25.Setting"}}</span>
   <span class="grid-span-2" style="text-align: left;">{{localize "SW25.Item.Power"}}{{localize "SW25.Basenumber"}} : <b>{{system.powerbase}}</b></span>
   <span class="grid-span-2" style="text-align: left;">
     <select name="system.applypower">
       {{selectOptions applyOptions selected=system.applypower localize=true}}
     </select>
   </span>
-  <span class="grid-span-4">
+  <span class="grid-span-6">
     {{#if (eq system.applypower "custom")}}
-    <div class="flexcol">
-      <div>
+    <div class="flexrow">
         <label for="{{item._id}}pwpdbt"><input id="{{item._id}}pwpdbt" type="checkbox" class="small-checkbox" name="system.pwpdbt" data-dtype="Boolean" {{#if system.pwpdbt}} checked {{/if}}/>{{localize "SW25.Item.pd"}}</label>
         <label for="{{item._id}}pwmdbt"><input id="{{item._id}}pwmdbt" type="checkbox" class="small-checkbox" name="system.pwmdbt" data-dtype="Boolean" {{#if system.pwmdbt}} checked {{/if}}/>{{localize "SW25.Item.md"}}</label>
         <label for="{{item._id}}pwcdbt"><input id="{{item._id}}pwcdbt" type="checkbox" class="small-checkbox" name="system.pwcdbt" data-dtype="Boolean" {{#if system.pwcdbt}} checked {{/if}}/>{{localize "SW25.Item.cd"}}</label>
-      </div>
-      <div>
         <label for="{{item._id}}pwhrbt"><input id="{{item._id}}pwhrbt" type="checkbox" class="small-checkbox" name="system.pwhrbt" data-dtype="Boolean" {{#if system.pwhrbt}} checked {{/if}}/>{{localize "SW25.Item.hr"}}</label>
         <label for="{{item._id}}pwmrbt"><input id="{{item._id}}pwmrbt" type="checkbox" class="small-checkbox" name="system.pwmrbt" data-dtype="Boolean" {{#if system.pwmrbt}} checked {{/if}}/>{{localize "SW25.Item.mr"}}</label>
-      </div>
     </div>
     {{/if}}
-  </span>
 </div>
 <div class="flexrow grid grid-8col">
-  <span class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Power"}}{{localize "SW25.Skillname"}}</b><br>
+  <span class="grid-span-2 form-group">
+    <label>{{localize "SW25.Item.Power"}}{{localize "SW25.Skillname"}}</label>
     <select name="system.powerskill">
       <option value="">-</option>
       <option value="adv" {{#if (eq system.powerskill "adv")}}selected{{/if}}>{{localize "SW25.Attributes.Advlevel"}}</option>
       {{selectOptions system.skilllist selected=system.powerskill valueAttr="name" labelAttr="name"}}
     </select>
   </span>
-  <span class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Power"}}{{localize "SW25.Abilityname"}}</b><br>
+  <span class="grid-span-2 form-group">
+    <label>{{localize "SW25.Item.Power"}}{{localize "SW25.Abilityname"}}</label>
     <select name="system.powerabi">
       {{selectOptions config.abilities selected=system.powerabi localize=true blank="-"}}
     </select>
   </span>
-  <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.powermod"><b>{{localize "SW25.Item.Power"}}{{localize "SW25.Check"}}{{localize "SW25.Modifier"}}</b></label><br>
-    <input id="{{item._id}}system.powermod" style="max-width: calc(50% - 7px);" type="text" name="system.powermod" value="{{system.powermod}}" data-dtype="Number"/></span>
+  <span class="grid-span-2 form-group">
+    <label for="{{item._id}}system.powermod">{{localize "SW25.Item.Power"}}{{localize "SW25.Check"}}{{localize "SW25.Modifier"}}</label>
+    <input id="{{item._id}}system.powermod" style="max-width: calc(50% - 7px);" type="text" name="system.powermod" value="{{system.powermod}}" data-dtype="Number"/>
+  </span>
 </div>
 <div class="flexrow grid grid-8col">
-  <span style="text-align: center;"><label for="{{item.id}}system.power"><b>{{localize "SW25.Item.Power"}}</b></label><br>
-    <input id="{{item._id}}system.power" type="text" name="system.power" value="{{system.power}}" data-dtype="Number"/></span>
-  <span style="text-align: center;"><label for="{{item.id}}system.cvalue"><b>{{localize "SW25.Item.Cvalue"}}</b></label><br>
-    <input id="{{item._id}}system.cvalue" type="text" name="system.cvalue" value="{{system.cvalue}}" data-dtype="Number"/></span>
-  <span style="text-align: center;"><label for="{{item._id}}system.halfpow"><b>{{localize "SW25.Item.Halfpow"}}</b></label><br>
-    <input id="{{item._id}}system.halfpow" type="checkbox" name="system.halfpow" data-dtype="Boolean" {{#if system.halfpow}} checked {{/if}}/></span>
+  <span class="form-group">
+    <label for="{{item.id}}system.power">{{localize "SW25.Item.Power"}}</label>
+    <input id="{{item._id}}system.power" type="text" name="system.power" value="{{system.power}}" data-dtype="Number"/>
+  </span>
+  <span class="form-group">
+    <label for="{{item.id}}system.cvalue">{{localize "SW25.Item.Cvalue"}}</label>
+    <input id="{{item._id}}system.cvalue" type="text" name="system.cvalue" value="{{system.cvalue}}" data-dtype="Number"/>
+  </span>
+  <span class="form-group">
+    <label for="{{item._id}}system.halfpow">{{localize "SW25.Item.Halfpow"}}</label>
+    <input id="{{item._id}}system.halfpow" type="checkbox" name="system.halfpow" data-dtype="Boolean" {{#if system.halfpow}} checked {{/if}}/>
+  </span>
   <div class="grid-span-3"></div>
-  <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.showpowmod"><b>{{localize "SW25.Item.Particularmod"}}</b></label><br>
-    <input id="{{item._id}}system.showpowmod" type="checkbox" name="system.showpowmod" data-dtype="Boolean" {{#if system.showpowmod}} checked {{/if}}/></span>
+  <span class="grid-span-2 form-group">
+    <label for="{{item._id}}system.showpowmod">{{localize "SW25.Item.Particularmod"}}</label>
+    <input id="{{item._id}}system.showpowmod" type="checkbox" name="system.showpowmod" data-dtype="Boolean" {{#if system.showpowmod}} checked {{/if}}/>
+  </span>
 </div>
 <div class="grid-powertable">
   <label class="pt-item pt-label" for="{{item._id}}system.pt3">3</label>
@@ -76,11 +84,26 @@
 <div style="display: {{#if system.showpowmod}}block{{else}}none{{/if}};">
   <div class="flexcol">
     <div class="flexrow grid grid-10col">
-      <label for="{{item._id}}system.halfpowmod" class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Halfpowmod"}}</b><br><input id="{{item._id}}system.halfpowmod" style="max-width: calc(50% - 7px);" type="text" name="system.halfpowmod" value="{{system.halfpowmod}}" data-dtype="Number"/></label>
-      <label for="{{item._id}}system.lethaltech" class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Lethaltech"}}</b><br><input id="{{item._id}}system.lethaltech" style="max-width: calc(50% - 7px);" type="text" name="system.lethaltech" value="{{system.lethaltech}}" data-dtype="Number"/></label>
-      <label for="{{item._id}}system.criticalray" class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Criticalray"}}</b><br><input id="{{item._id}}system.criticalray" style="max-width: calc(50% - 7px);" type="text" name="system.criticalray" value="{{system.criticalray}}" data-dtype="String"/></label>
-      <label for="{{item._id}}system.pharmtool" class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Pharmtool"}}</b><br><input id="{{item._id}}system.pharmtool" style="max-width: calc(50% - 7px);" type="text" name="system.pharmtool" value="{{system.pharmtool}}" data-dtype="Number"/></label>
-      <label for="{{item._id}}system.powup" class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Powup"}}</b><br><input id="{{item._id}}system.powup" style="max-width: calc(50% - 7px);" type="text" name="system.powup" value="{{system.powup}}" data-dtype="Number"/></label>
+      <span class="grid-span-2 form-group">
+        <label for="{{item._id}}system.halfpowmod">{{localize "SW25.Item.Halfpowmod"}}</label>
+        <input id="{{item._id}}system.halfpowmod" style="max-width: calc(50% - 7px);" type="text" name="system.halfpowmod" value="{{system.halfpowmod}}" data-dtype="Number"/>
+      </span>
+      <span class="grid-span-2 form-group">
+        <label for="{{item._id}}system.lethaltech">{{localize "SW25.Item.Lethaltech"}}</label>
+        <input id="{{item._id}}system.lethaltech" style="max-width: calc(50% - 7px);" type="text" name="system.lethaltech" value="{{system.lethaltech}}" data-dtype="Number"/>
+      </span>
+      <span class="grid-span-2 form-group">
+        <label for="{{item._id}}system.criticalray">{{localize "SW25.Item.Criticalray"}}</label>
+        <input id="{{item._id}}system.criticalray" style="max-width: calc(50% - 7px);" type="text" name="system.criticalray" value="{{system.criticalray}}" data-dtype="String"/>
+      </span>
+      <span class="grid-span-2 form-group">
+        <label for="{{item._id}}system.pharmtool">{{localize "SW25.Item.Pharmtool"}}</label>
+        <input id="{{item._id}}system.pharmtool" style="max-width: calc(50% - 7px);" type="text" name="system.pharmtool" value="{{system.pharmtool}}" data-dtype="Number"/>
+      </span>
+      <span class="grid-span-2 form-group">
+        <label for="{{item._id}}system.powup">{{localize "SW25.Item.Powup"}}</label>
+        <input id="{{item._id}}system.powup" style="max-width: calc(50% - 7px);" type="text" name="system.powup" value="{{system.powup}}" data-dtype="Number"/>
+      </span>
     </div>
     <div>
       {{localize "SW25.Item.Cwarn"}}<br>
@@ -93,3 +116,4 @@
     </div>
   </div>
 </div>
+</fieldset>

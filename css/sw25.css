@@ -1453,3 +1453,13 @@ input.weakapply[type="checkbox"] {
 .fairy-rank {
   font-size: 0.7em;
 }
+
+span.form-group{
+  flex-direction: column;
+  text-align: center;
+  margin: 0;
+}
+
+span.form-group > label{
+  font-weight: bold;
+}

@@ -52,32 +52,43 @@
             </select>
           </span>
           <div class="grid-span-3"></div>
-          <span class="grid-span-2"  style="text-align: center;"><label for="{{item._id}}system.usedice"><b>{{localize "SW25.Item.Usedice"}}</b></label><br>
-            <input id="{{item._id}}system.usedice" type="checkbox" name="system.usedice" data-dtype="Boolean" {{#if system.usedice}} checked {{/if}}/></span>
-          <span class="grid-span-2"  style="text-align: center;"><label for="{{item._id}}system.usepower"><b>{{localize "SW25.Item.Usepower"}}</b></label><br>
-            <input id="{{item._id}}system.usepower" type="checkbox" name="system.usepower" data-dtype="Boolean" {{#if system.usepower}} checked {{/if}}/></span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.usedice">{{localize "SW25.Item.Usedice"}}</label>
+            <input id="{{item._id}}system.usedice" type="checkbox" name="system.usedice" data-dtype="Boolean" {{#if system.usedice}} checked {{/if}}/>
+          </span>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.usepower">{{localize "SW25.Item.Usepower"}}</label>
+            <input id="{{item._id}}system.usepower" type="checkbox" name="system.usepower" data-dtype="Boolean" {{#if system.usepower}} checked {{/if}}/>
+          </span>
         </div>
         <div class="flexrow grid grid-10col">
-          <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.constant"><b>{{localize "SW25.Item.Constant"}}</b></label><br>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.constant">{{localize "SW25.Item.Constant"}}</label>
             <input id="{{item._id}}system.constant" type="checkbox" name="system.constant" data-dtype="Boolean" {{#if system.constant}} checked {{/if}}/>
           </span>
-          <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.main"><b>{{localize "SW25.Item.Main"}}</b></label><br>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.main">{{localize "SW25.Item.Main"}}</label>
             <input id="{{item._id}}system.main" type="checkbox" name="system.main" data-dtype="Boolean" {{#if system.main}} checked {{/if}}/>
           </span>
-          <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.aux"><b>{{localize "SW25.Item.Aux"}}</b></label><br>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.aux">{{localize "SW25.Item.Aux"}}</label>
             <input id="{{item._id}}system.aux" type="checkbox" name="system.aux" data-dtype="Boolean" {{#if system.aux}} checked {{/if}}/>
           </span>
-          <span class="grid-span-2" style="text-align: center;"><label for="{{item._id}}system.level"><b>{{localize "SW25.Level"}}</b></label><br>
+          <span class="grid-span-2 form-group">
+            <label for="{{item._id}}system.level">{{localize "SW25.Level"}}</label>
             <input id="{{item._id}}system.level" style="max-width: calc(50% - 7px);" type="text" name="system.level" value="{{system.level}}" data-dtype="Number"/>
           </span>
           <span class="grid-span-2"></span>
-          <span class="grid-span-4" style="text-align: left;"><label for="{{item._id}}system.premise"><b>{{localize "SW25.Item.Premise"}}</b></label><br>
+          <span class="grid-span-4" style="text-align: left;">
+            <label for="{{item._id}}system.premise"><b>{{localize "SW25.Item.Premise"}}</b></label><br>
             <input id="{{item._id}}system.premise" type="text" name="system.premise" value="{{system.premise}}" data-dtype="String"/>
           </span>
-          <span class="grid-span-6" style="text-align: left;"><label for="{{item._id}}system.support"><b>{{localize "SW25.Item.Ridingtrick.Support"}}</b></label><br>
+          <span class="grid-span-6" style="text-align: left;">
+            <label for="{{item._id}}system.support"><b>{{localize "SW25.Item.Ridingtrick.Support"}}</b></label><br>
             <input id="{{item._id}}system.support" type="text" name="system.support" value="{{system.support}}" data-dtype="String"/>
           </span>
-          <span class="grid-span-10" style="text-align: left;"><label for="{{item._id}}system.rtpart"><b>{{localize "SW25.Item.Part"}}</b></label><br>
+          <span class="grid-span-10" style="text-align: left;">
+            <label for="{{item._id}}system.rtpart"><b>{{localize "SW25.Item.Part"}}</b></label><br>
             <input id="{{item._id}}system.rtpart" type="text" name="system.rtpart" value="{{system.rtpart}}" data-dtype="String"/>
           </span>
           <span class="grid-span-10" style="text-align: left;"><label for="{{item._id}}system.overview"><b>{{localize "SW25.Item.Overview"}}</b></label><br>

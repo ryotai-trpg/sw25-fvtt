@@ -73,14 +73,18 @@
     {{!-- Details Tab --}}
     <div class="tab details" data-group="primary" data-tab="details">
       <div class="flexrow grid grid-8col nogapmargin">
-        <span style="text-align: center;"><label for="{{item._id}}system.skilllevel"><b>{{localize "SW25.Item.Skill.Skilllevel"}}</b></label><br>
-          <input id="{{item._id}}system.skilllevel" type="text" name="system.skilllevel" value="{{system.skilllevel}}" data-dtype="Number"/></span>
-        <span style="text-align: center;"><b>{{localize "SW25.Item.Skill.Exptable"}}</b><br>
+        <span class="form-group">
+          <label for="{{item._id}}system.skilllevel">{{localize "SW25.Item.Skill.Skilllevel"}}</label>
+          <input id="{{item._id}}system.skilllevel" type="text" name="system.skilllevel" value="{{system.skilllevel}}" data-dtype="Number"/>
+        </span>
+        <span class="form-group">
+          <label>{{localize "SW25.Item.Skill.Exptable"}}</label>
           <select name="system.exptable">
             {{selectOptions config.exptables selected=system.exptable blank="-"}}
           </select>
         </span>
-        <span class="grid-span-2" style="text-align: center;"><b>{{localize "SW25.Item.Skill.Skilltype"}}</b><br>
+        <span class="grid-span-2 form-group">
+          <label>{{localize "SW25.Item.Skill.Skilltype"}}</label>
           <select name="system.skilltype">
             {{selectOptions config.skillTypes selected=system.skilltype localize=true blank="-"}}
           </select>
