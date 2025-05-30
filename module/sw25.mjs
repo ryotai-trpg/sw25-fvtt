@@ -966,16 +966,16 @@ Hooks.once("ready", async function () {
 
 // SceneControl Hook
 Hooks.on("getSceneControlButtons", function (controls) {
-  controls[0].tools.push({
+  controls["tokens"].tools["rollRequest(Skill)"] = {
     name: "rollRequest(Skill)",
     title: game.i18n.localize("SETTING.rollRequest"),
     icon: "fas fa-dice-d6",
     visible: game.user.isGM,
-    onClick: () => {
+    onChange: () => {
       rollreq();
     },
     button: true,
-  });
+  };
 });
 
 // textarea edit hook

@@ -34,7 +34,7 @@ export async function rollreq() {
     checklist,
     abilities
   ) {
-    const html = await renderTemplate(
+    const html = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/rollreq-dialog.hbs",
       { method, checkname, ability, skilllist, checklist, abilities}
     );
@@ -91,7 +91,7 @@ export async function rollreq() {
               mod = modifier > 0 ? `+${modifier}` : modifier;
             }
 
-            chatData.content = await renderTemplate(
+            chatData.content = await foundry.applications.handlebars.renderTemplate(
               "systems/sw25/templates/roll/rollreq-card.hbs",
               {
                 checkName: name,
@@ -132,7 +132,7 @@ export async function rollreq() {
     checklist,
     abilities
   ) {
-    const html = await renderTemplate(
+    const html = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/rollreq-dialog.hbs",
       { method, checkname, ability, skilllist, checklist, abilities}
     );
