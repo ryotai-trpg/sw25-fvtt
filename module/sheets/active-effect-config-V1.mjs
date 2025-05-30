@@ -1,8 +1,9 @@
+import { ActiveEffectConfigV1 } from "./effect-config.js";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActiveEffectConfig}
  */
-export class SW25ActiveEffectConfig extends ActiveEffectConfig {
+export class SW25ActiveEffectConfig extends ActiveEffectConfigV1 {
   /** @override */
   static get defaultOptions() {
     //return mergeObject(super.defaultOptions, {

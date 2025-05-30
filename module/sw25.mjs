@@ -6,7 +6,7 @@ import { SW25Combat } from "./documents/combat.mjs";
 // Import sheet classes.
 import { SW25ActorSheet } from "./sheets/actor-sheet.mjs";
 import { SW25ItemSheet } from "./sheets/item-sheet.mjs";
-import { SW25ActiveEffectConfig } from "./sheets/active-effect-config.mjs";
+import { SW25ActiveEffectConfig } from "./sheets/active-effect-config-V1.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { SW25 } from "./helpers/config.mjs";
