@@ -77,20 +77,26 @@ Hooks.once("init", function () {
   CONFIG.ActiveEffect.legacyTransferral = false;
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("sw25", SW25ActorSheet, {
+  foundry.documents.collections.Actors.unregisterSheet(
+    "core", foundry.appv1.sheets.ActorSheet
+  );
+  foundry.documents.collections.Actors.registerSheet("sw25", SW25ActorSheet, {
     makeDefault: true,
     label: "SW25.SheetLabels.Actor",
   });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("sw25", SW25ItemSheet, {
+  foundry.documents.collections.Items.unregisterSheet(
+    "core", foundry.appv1.sheets.ItemSheet
+  );
+  foundry.documents.collections.Items.registerSheet("sw25", SW25ItemSheet, {
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });
 
   // Register Active effect sheet Class
-  DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", ActiveEffectConfig);
-  DocumentSheetConfig.registerSheet(
+  foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
+    ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig
+  );
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
     ActiveEffect,
     "sw25",
     SW25ActiveEffectConfig,

@@ -14,7 +14,7 @@ import { SW25 } from "../helpers/config.mjs";
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export class SW25ActorSheet extends ActorSheet {
+export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
