@@ -189,14 +189,12 @@
         <div class="grid-span-5 property">
           <label class="property--label">{{localize "SW25.Item.Clickitem"}}</label>
           <select class="property--value" name="system.clickitem"{{#unless system.isEdit}} disabled {{/unless}}>
-            {{#select system.clickitem}}
-            <option value="all">{{localize "SW25.Item.All"}}</option>
-            <option value="description">{{localize "SW25.Item.Onlydescription"}}</option>
-            <option value="dice1">{{localize "SW25.Check"}} 1</option>
-            <option value="dice2">{{localize "SW25.Check"}} 2</option>
-            <option value="dice3">{{localize "SW25.Check"}} 3</option>
-            <option value="power">{{localize "SW25.Item.Powerroll"}}</option>
-            {{/select}}
+            <option value="all"{{#if (eq system.clickitem "all")}} selected{{/if}}>{{localize "SW25.Item.All"}}</option>
+            <option value="description"{{#if (eq system.clickitem "description")}} selected{{/if}}>{{localize "SW25.Item.Onlydescription"}}</option>
+            <option value="dice1"{{#if (eq system.clickitem "dice1")}} selected{{/if}}>{{localize "SW25.Check"}} 1</option>
+            <option value="dice2"{{#if (eq system.clickitem "dice2")}} selected{{/if}}>{{localize "SW25.Check"}} 2</option>
+            <option value="dice3"{{#if (eq system.clickitem "dice3")}} selected{{/if}}>{{localize "SW25.Check"}} 3</option>
+            <option value="power"{{#if (eq system.clickitem "power")}} selected{{/if}}>{{localize "SW25.Item.Powerroll"}}</option>
           </select>
         </div>
         <div class="blank"></div>
