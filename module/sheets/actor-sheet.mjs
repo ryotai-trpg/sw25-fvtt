@@ -2248,17 +2248,22 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         )}
       </div>`;
 
-    const dialog = new Dialog({
-      title: game.i18n.localize("SW25.TargetSelect") + `(${item.name})`,
+    foundry.applications.api.DialogV2.wait({
+      window: {
+        title: game.i18n.localize("SW25.TargetSelect") + `(${item.name})`,
+      },
+      position: { width: 500 },
       content: content,
-      buttons: {
-        process: {
+      buttons: [
+        {
+          action: "process",
           label: game.i18n.localize("SW25.Item.EffectB"),
-          callback: (html) => {
-            const selectedIds = html
-              .find('input[type="checkbox"]:checked')
-              .map((_, el) => el.value)
-              .get();
+          callback: (event, button, dialog) => {
+            const selectedIds = Array.from(
+              dialog.element.querySelectorAll(
+                'input[type="checkbox"][id^="token-"]:checked'
+              )
+            ).map((el) => el.value);
 
             if (selectedIds.length === 0) {
               return ui.notifications.warn(
@@ -2302,38 +2307,43 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
           },
         },
-        cancel: {
+        {
+          action: "cancel",
           label: game.i18n.localize("SW25.Item.Spell.Cancel"),
+          default: true,
         },
+      ],
+      render: (event, dialog) => {
+        const root = dialog.element;
+
+        const addToggleHandler = (categoryId) => {
+          const toggle = root.querySelector(`#${categoryId}-toggle`);
+          const checkboxes = root.querySelectorAll(
+            `input[name="${categoryId}"]`
+          );
+
+          toggle?.addEventListener("click", () => {
+            const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+            for (const cb of checkboxes) {
+              cb.checked = !allChecked;
+              cb.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+          });
+
+          for (const cb of checkboxes) {
+            cb.addEventListener("change", () => {
+              const label = cb.nextElementSibling;
+              if (label) {
+                label.style.fontWeight = cb.checked ? "bold" : "normal";
+              }
+            });
+          }
+        };
+
+        addToggleHandler("friendly");
+        addToggleHandler("neutral");
+        addToggleHandler("hostile");
       },
-      default: "cancel",
-    });
-
-    dialog.render(true);
-
-    Hooks.once("renderDialog", (app, html) => {
-      html = $(html);
-      const addToggleHandler = (categoryId) => {
-        const toggle = html.find(`#${categoryId}-toggle`);
-        const checkboxes = html.find(`input[name="${categoryId}"]`);
-
-        toggle.on("click", () => {
-          const allChecked = checkboxes.toArray().every((cb) => cb.checked);
-          checkboxes.prop("checked", !allChecked).trigger("change");
-        });
-
-        checkboxes.on("change", (event) => {
-          const checkbox = $(event.currentTarget);
-          const label = checkbox.next("label");
-          label.css("font-weight", checkbox.is(":checked") ? "bold" : "normal");
-        });
-      };
-
-      addToggleHandler("friendly");
-      addToggleHandler("neutral");
-      addToggleHandler("hostile");
-
-      html[0].style.width = "500px";
     });
   }
 
@@ -2470,23 +2480,25 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
   async _inputUsePhaseareaCost(item) {
     const title = game.i18n.localize("SW25.InputPhaseareaPoint");
-    new Dialog({
-      title: `${title} (${item.name})`,
+    foundry.applications.api.DialogV2.wait({
+      window: { title: `${title} (${item.name})` },
       content: `
-        <form>
-          <div class="form-group">
-            <label for="number">${title} (${item.system.mincost}-${item.system.maxcost})</label>
-          </div>
-          <div class="form-group">
-            <input id="number" name="number" type="number" value="0" />
-          </div>
-        </form>
+        <div class="form-group">
+          <label for="number">${title} (${item.system.mincost}-${item.system.maxcost})</label>
+        </div>
+        <div class="form-group">
+          <input id="number" name="number" type="number" value="0" />
+        </div>
       `,
-      buttons: {
-        ok: {
+      buttons: [
+        {
+          action: "ok",
           label: game.i18n.localize("SW25.Use"),
-          callback: (html) => {
-            const cost = parseInt(html.find("#number").val());
+          default: true,
+          callback: (event, button, dialog) => {
+            const cost = parseInt(
+              dialog.element.querySelector("#number")?.value
+            );
             if (isNaN(cost)) {
               ui.notifications.error(
                 game.i18n.localize("SW25.Item.Spell.Cancel")
@@ -2496,12 +2508,12 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
             this._applyPhasearea(item, cost);
           },
         },
-        cancel: {
+        {
+          action: "cancel",
           label: game.i18n.localize("SW25.Item.Spell.Cancel"),
         },
-      },
-      default: "ok",
-    }).render(true);
+      ],
+    });
   }
 
   async _onMaterialcardCost(event) {

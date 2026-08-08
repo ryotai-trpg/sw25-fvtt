@@ -1,47 +1,25 @@
+const { DialogV2 } = foundry.applications.api;
+
 // Select Roll Method Dialog
 export async function targetRollDialog(targetTokens, label) {
   if (targetTokens.size == 1) {
     return "once";
   }
-  if (targetTokens.size >= 2) {
-    return new Promise((resolve) => {
-      let rollMethod = null;
-      new Dialog({
-        title: label,
-        content: game.i18n.localize("DIALOG.rollMethod"),
-        buttons: {
-          option1: {
-            label: game.i18n.localize("DIALOG.once"),
-            callback: () => {
-              rollMethod = "once";
-              resolve(rollMethod);
-            },
-          },
-          option2: {
-            label: game.i18n.localize("DIALOG.individual"),
-            callback: () => {
-              rollMethod = "individual";
-              resolve(rollMethod);
-            },
-          },
-          cancel: {
-            label: game.i18n.localize("Cancel"),
-            callback: () => {
-              rollMethod = "cancel";
-              resolve(rollMethod);
-            },
-          },
-        },
-        default: "cancel",
-        close: (html) => {
-          if (!rollMethod) {
-            rollMethod = "cancel";
-            resolve(rollMethod);
-          }
-        },
-      }).render(true);
-    });
-  }
+  if (targetTokens.size < 2) return;
+
+  // DialogV2.wait は押されたボタンの action を返し、
+  // ボタンを押さずに閉じた場合は null を返す。
+  const rollMethod = await DialogV2.wait({
+    window: { title: label },
+    content: game.i18n.localize("DIALOG.rollMethod"),
+    buttons: [
+      { action: "once", label: game.i18n.localize("DIALOG.once") },
+      { action: "individual", label: game.i18n.localize("DIALOG.individual") },
+      { action: "cancel", label: game.i18n.localize("Cancel"), default: true },
+    ],
+  });
+
+  return rollMethod ?? "cancel";
 }
 
 // Select Target Dialog
@@ -90,7 +68,6 @@ export async function targetSelectDialog(title) {
         <span class="selectable">${title}</span>
       </legend>`;
     category.forEach((token) => {
-      console.log(token);
       box += `
         <div class="token-check-wrap ${categoryId}-token">
           <input type="checkbox" id="token-${token.id}" name="${categoryId}" value="${token.id}">
@@ -130,86 +107,97 @@ export async function targetSelectDialog(title) {
       )}
     </div>`;
 
-  // show Dialog
-  return new Promise((resolve) => {
-    const dialog = new Dialog({
-      title: game.i18n.localize("SW25.TargetSelect") + ` : ${title}`,
-      content: content,
-      buttons: {
-        process: {
-          label: game.i18n.localize("OK"),
-          callback: (html) => {
-            // get selected token ID
-            const selectedIds = html
-              .find('input[type="checkbox"]:checked')
-              .map((_, el) => el.value)
-              .get();
+  // 選択されたトークンを返す。キャンセル、または何も選ばずに OK / 閉じた場合は空配列。
+  const selected = await DialogV2.wait({
+    window: { title: game.i18n.localize("SW25.TargetSelect") + ` : ${title}` },
+    position: { width: 500 },
+    content: content,
+    buttons: [
+      {
+        action: "process",
+        label: game.i18n.localize("OK"),
+        callback: (event, button, dialog) => {
+          // 全選択チェックボックスは値を持たないので、コマの分だけを拾う
+          const selectedIds = Array.from(
+            dialog.element.querySelectorAll(
+              'input[type="checkbox"][id^="token-"]:checked'
+            )
+          ).map((el) => el.value);
 
-            // no token error
-            if (selectedIds.length === 0) {
-              ui.notifications.warn(game.i18n.localize("SW25.Notargetwarn"));
-              return false;
-            }
+          if (selectedIds.length === 0) {
+            ui.notifications.warn(game.i18n.localize("SW25.Notargetwarn"));
+            return [];
+          }
 
-            // get selected tokens
-            const selectedTokens = canvas.tokens.placeables.filter((token) =>
-              selectedIds.includes(token.id)
-            );
-
-            resolve(selectedTokens);
-          },
-        },
-        cancel: {
-          label: game.i18n.localize("Cancel"),
-          callback: () => resolve([]),
+          return canvas.tokens.placeables.filter((token) =>
+            selectedIds.includes(token.id)
+          );
         },
       },
-      default: "cancel",
-    });
+      {
+        action: "cancel",
+        label: game.i18n.localize("Cancel"),
+        default: true,
+        callback: () => [],
+      },
+    ],
+    render: (event, dialog) => {
+      const root = dialog.element;
 
-    dialog.render(true);
-
-    // category name click hook
-    Hooks.once("renderDialog", (app, html) => {
-      html = $(html);
       const addToggleHandler = (categoryId) => {
-        const toggle = html.find(`#${categoryId}-toggle`);
-        const checkboxes = html.find(`input[name="${categoryId}"]`);
+        const toggle = root.querySelector(`#${categoryId}-toggle`);
+        const checkboxes = root.querySelectorAll(
+          `input[name="${categoryId}"]`
+        );
 
-        toggle.on("click", () => {
-          const allChecked = checkboxes.toArray().every((cb) => cb.checked);
-          checkboxes.prop("checked", !allChecked).trigger("change");
+        toggle?.addEventListener("click", () => {
+          const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+          for (const cb of checkboxes) {
+            cb.checked = !allChecked;
+            cb.dispatchEvent(new Event("change", { bubbles: true }));
+          }
         });
 
         // change font when selected
-        checkboxes.on("change", (event) => {
-          const checkbox = $(event.currentTarget);
-          const label = checkbox.next("label");
-          label.css("font-weight", checkbox.is(":checked") ? "bold" : "normal");
-        });
+        for (const cb of checkboxes) {
+          cb.addEventListener("change", () => {
+            const label = cb.nextElementSibling;
+            if (label) {
+              label.style.fontWeight = cb.checked ? "bold" : "normal";
+            }
+          });
+        }
       };
 
       addToggleHandler("friendly");
       addToggleHandler("neutral");
       addToggleHandler("hostile");
 
-      const allCheckboxes = html.find('input[type="checkbox"][id^="token-"]');
-      const selectAll = html.find("#select-all-toggle");
+      const allCheckboxes = root.querySelectorAll(
+        'input[type="checkbox"][id^="token-"]'
+      );
+      const selectAll = root.querySelector("#select-all-toggle");
 
       const updateSelectAllState = () => {
-        const checkedCount = allCheckboxes.filter(":checked").length;
-        selectAll.prop("checked", checkedCount === allCheckboxes.length);
+        const checkedCount = Array.from(allCheckboxes).filter(
+          (cb) => cb.checked
+        ).length;
+        if (selectAll) {
+          selectAll.checked =
+            allCheckboxes.length > 0 && checkedCount === allCheckboxes.length;
+        }
       };
 
       updateSelectAllState();
 
-      selectAll.on("change", () => {
-        const checked = selectAll.is(":checked");
-        allCheckboxes.prop("checked", checked).trigger("change");
+      selectAll?.addEventListener("change", () => {
+        for (const cb of allCheckboxes) {
+          cb.checked = selectAll.checked;
+          cb.dispatchEvent(new Event("change", { bubbles: true }));
+        }
       });
-
-      // set dialog width
-      html[0].style.width = "500px";
-    });
+    },
   });
+
+  return selected ?? [];
 }
