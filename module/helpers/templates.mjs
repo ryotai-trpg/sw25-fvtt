@@ -6,6 +6,11 @@
 export const preloadHandlebarsTemplates = async function () {
   return foundry.applications.handlebars.loadTemplates([
     // Actor partials.
+    // シート本体。V1 は `<form>` で包んで、ApplicationV2 は root パートとして
+    // 直接これを読む。両世代で 1 本を共有するための切り出し
+    "systems/sw25/templates/actor/parts/actor-character-body.hbs",
+    "systems/sw25/templates/actor/parts/actor-npc-body.hbs",
+    "systems/sw25/templates/actor/parts/actor-monster-body.hbs",
     "systems/sw25/templates/actor/parts/actor-skills.hbs",
     "systems/sw25/templates/actor/parts/actor-checks.hbs",
     "systems/sw25/templates/actor/parts/actor-checkskills.hbs",
