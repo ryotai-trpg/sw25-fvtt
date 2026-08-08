@@ -3848,6 +3848,15 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
 
   .sw25.application.actor .window-content header.sheet-header {
     display: flex;
+    align-items: center;
+  }
+
+  /* core は V1 に限って `.flexrow` の align-items を initial へ戻している
+     (`body.game .app.window-app .flexrow`)。AppV2 のルートには当たらず、
+     `@layer layouts` の center がそのまま残るので、npc の名前欄が
+     50px → 29.75px に潰れていた */
+  .sw25.application.actor .window-content .flexrow {
+    align-items: initial;
   }
 
   /* 見出し。AppV2 の体裁では <h1> が 48px の Modesto Condensed になる。
@@ -3960,6 +3969,13 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     gap: 0;
     line-height: unset;
     justify-content: space-around;
+  }
+
+  /* core の `body.game .app .tabs:not(.sheet-tabs) { border: none }` 相当。
+     キャラクターのサイドバー(nav.sidebar-tabs.tabs)に `@layer blocks` の
+     border-top が残って、V1 に無い横線が 1 本出ていた */
+  .sw25.application.actor .window-content .tabs:not(.sheet-tabs) {
+    border: none;
   }
 
   .sw25.application.actor .window-content .tabs > [data-tab].active {
