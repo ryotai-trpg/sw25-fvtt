@@ -24,6 +24,7 @@ import { rollreq } from "./helpers/rollrequest.mjs";
 import { targetRollDialog, targetSelectDialog } from "./helpers/dialogs.mjs";
 import { preparePolyglot } from "./helpers/sw25languageprovider.mjs";
 import { Migrator } from "./helpers/migrator.mjs";
+import { slideToggle } from "./helpers/utils.mjs";
 
 import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
@@ -960,43 +961,36 @@ Hooks.once("ready", async function () {
   });
 
   // Chat message button
-  Hooks.on("renderChatMessageHTML", (chatMessage, element, data) => {
-    // chatbutton.mjs がまだ jQuery 前提なので、ここで包んで渡す。
-    // DOM API への置き換えはチャットボタン側をまとめて直す時に行う。
-    const html = $(element);
-    html.find(".buttonclick").click(function () {
-      const button = $(this);
-      const buttonType = button.data("buttontype");
-      chatButton(chatMessage, buttonType);
-    });
-    html.find(".flavor-text").on("click", async function (event) {
-      event.preventDefault();
-      const toggler = $(event.currentTarget);
-      const message = toggler.closest(".chat-message");
-      const description = message.find(".chat-tooltip");
-      toggler.toggleClass("open", false);
-      description.slideToggle();
-    });
+  // ボタンの実行と、判定名を押した時の内訳の開閉。`renderChatMessageHTML` は
+  // 新しく描かれたメッセージにしか飛ばないので、`ready` の時点で既にログに
+  // 並んでいる分へは下で同じものを張り直す
+  const bindChatMessage = (chatMessage, element) => {
+    for (const button of element.querySelectorAll(".buttonclick"))
+      button.addEventListener("click", () =>
+        chatButton(chatMessage, button.dataset.buttontype)
+      );
+
+    for (const toggler of element.querySelectorAll(".flavor-text"))
+      toggler.addEventListener("click", (event) => {
+        event.preventDefault();
+        const message = toggler.closest(".chat-message");
+        const description = message?.querySelector(".chat-tooltip");
+        toggler.classList.remove("open");
+        if (description) slideToggle(description);
+      });
+  };
+
+  Hooks.on("renderChatMessageHTML", (chatMessage, element) => {
+    bindChatMessage(chatMessage, element);
   });
+
   // Add listener to past message
-  $(".chat-message .buttonclick").each((index, element) => {
-    const messageId = $(element).closest(".message").attr("data-message-id");
-    $(element).on("click", (event) => {
-      const chatMessage = game.messages.get(messageId);
-      const button = $(event.currentTarget);
-      const buttonType = button.data("buttontype");
-      chatButton(chatMessage, buttonType);
-    });
-  });
-  $(".chat-message .flavor-text").each((index, element) => {
-    $(element).on("click", (event) => {
-      const toggler = $(event.currentTarget);
-      const message = toggler.closest(".chat-message");
-      const description = message.find(".chat-tooltip");
-      toggler.toggleClass("open", false);
-      description.slideToggle();
-    });
-  });
+  for (const element of document.querySelectorAll(
+    ".chat-message[data-message-id]"
+  )) {
+    const chatMessage = game.messages.get(element.dataset.messageId);
+    if (chatMessage) bindChatMessage(chatMessage, element);
+  }
 
   // Prepare reference data from journal or compendium
   const entryName = "Reference Data";

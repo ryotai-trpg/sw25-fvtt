@@ -6,6 +6,19 @@ import { DamageSupporter } from "../helpers/damagesupport.mjs";
 import { Util } from "./utils.mjs";
 
 /**
+ * 書き換えたメッセージのダイスの内訳を畳む。
+ *
+ * チャットログとポップアウトに同じメッセージが並ぶので、id で全部拾う。
+ *
+ * @param {ChatMessage} chatMessage
+ */
+function collapseDiceTooltips(chatMessage) {
+  const selector = `.message[data-message-id="${chatMessage.id}"] .dice-tooltip`;
+  for (const el of document.querySelectorAll(selector))
+    el.classList.remove("expanded");
+}
+
+/**
  * Execute  chat button click event and return the result.
  */
 export async function chatButton(chatMessage, buttonType) {
@@ -607,8 +620,7 @@ export async function chatButton(chatMessage, buttonType) {
         content: chatData.content,
         flags: chatData.flags,
       });
-      const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-      html.find(".dice-tooltip").removeClass("expanded");
+      collapseDiceTooltips(chatMessage);
 
       return;
     }
@@ -667,8 +679,7 @@ export async function chatButton(chatMessage, buttonType) {
         content: chatData.content,
         flags: chatData.flags,
       });
-      const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-      html.find(".dice-tooltip").removeClass("expanded");
+      collapseDiceTooltips(chatMessage);
 
       return;
     }
@@ -1002,8 +1013,7 @@ export async function chatButton(chatMessage, buttonType) {
       content: chatData.content,
       flags: chatData.flags,
     });
-    const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-    html.find(".dice-tooltip").removeClass("expanded");
+    collapseDiceTooltips(chatMessage);
 
     return;
   }
@@ -1092,8 +1102,7 @@ export async function chatButton(chatMessage, buttonType) {
       content: chatData.content,
       flags: chatData.flags,
     });
-    const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-    html.find(".dice-tooltip").removeClass("expanded");
+    collapseDiceTooltips(chatMessage);
 
     return;
   }
@@ -1157,8 +1166,7 @@ export async function chatButton(chatMessage, buttonType) {
         content: chatData.content,
         flags: chatData.flags,
       });
-      const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-      html.find(".dice-tooltip").removeClass("expanded");
+      collapseDiceTooltips(chatMessage);
 
       return;
     }
@@ -1208,8 +1216,7 @@ export async function chatButton(chatMessage, buttonType) {
         content: chatData.content,
         flags: chatData.flags,
       });
-      const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-      html.find(".dice-tooltip").removeClass("expanded");
+      collapseDiceTooltips(chatMessage);
 
       return;
     }
@@ -1328,8 +1335,7 @@ export async function chatButton(chatMessage, buttonType) {
       content: chatData.content,
       flags: chatData.flags,
     });
-    const html = $(`.message[data-message-id="${chatMessage.id}"]`);
-    html.find(".dice-tooltip").removeClass("expanded");
+    collapseDiceTooltips(chatMessage);
 
     return;
   }

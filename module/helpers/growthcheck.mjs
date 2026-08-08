@@ -77,39 +77,40 @@ export async function growthCheck(actor) {
   ChatMessage.create(chatData, { messageMode });
 
   Hooks.once("renderChatMessageHTML", (message, element, data) => {
-    const html = $(element);
-    html.find(".increase-ability").click(async function (event) {
-      event.preventDefault();
+    for (const button of element.querySelectorAll(".increase-ability")) {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
 
-      const beforeValueGrowth = parseInt(event.currentTarget.dataset.value);
-      const target = game.actors.get(message.flags.sw25.actor);
-      const growth = event.currentTarget.dataset.ability;
-      const currentValueGrowth = target.system.abilities[growth].valuegrowth;
-      const afterValueGrowth = currentValueGrowth + 1;
-      let ability = growth.capitalize();
-      let abilityName = game.i18n.localize(`SW25.Ability.${ability}.long`);
-      let abilityDie = game.i18n.localize(`SW25.Ability.${ability}.die`);
+        const beforeValueGrowth = parseInt(button.dataset.value);
+        const target = game.actors.get(message.flags.sw25.actor);
+        const growth = button.dataset.ability;
+        const currentValueGrowth = target.system.abilities[growth].valuegrowth;
+        const afterValueGrowth = currentValueGrowth + 1;
+        let ability = growth.capitalize();
+        let abilityName = game.i18n.localize(`SW25.Ability.${ability}.long`);
+        let abilityDie = game.i18n.localize(`SW25.Ability.${ability}.die`);
 
-      if (beforeValueGrowth == currentValueGrowth) {
-        await target.update({
-          [`system.abilities.${growth}.valuegrowth`]: afterValueGrowth,
-        });
+        if (beforeValueGrowth == currentValueGrowth) {
+          await target.update({
+            [`system.abilities.${growth}.valuegrowth`]: afterValueGrowth,
+          });
 
-        let chatContent = `<div class="growth">
+          let chatContent = `<div class="growth">
           <span class="fontsize12">${abilityDie}${abilityName}&nbsp;</span>:&nbsp;
           ${game.i18n.localize("SW25.Ability.Growth")}&nbsp;
           <span class="fontsize12 before">${currentValueGrowth}</span>
-          ><span class="fontsize11">></span><span class="fontsize12">></span> 
+          ><span class="fontsize11">></span><span class="fontsize12">></span>
           <span class="fontsize15 after">${afterValueGrowth}</span>
           </div>`;
-        let chatData = {
-          user: game.user.id,
-          speaker: ChatMessage.getSpeaker({ actor: target }),
-          content: chatContent,
-        };
+          let chatData = {
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker({ actor: target }),
+            content: chatContent,
+          };
 
-        ChatMessage.create(chatData);
-      }
-    });
+          ChatMessage.create(chatData);
+        }
+      });
+    }
   });
 }
