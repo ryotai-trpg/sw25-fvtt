@@ -254,11 +254,18 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         if (i.system?.resource?.type == "note") {
           notes.push(i);
         } else if (i.system?.resource?.type == "material") {
-          let materialtype = i.system?.resource?.materialtype;
-          let materialrank = i.system?.resource?.materialrank;
-          materials[materialtype][materialrank].push(i);
-          materialshow.all = true;
-          materialshow[materialtype] = true;
+          const materialtype = i.system?.resource?.materialtype;
+          const materialrank = i.system?.resource?.materialrank;
+          // 色か階級が未設定の素材が 1 つでもあると、ここで undefined へ
+          // push してシートが描画ごと落ちていた。素材表には並べられないので、
+          // 代わりにリソース一覧へ出してシート上から直せるようにする
+          if (materials[materialtype]?.[materialrank]) {
+            materials[materialtype][materialrank].push(i);
+            materialshow.all = true;
+            materialshow[materialtype] = true;
+          } else if (!resources.includes(i)) {
+            resources.push(i);
+          }
         } else if (i.system?.resource?.type == "lifeline") {
           lifelines.push(i);
         } else if (i.system?.resource?.type == "tacspower") {
@@ -1832,7 +1839,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     event.preventDefault();
     const action = event.currentTarget.dataset.action;
     const input = event.currentTarget.closest("li").querySelector("input.qt-change");
-    const property = event.currentTarget.dataset.property;
+    const property = this._itemProperty(event.currentTarget);
     const changeItem = $(event.currentTarget);
     const item = this.actor.items.get(
       changeItem.parents(".item")[0].dataset.itemId
@@ -1865,14 +1872,25 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     input.value = quantity;
 
-    if (item) {
-      const data = {};
-      data[property] = quantity;
-      await item.update(data);
-      this._updateQuantity(item, quantity);
-    }
+    if (item) await item.update({ [property]: quantity });
 
     this.submit();
+  }
+
+  /**
+   * ボタンの `data-property` はテンプレートのループ変数名込みで
+   * `item.system.quantity` のように書かれている。実際の更新先は
+   * その `item.` を除いた部分。
+   *
+   * 以前はこれをそのまま `item.update()` に渡していて、
+   * スキーマに無いキーへの空打ちが 1 回入っていた
+   * (本当の更新は直後の `_update*` が別に行っていた)。
+   *
+   * @param {HTMLElement} target `data-property` を持つ要素
+   * @returns {string} `system.` から始まる更新先
+   */
+  _itemProperty(target) {
+    return target.dataset.property?.replace(/^item\./, "");
   }
 
   async _changeQuantity(event) {
@@ -1894,7 +1912,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     event.preventDefault();
     const action = event.currentTarget.dataset.action;
     const input = event.currentTarget.closest("li").querySelector("input.sl-change");
-    const property = event.currentTarget.dataset.property;
+    const property = this._itemProperty(event.currentTarget);
     const changeItem = $(event.currentTarget);
     const item = this.actor.items.get(
       changeItem.parents(".item")[0].dataset.itemId
@@ -1907,12 +1925,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     input.value = skilllevel;
 
-    if (item) {
-      const data = {};
-      data[property] = skilllevel;
-      await item.update(data);
-      this._updateSkilllevel(item, skilllevel);
-    }
+    if (item) await item.update({ [property]: skilllevel });
 
     this.submit();
   }
@@ -1926,10 +1939,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     );
     let newSkillLevel = Number(event.currentTarget.value);
     item.update({ "system.skilllevel": newSkillLevel });
-  }
-
-  async _updateSkilllevel(item, skilllevel) {
-    await item.update({ "system.skilllevel": skilllevel });
   }
 
   async _changeSkillMod(event) {
@@ -1947,7 +1956,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     event.preventDefault();
     const action = event.currentTarget.dataset.action;
     const input = event.currentTarget.closest("li").querySelector("input.cm-change");
-    const property = event.currentTarget.dataset.property;
+    const property = this._itemProperty(event.currentTarget);
     const changeItem = $(event.currentTarget);
     const item = this.actor.items.get(
       changeItem.parents(".item")[0].dataset.itemId
@@ -1960,12 +1969,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     input.value = checkmod;
 
-    if (item) {
-      const data = {};
-      data[property] = checkmod;
-      await item.update(data);
-      this._updateCheckmod(item, checkmod);
-    }
+    if (item) await item.update({ [property]: checkmod });
 
     this.submit();
   }
@@ -1981,9 +1985,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     if (newCheckMod == 0) newCheckMod = null;
     item.update({ "system.checkmod": newCheckMod });
   }
-  async _updateCheckmod(item, checkmod) {
-    await item.update({ "system.checkmod": checkmod });
-  }
 
   async _changeCheckMod1(event) {
     event.preventDefault();
@@ -1997,10 +1998,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     item.update({ "system.checkmod1": newCheckMod });
   }
 
-  async _updateCheckmod(item, checkmod) {
-    await item.update({ "system.checkmod1": checkmod });
-  }
-
   async _changeCheckMod2(event) {
     event.preventDefault();
 
@@ -2011,10 +2008,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     let newCheckMod = Number(event.currentTarget.value);
     if (newCheckMod == 0) newCheckMod = null;
     item.update({ "system.checkmod2": newCheckMod });
-  }
-  
-  async _updateCheckmod(item, checkmod) {
-    await item.update({ "system.checkmod2": checkmod });
   }
 
   async _changeCheckMod3(event) {
@@ -2029,10 +2022,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     item.update({ "system.checkmod3": newCheckMod });
   }
 
-  async _updateCheckmod(item, checkmod) {
-    await item.update({ "system.checkmod3": checkmod });
-  }
-
   async _changePowerMod(event) {
     event.preventDefault();
 
@@ -2043,10 +2032,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     let newPowerMod = Number(event.currentTarget.value);
     if (newPowerMod == 0) newPowerMod = null;
     item.update({ "system.powermod": newPowerMod });
-  }
-
-  async _updatePowermod(item, powermod) {
-    await item.update({ "system.powermod": powermod });
   }
 
   async _changeEquip(event) {
@@ -2060,10 +2045,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     item.update({ "system.equip": newEquip });
   }
 
-  async _updateEquip(item, equip) {
-    await item.update({ "system.equip": equip });
-  }
-
   async _changeReading(event) {
     event.preventDefault();
 
@@ -2075,10 +2056,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     item.update({ "system.reading": newReading });
   }
 
-  async _updateReading(item, reading) {
-    await item.update({ "system.reading": reading });
-  }
-
   async _changeConversation(event) {
     event.preventDefault();
 
@@ -2088,10 +2065,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     );
     let newConversation = event.currentTarget.checked;
     item.update({ "system.conversation": newConversation });
-  }
-
-  async _updateConversation(item, conversation) {
-    await item.update({ "system.conversation": conversation });
   }
 
   async _onGrowthCheck(event) {
@@ -2180,171 +2153,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
       ]);
       await createdItem[0].update(updatedData);
     }
-  }
-
-  async _selectApplyTarget(event, item, targetEffects, orgActor, orgId) {
-    const tokens = canvas.tokens.placeables;
-
-    if (tokens.length === 0) {
-      return ui.notifications.warn(game.i18n.localize("SW25.NotTokenwarn"));
-    }
-
-    const categories = {
-      friendly: [],
-      neutral: [],
-      hostile: [],
-    };
-
-    tokens.forEach((token) => {
-      switch (token.document.disposition) {
-        case 1:
-          categories.friendly.push(token);
-          break;
-        case 0:
-          categories.neutral.push(token);
-          break;
-        case -1:
-          categories.hostile.push(token);
-          break;
-      }
-    });
-
-    for (const key in categories) {
-      categories[key].sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    const createCategoryBox = (category, title, categoryId) => {
-      let box = `<fieldset class="target-select">
-        <legend id="${categoryId}-toggle" style="cursor: pointer;">
-          <span class="selectable">${title}</span>
-        </legend>`;
-      category.forEach((token) => {
-        box += `
-          <div>
-            <input type="checkbox" id="token-${token.id}" name="${categoryId}" value="${token.id}" />
-            <label for="token-${token.id}" style="font-weight: normal;">${token.name}</label>
-          </div>`;
-      });
-      box += `</fieldset>`;
-      return box;
-    };
-
-    const content = `
-      <div style="width: 100%;">
-        ${createCategoryBox(
-          categories.friendly,
-          game.i18n.localize("SW25.Disposition.Friendly"),
-          "friendly"
-        )}
-        ${createCategoryBox(
-          categories.neutral,
-          game.i18n.localize("SW25.Disposition.Neutral"),
-          "neutral"
-        )}
-        ${createCategoryBox(
-          categories.hostile,
-          game.i18n.localize("SW25.Disposition.Hostile"),
-          "hostile"
-        )}
-      </div>`;
-
-    foundry.applications.api.DialogV2.wait({
-      window: {
-        title: game.i18n.localize("SW25.TargetSelect") + `(${item.name})`,
-      },
-      position: { width: 500 },
-      content: content,
-      buttons: [
-        {
-          action: "process",
-          label: game.i18n.localize("SW25.Item.EffectB"),
-          callback: (event, button, dialog) => {
-            const selectedIds = Array.from(
-              dialog.element.querySelectorAll(
-                'input[type="checkbox"][id^="token-"]:checked'
-              )
-            ).map((el) => el.value);
-
-            if (selectedIds.length === 0) {
-              return ui.notifications.warn(
-                game.i18n.localize("SW25.Notargetwarn")
-              );
-            }
-
-            const selectedTokens = canvas.tokens.placeables.filter((token) =>
-              selectedIds.includes(token.id)
-            );
-            const targetTokenId = Array.from(
-              selectedTokens,
-              (target) => target.id
-            );
-
-            if (game.user.isGM) {
-              selectedTokens.forEach((targetActor) => {
-                targetEffects.forEach((effect) => {
-                  const transferEffect = foundry.utils.duplicate(effect);
-                  transferEffect.disabled = false;
-                  transferEffect.sourceName = orgActor;
-                  transferEffect.flags = {
-                    sw25: {
-                      sourceName: orgActor,
-                      sourceId: `Actor.${orgId}`,
-                    },
-                  };
-                  targetActor.actor.createEmbeddedDocuments("ActiveEffect", [
-                    transferEffect,
-                  ]);
-                });
-              });
-            } else {
-              game.socket.emit("system.sw25", {
-                method: "applyEffect",
-                targetTokens: targetTokenId,
-                targetEffects: targetEffects,
-                orgActor: orgActor,
-                orgId: orgId,
-              });
-            }
-          },
-        },
-        {
-          action: "cancel",
-          label: game.i18n.localize("SW25.Item.Spell.Cancel"),
-          default: true,
-        },
-      ],
-      render: (event, dialog) => {
-        const root = dialog.element;
-
-        const addToggleHandler = (categoryId) => {
-          const toggle = root.querySelector(`#${categoryId}-toggle`);
-          const checkboxes = root.querySelectorAll(
-            `input[name="${categoryId}"]`
-          );
-
-          toggle?.addEventListener("click", () => {
-            const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
-            for (const cb of checkboxes) {
-              cb.checked = !allChecked;
-              cb.dispatchEvent(new Event("change", { bubbles: true }));
-            }
-          });
-
-          for (const cb of checkboxes) {
-            cb.addEventListener("change", () => {
-              const label = cb.nextElementSibling;
-              if (label) {
-                label.style.fontWeight = cb.checked ? "bold" : "normal";
-              }
-            });
-          }
-        };
-
-        addToggleHandler("friendly");
-        addToggleHandler("neutral");
-        addToggleHandler("hostile");
-      },
-    });
   }
 
   async _onUsePhasearea(event) {
@@ -2534,7 +2342,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     );
 
     const useRank = event.target.textContent.trim().toLowerCase();
-    let update = {};
     const cards = [
       { color: "red", mark: "fa-paw" },
       { color: "green", mark: "fa-leaf" },
@@ -2619,8 +2426,6 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         }
       }
     }
-
-    this.actor.update(update);
 
     // Chat message
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
