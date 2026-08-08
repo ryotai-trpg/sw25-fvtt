@@ -106,3 +106,29 @@ export class SW25LanguageSheet extends SW25ItemSheetV2 {
 
   static TABS = SW25ItemSheetV2.tabs("description");
 }
+
+/** リソース(消耗品・素材・秘伝など)。 */
+export class SW25ResourceSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("resource"),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.DESCRIPTION_PART,
+    details: SW25ItemSheetV2.detailsPart("resource"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.overviewCards = [
+      {
+        span: 6,
+        label: game.i18n.localize("SW25.Item.Overview"),
+        value: this.document.system.overview,
+      },
+    ];
+    return context;
+  }
+}

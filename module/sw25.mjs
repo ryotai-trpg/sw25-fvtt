@@ -25,7 +25,10 @@ import { bindTextareaEditors } from "./helpers/textarea-editor.mjs";
 
 import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
-import { SW25LanguageSheet } from "./sheets/item-sheet-V2.mjs";
+import {
+  SW25LanguageSheet,
+  SW25ResourceSheet,
+} from "./sheets/item-sheet-V2.mjs";
 
 // Export variable.
 export const rpt = {};
@@ -109,6 +112,12 @@ Hooks.once("init", function () {
   // 未移行の型は上の SW25ItemSheet(V1)が既定のまま
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25LanguageSheet, {
     types: ["language"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25ResourceSheet, {
+    types: ["resource"],
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });

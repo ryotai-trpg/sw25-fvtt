@@ -1,0 +1,19 @@
+{{!-- resource のヘッダ固有部分。種別の表示名と概要、右肩に個数。
+
+     ラベルは V1 と同じ翻訳キーを使う。`SW25.Item.resource.FIELDS.*` は
+     まだ無く、既存キーと二重管理になるので今は増やさない
+     (language / skill だけ Phase 2 で FIELDS が入っている)。 --}}
+<section class="header__subtitle">
+  <span class="header__subtitle--label">
+    {{localize "SW25.Item.Resource.Type"}} : {{localizeResourceType system.resource.type}}
+  </span>
+  <div class="header__subtitle--overview">{{system.overview}}</div>
+</section>
+
+<section class="header__activate">
+  <div class="property-col">
+    <label class="property--label-col" for="{{document.id}}system.quantity">{{localize "SW25.Quantity"}}</label>
+    <input class="property--value align-center" id="{{document.id}}system.quantity" type="text"
+           name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+  </div>
+</section>

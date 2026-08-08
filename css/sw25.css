@@ -3723,3 +3723,31 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
 .sw25.application.item .tab prose-mirror {
   min-height: 100%;
 }
+
+/* 詳細タブの囲み。V1 は `.sw25item .category` で当てていたが、AppV2 には
+   `.sw25item` の包み要素が無いので同じ内容をこちらにも置く
+   (`.sw25pc` / `.sw25item` 側は触らない) */
+.sw25.application.item .category {
+  padding: 5px;
+  margin: 2px;
+  border: thin ridge #000;
+}
+
+.sw25.application.item .category__title {
+  padding: 0px 5px;
+  font-weight: bold;
+}
+
+.sw25.application.item .subcategory {
+  padding: 5px;
+  margin: 2px;
+  border: thin dashed #000;
+  background-color: #00000010;
+}
+
+/* タブは flex 列。中身は上から積む(本体の .standard-form .tab.active が
+   flex-direction: column を付ける)ので、伸ばすのはエディタだけにする */
+.sw25.application.item .tab > fieldset,
+.sw25.application.item .tab > .grid {
+  flex: 0 0 auto;
+}

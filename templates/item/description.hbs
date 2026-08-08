@@ -1,15 +1,31 @@
-{{!-- 説明タブ。どの型でも同じなので PART として共有する。
+{{!-- 説明タブ。全型で共通の PART。
+
+     どの型も「概要カードの並び + 本文エディタ」という同じ形をしていて、
+     違うのはカードの中身だけ。カードは型ごとのシートが `_prepareContext` で
+     `overviewCards`(翻訳済みの label / value と grid の span)に組む。
+     V1 では同じマークアップが 24 本のテンプレートに写されていた。
 
      V1 の `{{editor}}` は使わない。v14 の `{{editor}}` は
-     `createEditorInput` に委譲するが、`button=true` で返るのは
-     `<div class="editor">` + `<a class="editor-edit">` で、これを起動する
-     `.editor-content[data-edit]` の配線は **V1 の FormApplication にしか無い**
-     (`appv1/api/form-application-v1.mjs:171`)。AppV2 では鉛筆を押しても何も起きない。
+     `createEditorInput` に委譲するが、`button=true` で返る
+     `<div class="editor">` を起動する `.editor-content[data-edit]` の配線は
+     **V1 の FormApplication にしか無い**(`appv1/api/form-application-v1.mjs:171`)。
+     AppV2 では鉛筆を押しても何も起きない。
 
      HTMLField を formInput に通すと `<prose-mirror name="system.description">`
      になり、`form.submitOnChange` がそのまま拾う。`toggled` が V1 の
      「鉛筆を押して編集」に当たり、閉じている間は `enriched` を表示する。 --}}
-<section class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  {{#if overviewCards}}
+    <div class="grid grid-6col flex-group-left">
+      {{#each overviewCards as |card|}}
+        <div class="grid-span-{{card.span}} overview">
+          <div class="overview--label">{{card.label}}</div>
+          <div class="overview--value">{{card.value}}</div>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
   {{formInput systemFields.description value=system.description
               toggled=true enriched=enrichedDescription}}
 </section>

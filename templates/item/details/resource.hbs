@@ -1,0 +1,103 @@
+{{!-- resource の詳細タブ。
+
+     入力の可否は編集モード(`system.isEdit`)で決まる。本体の
+     `{{disabled}}` ヘルパを使うので、V1 の
+     `{{#unless system.isEdit}} disabled {{/unless}}` より短い。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+  {{!-- Basic Category --}}
+  <fieldset class="category flexrow grid grid-10col">
+    <legend class="category__title">{{localize "SW25.Item.Field.Basic"}}</legend>
+
+    <div class="grid-span-8 property">
+      <label class="property--label" for="{{document.id}}system.overview">{{localize "SW25.Item.Overview"}}</label>
+      <input class="property--value" id="{{document.id}}system.overview" type="text"
+             name="system.overview" value="{{system.overview}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    </div>
+    <div class="grid-span-2">
+      <input class="checkbox--hidden" id="{{document.id}}system.selfbuff" type="checkbox"
+             name="system.selfbuff" data-dtype="Boolean" {{checked system.selfbuff}} {{disabled (not isEdit)}}/>
+      <label class="checkbox--label" for="{{document.id}}system.selfbuff">{{localize "SW25.Item.Selfbuff"}}</label>
+    </div>
+  </fieldset>
+
+  {{!-- ResourceType Category --}}
+  <fieldset class="category flexrow grid grid-10col">
+    <legend class="category__title">{{localize "SW25.Item.Field.Resource"}}</legend>
+
+    <div class="grid-span-3 property">
+      <input class="checkbox--hidden" id="{{document.id}}system.resource.isNotBattle" type="checkbox"
+             name="system.resource.isNotBattle" data-dtype="Boolean"
+             {{checked system.resource.isNotBattle}} {{disabled (not isEdit)}}/>
+      <label class="checkbox--label" for="{{document.id}}system.resource.isNotBattle">{{localize "SW25.Item.Resource.Battle"}}</label>
+    </div>
+    <div class="grid-span-2 blank"></div>
+    <div class="grid-span-5 property">
+      <label class="property--label" for="{{document.id}}system.price">{{localize "SW25.Item.Price"}}</label>
+      <input class="property--value" id="{{document.id}}system.price" type="text"
+             name="system.price" value="{{system.price}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    </div>
+
+    <fieldset class="subcategory grid-span-4 flexrow grid grid-10col">
+      <legend>{{localize "SW25.Quantity"}}{{localize "SW25.Limit"}}</legend>
+      <div class="grid-span-2 property">
+        <label class="property--label" for="{{document.id}}system.qmin">{{localize "SW25.Min"}}</label>
+        <input class="property--value" id="{{document.id}}system.qmin" type="text"
+               name="system.qmin" value="{{system.qmin}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+      </div>
+      <div class="grid-span-2 property">
+        <label class="property--label-col" for="{{document.id}}system.qmax">{{localize "SW25.Max"}}</label>
+        <input class="property--value" id="{{document.id}}system.qmax" type="text"
+               name="system.qmax" value="{{system.qmax}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+      </div>
+    </fieldset>
+
+    <div class="grid-span-5 property">
+      <label class="property--label" for="{{document.id}}system.resource.type">{{localize "SW25.Item.Resource.Type"}}</label>
+      <select class="property--value" id="{{document.id}}system.resource.type"
+              name="system.resource.type" {{disabled (not isEdit)}}>
+        {{selectOptions config.resourceTypes selected=system.resource.type localize=true}}
+      </select>
+    </div>
+
+    {{#if (eq system.resource.type "note")}}
+      <div class="grid-span-2 property">
+        <select class="property--value" id="{{document.id}}system.resource.notetype"
+                name="system.resource.notetype" {{disabled (not isEdit)}}>
+          {{selectOptions config.noteTypes selected=system.resource.notetype localize=true}}
+        </select>
+      </div>
+    {{/if}}
+    {{#if (eq system.resource.type "material")}}
+      <div class="grid-span-3 property">
+        <select class="property--value" name="system.resource.materialtype" {{disabled (not isEdit)}}>
+          {{selectOptions config.materialTypes selected=system.resource.materialtype localize=true}}
+        </select>
+        <select class="property--value" name="system.resource.materialrank" {{disabled (not isEdit)}}>
+          {{selectOptions config.materialRanks selected=system.resource.materialrank localize=true}}
+        </select>
+      </div>
+    {{/if}}
+    {{#if (eq system.resource.type "lifeline")}}
+      <div class="grid-span-2 property">
+        <select class="property--value" name="system.resource.lifelinetype" {{disabled (not isEdit)}}>
+          {{selectOptions config.phaseareaTypes selected=system.resource.lifelinetype localize=true}}
+        </select>
+      </div>
+    {{/if}}
+    {{#if (eq system.resource.type "magitech")}}
+      <div class="grid-span-4 property">
+        <select class="property--value" name="system.resource.magitechtype" {{disabled (not isEdit)}}>
+          {{selectOptions config.magitechTypes selected=system.resource.magitechtype localize=true}}
+        </select>
+      </div>
+    {{/if}}
+    {{#if (eq system.resource.type "abyssex")}}
+      <div class="grid-span-4 property">
+        <select class="property--value" name="system.resource.abyssextype" {{disabled (not isEdit)}}>
+          {{selectOptions config.abyssexTypes selected=system.resource.abyssextype localize=true}}
+        </select>
+      </div>
+    {{/if}}
+  </fieldset>
+</section>
