@@ -3814,18 +3814,6 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     --color-shadow-primary: #ff0000;
   }
 
-  /* ウィンドウの見出し。`.window-title` の実体は <h1> で、AppV2 の体裁では
-     26px の見出し書体になる(V1 は 14px)。ルート側の font-size は
-     `.application .window-header .window-title` の独自ルールに阻まれて
-     継承されないので、ここで直接指定する */
-  .sw25.application .window-header .window-title {
-    font-family: var(--font-primary);
-    font-size: var(--font-size-14);
-    font-weight: normal;
-    line-height: normal;
-    margin: 0;
-  }
-
   .sw25.application.actor {
     /* AppV2 は行の高さと文字の大きさを固定値で敷く。
        ウィンドウの見出しが 14px → 26px になるのもこれ */
@@ -3858,7 +3846,7 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     flex: 1;
   }
 
-  .sw25.application.actor header.sheet-header {
+  .sw25.application.actor .window-content header.sheet-header {
     display: flex;
   }
 
@@ -3869,7 +3857,7 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
      `font-family: inherit` にしてはいけない —— 名前の <h1> は親
      (.header__title)が Modesto Condensed なので、V1 では出ていない
      装飾書体を拾ってしまう。V1 と同じく絶対値で戻す */
-  .sw25.application.actor :is(h1, h2, h3, h4, h5, h6) {
+  .sw25.application.actor .window-content :is(h1, h2, h3, h4, h5, h6) {
     font-family: var(--font-primary);
     font-weight: normal;
     line-height: unset;
@@ -3878,28 +3866,28 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     padding: 0;
   }
 
-  .sw25.application.actor h4 {
+  .sw25.application.actor .window-content h4 {
     font-size: revert;
   }
 
-  .sw25.application.actor h1 {
+  .sw25.application.actor .window-content h1 {
     font-size: 2em;
     border-bottom: 2px solid var(--color-underline-header);
   }
 
-  .sw25.application.actor h2 {
+  .sw25.application.actor .window-content h2 {
     font-size: 1.5em;
     border-bottom: 1px solid var(--color-underline-header);
   }
 
-  .sw25.application.actor h3 {
+  .sw25.application.actor .window-content h3 {
     font-size: 1.25em;
     border-bottom: 1px solid var(--color-underline-header);
   }
 
   /* 入力欄。AppV2 の既定は高さ 2rem・幅 100% で、行の詰まった
      このシートでは縦にも横にも溢れる */
-  .sw25.application.actor
+  .sw25.application.actor .window-content
     :is(input[type="text"], input[type="number"], input[type="password"],
         input[type="date"], input[type="time"], input[type="search"]) {
     width: calc(100% - 2px);
@@ -3914,14 +3902,14 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     border-radius: 3px;
   }
 
-  .sw25.application.actor input[type="checkbox"] {
+  .sw25.application.actor .window-content input[type="checkbox"] {
     flex: 0 0 20px;
     width: 20px;
     height: 20px;
     margin: 3px 5px;
   }
 
-  .sw25.application.actor select {
+  .sw25.application.actor .window-content select {
     width: auto;
     height: calc(var(--form-field-height) + 1px);
     padding: 0 3px;
@@ -3932,28 +3920,28 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     text-overflow: ellipsis;
   }
 
-  .sw25.application.actor :is(option, optgroup) {
+  .sw25.application.actor .window-content :is(option, optgroup) {
     font-family: inherit;
   }
 
-  .sw25.application.actor hr {
+  .sw25.application.actor .window-content hr {
     border: none;
     border-top: 1px solid var(--color-border-light-primary);
     border-bottom: 1px solid var(--color-border-light-highlight);
   }
 
-  .sw25.application.actor img {
+  .sw25.application.actor .window-content img {
     box-sizing: border-box;
     border: 1px solid var(--color-border-dark);
     border-radius: 2px;
     max-width: 100%;
   }
 
-  .sw25.application.actor :is(ul, ol) li {
+  .sw25.application.actor .window-content :is(ul, ol) li {
     margin: unset;
   }
 
-  .sw25.application.actor button {
+  .sw25.application.actor .window-content button {
     display: unset;
     height: unset;
     min-height: unset;
@@ -3961,11 +3949,11 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     line-height: 28px;
   }
 
-  .sw25.application.actor .tabs.sheet-tabs {
+  .sw25.application.actor .window-content .tabs.sheet-tabs {
     margin: 4px 0;
   }
 
-  .sw25.application.actor .tabs {
+  .sw25.application.actor .window-content .tabs {
     align-items: center;
     display: flex;
     flex-flow: row;
@@ -3974,13 +3962,13 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
     justify-content: space-around;
   }
 
-  .sw25.application.actor .tabs > [data-tab].active {
+  .sw25.application.actor .window-content .tabs > [data-tab].active {
     text-shadow: 0 0 10px var(--color-shadow-primary);
   }
 
   /* タブの見出し。V1 は core の `.app` 側のルールで余白が付いていた。
      キャラクターの縦帯(.tab-switcher)は自前の余白を持つので触らない */
-  .sw25.application.actor nav.sheet-tabs > a {
+  .sw25.application.actor .window-content nav.sheet-tabs > a {
     padding: 8px 12px;
   }
 }

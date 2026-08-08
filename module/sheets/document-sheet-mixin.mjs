@@ -27,25 +27,6 @@ export const SW25DocumentSheetMixin = (base) =>
       },
     };
 
-    /**
-     * ウィンドウの見出し。
-     *
-     * `DocumentSheetV2` の既定は `${型名}: ${名前}`(「PC: テストPC」)だが、
-     * V1 のシートはどちらも名前だけを出していた
-     * (`appv1/sheets/actor-sheet.mjs:44` / `item-sheet.mjs:35`)。
-     * 移行で見出しの文字を増やさない。トークンのアクターのときだけ
-     * V1 と同じく種別を前に付ける。
-     *
-     * @override
-     */
-    get title() {
-      const doc = this.document;
-      if (doc.isToken) {
-        return `[${game.i18n.localize("DOCUMENT.Token")}] ${doc.name}`;
-      }
-      return doc.name;
-    }
-
     /* -------------------------------------------- */
     /*  Context                                     */
     /* -------------------------------------------- */
