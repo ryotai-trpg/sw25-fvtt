@@ -16,6 +16,10 @@
       {{#if isEdit}}
         {{formInput fields.name value=source.name placeholder=(localize "DOCUMENT.FIELDS.name.label")
                     aria=(object label=(localize "DOCUMENT.FIELDS.name.label"))}}
+      {{else if titleSlot}}
+        {{!-- 名前の前後にバッジを出す型(魔法のアイテム、武器の種別など)は
+              閲覧時の見出しごと templates/item/title/<type>.hbs が持つ --}}
+        {{> (lookup . "titleSlot")}}
       {{else}}
         {{document.name}}
       {{/if}}

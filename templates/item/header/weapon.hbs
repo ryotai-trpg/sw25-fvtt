@@ -1,0 +1,30 @@
+{{!-- weapon のヘッダ固有部分。分類・階級・価格・名誉点と概要、
+      右肩に装備 / 専用 / 個数。 --}}
+<section class="header__subtitle">
+  <span class="header__subtitle--label">
+    〈{{system.categoryname}}〉{{system.rank}} /
+    {{localize "SW25.Item.Price"}} : {{system.price}}
+    {{#if system.isHonoritem}}
+      + {{system.honor}} {{localize "SW25.Item.Honor"}}
+    {{/if}}
+  </span>
+  <div class="header__subtitle--overview">{{system.overview}}</div>
+</section>
+
+<section class="header__activate">
+  <div class="header__checkbox">
+    <input class="checkbox--hidden" id="{{docId}}system.equip" type="checkbox"
+           name="system.equip" data-dtype="Boolean" {{checked system.equip}}/>
+    <label class="checkbox--label" for="{{docId}}system.equip">{{localize "SW25.Equip"}}</label>
+  </div>
+  <div class="header__checkbox">
+    <input class="checkbox--hidden" id="{{docId}}system.dedicated" type="checkbox"
+           name="system.dedicated" data-dtype="Boolean" {{checked system.dedicated}}/>
+    <label class="checkbox--label" for="{{docId}}system.dedicated">{{localize "SW25.Item.Dedicated"}}</label>
+  </div>
+  <div class="property">
+    <label class="property--label" for="{{docId}}system.quantity">{{localize "SW25.Quantity"}}</label>
+    <input class="property--value align-center" id="{{docId}}system.quantity" type="text"
+           name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+  </div>
+</section>

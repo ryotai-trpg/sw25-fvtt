@@ -1,0 +1,11 @@
+{{!-- weapon の閲覧時の見出し。魔法のアイテムの印と、斬撃 / 打撃の印を名前に添える。 --}}
+{{#if system.isMagicitem}}
+  <span class="icon-stack">
+    <i class="mgc_diamond_square_fill"></i>
+    <i class="mgc_quill_pen_line" style="color: #ffffff"></i>
+  </span>
+{{/if}}
+{{document.name}}
+{{#if (eq system.type "blade")}}<i class="mgc_sword_line"></i>{{/if}}
+{{#if (eq system.type "blow")}}<i class="mgc_auction_line"></i>{{/if}}
+{{#if (eq system.type "both")}}<i class="mgc_sword_line"></i><i class="mgc_auction_line"></i>{{/if}}
