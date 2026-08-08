@@ -20,9 +20,8 @@
   ],
   "version": "2.5.0",
   "compatibility": {
-    "minimum": "12",
-    "verified": "14",
-    "maximum": "15"
+    "minimum": "14",
+    "verified": "14.365"
   },
   "esmodules": ["module/sw25.mjs"],
   "styles": ["css/sw25.css", "css/sw25-skin.css", "fonts/MingCute/MingCute.css"],
@@ -90,8 +89,8 @@
     }
   ],
   "socket": true,
-  "manifest": "https://raw.githubusercontent.com/EduardoJGilA/sw25-fvtt/dev/system.json",
-  "download": "https://github.com/EduardoJGilA/sw25-fvtt/archive/refs/heads/dev.zip",
+  "manifest": "https://raw.githubusercontent.com/ryotai-trpg/sw25-fvtt/v14/system.json",
+  "download": "https://github.com/ryotai-trpg/sw25-fvtt/archive/refs/heads/v14.zip",
   "background": "systems/sw25/assets/sw25fvtt.png",
   "grid": {
     "distance": 1,
