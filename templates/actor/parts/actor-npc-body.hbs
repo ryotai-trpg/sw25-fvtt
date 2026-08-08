@@ -153,7 +153,7 @@
 
     {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
-      {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
+      {{formInput systemFields.biography value=system.biography toggled=true enriched=enrichedBiography}}
     </div>
 
     {{!-- Owned Details Tab --}}
@@ -199,7 +199,7 @@
         <div class="flexcol margin-m">
           <div><b>{{localize "SW25.Gminfo"}}</b></div>
           <span style="text-align: left;"><label for="{{actor._id}}system.udname">{{localize "SW25.Unidentifiedname"}}</label><input id="{{actor._id}}system.udname" style="max-width: calc(50% - 7px); text-align: left;" type="text" name="system.udname" value="{{system.udname}}" data-dtype="String"/></span>
-          <div>{{editor system.gminfo target="system.gminfo" rollData=rollData button=true owner=owner editable=editable}}</div>
+          <div>{{formInput systemFields.gminfo value=system.gminfo toggled=true enriched=enrichedGminfo}}</div>
         </div>
         {{/if}}
       </div>
