@@ -9,6 +9,7 @@ import {
   elementsFields,
   resistFields,
   numberedCheckFields,
+  textareaEditorFields,
   derivedNumber,
   derivedString,
   NumberField,
@@ -57,6 +58,8 @@ export class MonsterabilityData extends SW25ItemDataModel {
       efmod: derivedNumber(),
       efallckmod: derivedNumber(),
       efallmgpmod: derivedNumber(),
+      efallscmod: derivedNumber(),
+      efallacmod: derivedNumber(),
     };
   }
 
@@ -86,11 +89,18 @@ export class ActionData extends SW25ItemDataModel {
       actionresult: str(),
       actionvalue: str(),
       dialog: str(),
-      action: str(),
-      actioneffect: str(),
+      // actor-actions*.hbs が {{{system.displayaction}}} /
+      // {{{system.displayactioneffect}}} を読む
+      ...textareaEditorFields("action"),
+      ...textareaEditorFields("actioneffect"),
 
       /* ---- 派生値 ---- */
       actiondicename: derivedString(),
+      efmod: derivedNumber(),
+      efallckmod: derivedNumber(),
+      efallmgpmod: derivedNumber(),
+      efallscmod: derivedNumber(),
+      efallacmod: derivedNumber(),
     };
   }
 

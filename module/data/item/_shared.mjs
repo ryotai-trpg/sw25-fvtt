@@ -74,6 +74,22 @@ export const derivedString = () =>
   new StringField({ required: true, blank: true, persisted: false });
 
 /**
+ * `.textarea-editor` の 1 組。
+ *
+ * sw25.mjs の blur フックが data-path を見て
+ * `system.<name>`(生のテキスト)と `system.display<name>`(改行を <br> にしたもの)を
+ * まとめて update する。display 側は名前がテンプレートに直接書かれていないので
+ * `name="system.*"` の grep では拾えない。宣言し忘れると DataModel が捨てるため、
+ * `{{{system.display<name>}}}` で読んでいる側が空になる。
+ *
+ * @param {string} name data-path に書いてある名前
+ */
+export const textareaEditorFields = (name) => ({
+  [name]: str(),
+  [`display${name}`]: str(),
+});
+
+/**
  * 番号付きの判定ブロック(label1 / checkbase1 …)。
  * 魔物能力は 3 本、行動は 2 本(そちらは技能と適用ボタンも付く)。
  *
@@ -303,6 +319,23 @@ export const rollFields = () => ({
   resusequantity: num(),
 
   /* ---- 以下は prepareDerivedData が毎回入れ直す ---- */
+  ...derivedRollFields(),
+});
+
+/**
+ * documents/item.mjs の判定・威力の準備が毎回書く値。
+ *
+ * 宣言しないと `toObject(false)` から落ちる。V1 シートは
+ * `document.toObject(false)` でコンテキストを作り、アクターシートの
+ * アイテム行も `context.data.items`(= 同じく toObject 経由)なので、
+ * **未宣言の派生値はシート上で空になる**。SchemaField#toObject が
+ * 宣言済みフィールドだけを回すため、persisted: false でも宣言は要る。
+ *
+ * 番号付きの 1〜3 は、番号付きブロックを持たない型(武器・装飾品など)にも
+ * 無条件で書かれる。numberedCheckFields() を使う型では、そちらを後に
+ * 展開して保存対象の入力で上書きする。
+ */
+export const derivedRollFields = () => ({
   checkbase: derivedNumber(),
   powerbase: derivedNumber(),
   totalcvalue: new NumberField({
@@ -311,25 +344,41 @@ export const rollFields = () => ({
     initial: null,
     persisted: false,
   }),
-  formula: new StringField({
-    required: true,
-    blank: true,
-    initial: "2d6",
-    persisted: false,
-  }),
+  formula: derivedFormula(),
+  // 判定・威力それぞれのダイス式。usefix が立つと数値の 7 が入るので型は縛らない
+  checkformula: derivedFormula(),
+  powerformula: derivedFormula(),
+  checkformula1: derivedFormula(),
+  checkformula2: derivedFormula(),
+  checkformula3: derivedFormula(),
+  checkbase1: derivedNumber(),
+  checkbase2: derivedNumber(),
+  checkbase3: derivedNumber(),
+  checkbasefix1: derivedNumber(7),
+  checkbasefix2: derivedNumber(7),
+  checkbasefix3: derivedNumber(7),
+  // ck*bt / pw*bt から組み立てられる ["pd","md",…]。
+  // チャットカードにどのダメージ適用ボタンを出すかの指定
+  checkTypesButton: derivedStringArray(),
+  checkTypesButton1: derivedStringArray(),
+  checkTypesButton2: derivedStringArray(),
+  checkTypesButton3: derivedStringArray(),
+  powerTypesButton: derivedStringArray(),
+  // 効果・装備の有無(チャットカードのボタン表示に使う)
+  useeffect: new BooleanField({ initial: false, persisted: false }),
+  useequip: new BooleanField({ initial: false, persisted: false }),
   // 数値と criticalray の文字列が混ざるので要素の型は縛らない
   powertable: new ArrayField(new AnyField(), {
     required: true,
     initial: [],
     persisted: false,
   }),
-  // シートのセレクト用に組み立てられる一覧
-  skilllist: new StringField({
-    required: true,
-    blank: true,
-    persisted: false,
-  }),
-  itemlist: new StringField({ required: true, blank: true, persisted: false }),
+  // シートのセレクト用に組み立てられる一覧。
+  // skilllist は技能アイテムそのものの配列、itemlist は {itemId, itemName} の配列。
+  // ArrayField(ObjectField) にすると toObject で deepClone が走って
+  // skilllist の Document が壊れるので、素通しの AnyField にする
+  skilllist: derivedAny(),
+  itemlist: derivedAny(),
 });
 
 /* -------------------------------------------- */
@@ -355,6 +404,26 @@ export const derivedNumber = (initial = 0) =>
     initial,
     persisted: false,
   });
+
+/**
+ * prepare が毎回入れ直すダイス式。
+ * 通常は "2d6" などの文字列だが、固定値(usefix)のときは数値の 7 が入る。
+ */
+export const derivedFormula = () =>
+  new AnyField({ required: false, initial: "2d6", persisted: false });
+
+/** prepare が毎回組み立てる文字列の配列 */
+export const derivedStringArray = () =>
+  new ArrayField(new StringField(), { required: true, persisted: false });
+
+/**
+ * 型を縛らない派生値。
+ *
+ * AnyField は serializable: false が既定で、`toObject` が素通し
+ * (`DataField#toObject` が値をそのまま返す)。Document を含む配列を
+ * シートへ渡している箇所があるので、deepClone される field は使えない。
+ */
+export const derivedAny = () => new AnyField({ required: false, persisted: false });
 
 /** 派生値だけを集めた SchemaField(まとめて保存対象から外す) */
 export const derivedSchema = (fields) =>

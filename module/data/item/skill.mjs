@@ -3,6 +3,7 @@ import {
   baseFields,
   commonFields,
   derivedNumber,
+  derivedRollFields,
   derivedSchema,
   BooleanField,
   NumberField,
@@ -48,6 +49,11 @@ export class SkillData extends SW25ItemDataModel {
       efallskmod: derivedNumber(),
       efallscmod: derivedNumber(),
       efallacmod: derivedNumber(),
+      // 技能は判定の入力を持たないので rollFields() は使わないが、
+      // documents/item.mjs の判定準備は技能にも派生値を書く
+      // (アクターシートの技能行が checkbase / formula などを読む)
+      ...derivedRollFields(),
+      cvalue: derivedNumber(10),
       skillbase: derivedSchema({
         dex: derivedNumber(),
         agi: derivedNumber(),

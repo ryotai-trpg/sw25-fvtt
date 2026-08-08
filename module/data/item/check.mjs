@@ -40,6 +40,8 @@ export class CheckData extends SW25ItemDataModel {
       /* ---- 派生値 ---- */
       efckmod: derivedNumber(),
       efallckmod: derivedNumber(),
+      efallscmod: derivedNumber(),
+      efallacmod: derivedNumber(),
     };
   }
 

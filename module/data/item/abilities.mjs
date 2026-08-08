@@ -8,6 +8,7 @@ import {
   costFields,
   elementsFields,
   resistFields,
+  textareaEditorFields,
   derivedNumber,
   derivedString,
   BooleanField,
@@ -57,13 +58,15 @@ export class SpellData extends SW25ItemDataModel {
       hpresist: bool(),
       excost1: str(),
       extime1: str(),
-      expansion1: str(),
       excost2: str(),
       extime2: str(),
-      expansion2: str(),
+      // display 側を読んでいる箇所はまだ無いが、フックが書くので宣言しておく
+      ...textareaEditorFields("expansion1"),
+      ...textareaEditorFields("expansion2"),
 
       /* ---- 派生値 ---- */
       efallmgpmod: derivedNumber(),
+      typename: derivedString(),
       fairytypename: derivedString(),
       fairypropname: derivedString(),
     };
@@ -102,6 +105,9 @@ export class MagicalsongData extends SW25ItemDataModel {
       upcost: num(),
       downcost: num(),
       charmcost: num(),
+
+      /* ---- 派生値 ---- */
+      typename: derivedString(),
     };
   }
 
@@ -154,6 +160,9 @@ export class PhaseareaData extends SW25ItemDataModel {
       type: str(),
       mincost: num(),
       maxcost: num(),
+
+      /* ---- 派生値 ---- */
+      typename: derivedString(),
     };
   }
 
@@ -175,6 +184,7 @@ export class TacticsData extends SW25ItemDataModel {
       cond: str(),
 
       /* ---- 派生値 ---- */
+      typename: derivedString(),
       linename: derivedString(),
     };
   }
@@ -248,6 +258,7 @@ export class CombatabilityData extends SW25ItemDataModel {
       limcond: str(),
 
       /* ---- 派生値 ---- */
+      typename: derivedString(),
       condtypename: derivedString(),
     };
   }

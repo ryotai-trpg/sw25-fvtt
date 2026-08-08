@@ -8,6 +8,7 @@ import {
   costFields,
   elementsFields,
   magicItemFields,
+  derivedNumber,
   derivedString,
   NumberField,
   StringField,
@@ -46,6 +47,8 @@ export class WeaponData extends SW25ItemDataModel {
       usagename: derivedString(),
       // 判定に使う技能の表示用。checkskill から引く
       showskill: derivedString(),
+      // 威力表の一覧表示用。powerbase に半減・効果の補正を足したもの
+      listpowerbase: derivedNumber(),
     };
   }
 
