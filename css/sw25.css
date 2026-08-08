@@ -3770,3 +3770,85 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
   flex-direction: column;
   min-height: 0;
 }
+
+/* =====================================================================
+   ApplicationV2 のアクターシート(Phase 3)
+
+   テンプレートは V1 と同じもの(parts/actor-<type>-body.hbs)を読むので、
+   足りないのは「V1 の枠が与えていたもの」だけ。v14 は AppV2 のシートに
+   新しい体裁(foundry2)をそのまま当て、V1 のシートにだけ
+   `body.game .app ...` で旧来の体裁へ戻す互換ルールを持っている。
+   その戻し分をアクターシートの範囲に限って置き直す。
+   `.sw25pc` 側と `.sw25.application.item` 側は触らない。
+   ===================================================================== */
+
+.sw25.application.actor {
+  /* 主タブの縦帯(.tab-switcher)は right: -2.5em でシートの外へ出す。
+     ルートの <form> は AppV2 が overflow: hidden にしているので開ける */
+  overflow: visible;
+
+  /* 入力欄の高さ。AppV2 の既定は 2rem(32px)で、V1 の互換ルールが使う
+     26px に比べて縦に伸びる。行数の多いシートなので V1 に揃える */
+  --input-height: 26px;
+  --form-field-height: 26px;
+
+  /* AppV2 は行の高さを固定値で敷く。V1 の互換ルールは line-height: unset */
+  line-height: normal;
+}
+
+/* .window-content は backdrop-filter: blur() を持つため、絶対配置の
+   包含ブロックになる。V1 では .app が包含ブロックで .tab-switcher が
+   はみ出せていたので、ここで切らないようにする。
+   縦のスクロールは #main-contents / #sidebar-* が各自で持っている */
+.sw25.application.actor .window-content {
+  overflow: visible;
+}
+
+/* 見出し。AppV2 の体裁ではアイテム名の <h4> が 24px の
+   Modesto Condensed になる。V1 と同じ字面に戻す */
+.sw25.application.actor :is(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+  font-weight: normal;
+  line-height: unset;
+  color: inherit;
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+
+.sw25.application.actor :is(h4, h5, h6) {
+  font-size: inherit;
+}
+
+.sw25.application.actor h1 {
+  font-size: 2em;
+}
+
+.sw25.application.actor h2 {
+  font-size: 1.5em;
+}
+
+.sw25.application.actor h3 {
+  font-size: 1.25em;
+}
+
+/* AppV2 は select を幅いっぱいに広げ、チェックボックスを大きくする。
+   どちらも列の詰まったこのシートでは崩れるので V1 の寸法に戻す */
+.sw25.application.actor select {
+  width: auto;
+}
+
+.sw25.application.actor input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+/* 選択肢の背景。AppV2 では透明になり、開いたときに字が読めなくなる */
+.sw25.application.actor option {
+  background-color: var(--color-cool-5, #dad8cc);
+}
+
+/* タブの見出し。V1 は core の `.app` 側のルールで余白が付いていた。
+   キャラクターの縦帯(.tab-switcher)は自前の余白を持つので触らない */
+.sw25.application.actor nav.sheet-tabs > a {
+  padding: 8px 12px;
+}

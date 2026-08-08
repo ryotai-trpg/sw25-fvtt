@@ -5,6 +5,11 @@ import { SW25ActiveEffect } from "./documents/active-effect.mjs";
 import { SW25Combat } from "./documents/combat.mjs";
 // Import sheet classes.
 import { SW25ActorSheet } from "./sheets/actor-sheet.mjs";
+import {
+  SW25CharacterSheet,
+  SW25NpcSheet,
+  SW25MonsterSheet,
+} from "./sheets/actor-sheet-V2.mjs";
 import { SW25ItemSheet } from "./sheets/item-sheet.mjs";
 import { SW25ActiveEffectConfigV2 } from "./sheets/active-effect-config-V2.mjs";
 
@@ -116,6 +121,25 @@ Hooks.once("init", function () {
     foundry.appv1.sheets.ActorSheet
   );
   DocumentSheetConfig.registerSheet(Actor, "sw25", SW25ActorSheet, {
+    makeDefault: true,
+    label: "SW25.SheetLabels.Actor",
+  });
+
+  // ApplicationV2 へ移した型は、型を絞った登録で V1 の既定を上書きする
+  DocumentSheetConfig.registerSheet(Actor, "sw25", SW25CharacterSheet, {
+    types: ["character"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Actor",
+  });
+
+  DocumentSheetConfig.registerSheet(Actor, "sw25", SW25NpcSheet, {
+    types: ["npc"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Actor",
+  });
+
+  DocumentSheetConfig.registerSheet(Actor, "sw25", SW25MonsterSheet, {
+    types: ["monster"],
     makeDefault: true,
     label: "SW25.SheetLabels.Actor",
   });
