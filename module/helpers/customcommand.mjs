@@ -186,7 +186,7 @@ export async function customCommand(command, messageData, parameters) {
         }
       };
 
-      chatData.content = await renderTemplate(
+      chatData.content = await foundry.applications.handlebars.renderTemplate(
         "systems/sw25/templates/roll/roll-power.hbs",
         {
           formula: chatFormula,

@@ -615,7 +615,7 @@ export class SW25ItemSheet extends foundry.appv1.sheets.ItemSheet {
     const isHonor = 0 < getHonor || 0 < getSword;
     const isAbyss = 0 < getAbyss || 0 < keepAbyss;
 
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/session-info.hbs",
       {
         title: title,

@@ -227,7 +227,7 @@ Hooks.on("updateCombat", async (combat, changes, options, userId) => {
         rollMode: rollMode,
       };
 
-      chatData.content = await renderTemplate(
+      chatData.content = await foundry.applications.handlebars.renderTemplate(
         "systems/sw25/templates/roll/hpmp-apply.hbs",
         {
           targetHP: targetHP,

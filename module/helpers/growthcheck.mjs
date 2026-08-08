@@ -45,7 +45,7 @@ export async function growthCheck(actor) {
         </span>
     `;
 
-  let chatContent = await renderTemplate(
+  let chatContent = await foundry.applications.handlebars.renderTemplate(
     "systems/sw25/templates/roll/roll-check.hbs",
     {
       formula: chatFormula,

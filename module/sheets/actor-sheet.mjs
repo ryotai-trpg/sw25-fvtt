@@ -954,7 +954,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
             targetMessage: chatMessageId,
           },
         };
-        chatData.content = await renderTemplate(
+        chatData.content = await foundry.applications.handlebars.renderTemplate(
           "systems/sw25/templates/roll/roll-applyall.hbs",
           {
             apply: dataset.apply,
@@ -1090,7 +1090,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         },
       };
 
-      chatData.content = await renderTemplate(
+      chatData.content = await foundry.applications.handlebars.renderTemplate(
         "systems/sw25/templates/roll/roll-check.hbs",
         {
           formula: roll.formula,
@@ -1158,7 +1158,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
             targetMessage: chatMessageId,
           },
         };
-        chatData.content = await renderTemplate(
+        chatData.content = await foundry.applications.handlebars.renderTemplate(
           "systems/sw25/templates/roll/roll-applyall.hbs",
           {
             apply: dataset.apply,
@@ -1309,7 +1309,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
       },
     };
     
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/roll-power.hbs",
       {
         formula: chatFormula,
@@ -1446,7 +1446,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
       speaker: speaker,
       flavor: label,
     };
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/effect-apply.hbs",
       {
         targetActorName: chatActorName,
@@ -1583,7 +1583,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         method: method,
       },
     };
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/rollreq-card.hbs",
       {
         checkName: checkName,
@@ -1660,7 +1660,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         method: method,
       },
     };
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/rollreq-card.hbs",
       {
         checkName: checkName,
@@ -1732,7 +1732,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         method: method,
       },
     };
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/rollreq-card.hbs",
       {
         checkName: checkName,
@@ -2457,7 +2457,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
       speaker: speaker,
       flavor: label,
     };
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/effect-apply.hbs",
       {
         targetActorName: chatActorName,
@@ -2620,7 +2620,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
       speaker: speaker,
       flavor: label,
     };
-    chatData.content = await renderTemplate(
+    chatData.content = await foundry.applications.handlebars.renderTemplate(
       "systems/sw25/templates/roll/card-apply.hbs",
       {
         name: name,
