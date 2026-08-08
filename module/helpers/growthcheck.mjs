@@ -51,6 +51,10 @@ export async function growthCheck(actor) {
       formula: chatFormula,
       tooltip: await roll.getTooltip(),
       total: result,
+      // 成長カードは判定カードの体裁を借りているだけで、flags.sw25 には
+      // actor しか無い。判定の結果を書き換えるボタン(対象選択・±1)を出すと
+      // chatbutton.mjs が flags.sw25.rolls を読んで必ず落ちる
+      readonly: true,
     }
   );
 

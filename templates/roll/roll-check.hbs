@@ -19,6 +19,9 @@
         {{/each}}
     </div>
 {{/if}}{{/if}}
+{{!-- readonly: 判定の結果を書き換えるボタンを出さない。判定カードの体裁だけを
+      借りていて flags.sw25 に rolls / orgtotal を持たないカード(能力値の成長)用 --}}
+{{#unless readonly}}
 {{#if targetName}}
     <button class="buttonclick chat-target" data-buttontype="target-select">
         <span class="targetname">{{{targetName}}}</span>
@@ -28,6 +31,7 @@
         <i class="fa-solid fa-users-viewfinder"></i>
     </button>
 {{/if}}
+{{/unless}}
 <div class="dice-roll" data-action="expandRoll">
     {{#if flavor}}<div class="dice-flavor">{{flavor}}</div>{{/if}}
     <div class="dice-result">
@@ -38,7 +42,7 @@
 <div class="diceresult">
     <div class="diceresult-apply">
         <h4 class="dice-total diceresult-apply" style="flex-grow: 1">
-            <span class="buttonclick quantitychange" data-buttontype="checkdecrease">&nbsp;-&nbsp;</span>
+            {{#unless readonly}}<span class="buttonclick quantitychange" data-buttontype="checkdecrease">&nbsp;-&nbsp;</span>{{/unless}}
             <span class="diceresult-total">
                 {{#if critical}} <span class="success">{{localize "SW25.Critical"}} ▶ </span>{{/if}}
                 {{#if fumble}} <span class="failed">{{localize "SW25.Fumble"}} ▶ </span>{{/if}}
@@ -47,7 +51,7 @@
                 {{{total}}}
                 {{#if chatLootItem}}: </span><span class="success">{{chatLootItem}}</span>{{/if}}
             </span>
-            <span class="buttonclick quantitychange" data-buttontype="checkincrease">&nbsp;+&nbsp;</span>
+            {{#unless readonly}}<span class="buttonclick quantitychange" data-buttontype="checkincrease">&nbsp;+&nbsp;</span>{{/unless}}
         </h4>
         {{#if (eq apply "on")}}
         <div class="result-change">
