@@ -29,6 +29,45 @@ import { targetRollDialog } from "../helpers/dialogs.mjs";
 let quantityWarn = false;
 
 /**
+ * 能力値の種族値は 2 つずつ組になっていて、組の片方(A/C/E)だけが持っている。
+ */
+const ABILITY_RACE_PAIR = {
+  dex: "dex",
+  agi: "dex",
+  str: "str",
+  vit: "str",
+  int: "int",
+  mnd: "int",
+};
+
+/**
+ * 能力値ボーナス =(種族値 + 基礎値 + 成長 + 修正 + 効果修正 + extra)/ 6
+ *                + 効果によるボーナス修正。
+ *
+ * **npc / monster の DataModel に `abilities` は無い**ので、無い値は 0 として
+ * 扱う(`_prepareItemRollData` が前からこの扱いになっている)。
+ *
+ * @param {object} abilities  actor.system.abilities(無いこともある)
+ * @param {string} key        dex / agi / str / vit / int / mnd
+ * @param {number} [extra]    6 で割る前に足す値(魔法行使の「専心」+2 など)
+ * @returns {number}
+ */
+function abilityBonus(abilities, key, extra = 0) {
+  const abi = abilities?.[key] ?? {};
+  const race = abilities?.[ABILITY_RACE_PAIR[key]] ?? {};
+  return Math.floor(
+    ((race.racevalue ?? 0) +
+      (abi.valuebase ?? 0) +
+      (abi.valuegrowth ?? 0) +
+      (abi.valuemodify ?? 0) +
+      (abi.efvaluemodify ?? 0) +
+      extra) /
+      6 +
+      Number(abi.efmodify ?? 0)
+  );
+}
+
+/**
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
@@ -264,15 +303,7 @@ export class SW25Item extends Item {
       systemData.efallskmod = Number(actorData.effect.allsk);
     else systemData.efallskmod = 0;
 
-    const dexmod = Math.floor(
-      (actorData.abilities.dex.racevalue +
-        actorData.abilities.dex.valuebase +
-        actorData.abilities.dex.valuegrowth +
-        actorData.abilities.dex.valuemodify +
-        actorData.abilities.dex.efvaluemodify) /
-        6 +
-        Number(actorData.abilities.dex.efmodify)
-    );
+    const dexmod = abilityBonus(actorData.abilities, "dex");
     systemData.skillbase.dex =
       Number(systemData.skilllevel) +
       Number(dexmod) +
@@ -284,15 +315,7 @@ export class SW25Item extends Item {
       Number(systemData.skilllevel) +
       Number(dexmod) +
       Number(systemData.skillmod);
-    const agimod = Math.floor(
-      (actorData.abilities.dex.racevalue +
-        actorData.abilities.agi.valuebase +
-        actorData.abilities.agi.valuegrowth +
-        actorData.abilities.agi.valuemodify +
-        actorData.abilities.agi.efvaluemodify) /
-        6 +
-        Number(actorData.abilities.agi.efmodify)
-    );
+    const agimod = abilityBonus(actorData.abilities, "agi");
     systemData.skillbase.agi =
       Number(systemData.skilllevel) +
       Number(agimod) +
@@ -304,15 +327,7 @@ export class SW25Item extends Item {
       Number(systemData.skilllevel) +
       Number(agimod) +
       Number(systemData.skillmod);
-    const strmod = Math.floor(
-      (actorData.abilities.str.racevalue +
-        actorData.abilities.str.valuebase +
-        actorData.abilities.str.valuegrowth +
-        actorData.abilities.str.valuemodify +
-        actorData.abilities.str.efvaluemodify) /
-        6 +
-        Number(actorData.abilities.str.efmodify)
-    );
+    const strmod = abilityBonus(actorData.abilities, "str");
     systemData.skillbase.str =
       Number(systemData.skilllevel) +
       Number(strmod) +
@@ -324,15 +339,7 @@ export class SW25Item extends Item {
       Number(systemData.skilllevel) +
       Number(strmod) +
       Number(systemData.skillmod);
-    const vitmod = Math.floor(
-      (actorData.abilities.str.racevalue +
-        actorData.abilities.vit.valuebase +
-        actorData.abilities.vit.valuegrowth +
-        actorData.abilities.vit.valuemodify +
-        actorData.abilities.vit.efvaluemodify) /
-        6 +
-        Number(actorData.abilities.vit.efmodify)
-    );
+    const vitmod = abilityBonus(actorData.abilities, "vit");
     systemData.skillbase.vit =
       Number(systemData.skilllevel) +
       Number(vitmod) +
@@ -344,24 +351,11 @@ export class SW25Item extends Item {
       Number(systemData.skilllevel) +
       Number(vitmod) +
       Number(systemData.skillmod);
-    const intmod = Math.floor(
-      (actorData.abilities.int.racevalue +
-        actorData.abilities.int.valuebase +
-        actorData.abilities.int.valuegrowth +
-        actorData.abilities.int.valuemodify +
-        actorData.abilities.int.efvaluemodify) /
-        6 +
-        Number(actorData.abilities.int.efmodify)
-    );
-    const invokemod = Math.floor(
-      (actorData.abilities.int.racevalue +
-        actorData.abilities.int.valuebase +
-        actorData.abilities.int.valuegrowth +
-        actorData.abilities.int.valuemodify +
-        actorData.abilities.int.efvaluemodify +
-        (systemData.dedicated ? 2 : 0)) /
-        6 +
-        Number(actorData.abilities.int.efmodify)
+    const intmod = abilityBonus(actorData.abilities, "int");
+    const invokemod = abilityBonus(
+      actorData.abilities,
+      "int",
+      systemData.dedicated ? 2 : 0
     );
     systemData.skillbase.int =
       Number(systemData.skilllevel) +
@@ -378,15 +372,7 @@ export class SW25Item extends Item {
       Number(systemData.skilllevel) +
       Number(invokemod) +
       Number(systemData.skillmod);
-    const mndmod = Math.floor(
-      (actorData.abilities.int.racevalue +
-        actorData.abilities.mnd.valuebase +
-        actorData.abilities.mnd.valuegrowth +
-        actorData.abilities.mnd.valuemodify +
-        actorData.abilities.mnd.efvaluemodify) /
-        6 +
-        Number(actorData.abilities.mnd.efmodify)
-    );
+    const mndmod = abilityBonus(actorData.abilities, "mnd");
     systemData.skillbase.mnd =
       Number(systemData.skilllevel) +
       Number(mndmod) +
@@ -454,66 +440,8 @@ export class SW25Item extends Item {
     });
 
     let abimod = 0;
-    if (systemData.checkabi == "dex")
-      abimod = Math.floor(
-        (actorData.abilities.dex.racevalue +
-          actorData.abilities.dex.valuebase +
-          actorData.abilities.dex.valuegrowth +
-          actorData.abilities.dex.valuemodify +
-          actorData.abilities.dex.efvaluemodify) /
-          6 +
-          Number(actorData.abilities.dex.efmodify)
-      );
-    if (systemData.checkabi == "agi")
-      abimod = Math.floor(
-        (actorData.abilities.dex.racevalue +
-          actorData.abilities.agi.valuebase +
-          actorData.abilities.agi.valuegrowth +
-          actorData.abilities.agi.valuemodify +
-          actorData.abilities.agi.efvaluemodify) /
-          6 +
-          Number(actorData.abilities.agi.efmodify)
-      );
-    if (systemData.checkabi == "str")
-      abimod = Math.floor(
-        (actorData.abilities.str.racevalue +
-          actorData.abilities.str.valuebase +
-          actorData.abilities.str.valuegrowth +
-          actorData.abilities.str.valuemodify +
-          actorData.abilities.str.efvaluemodify) /
-          6 +
-          Number(actorData.abilities.str.efmodify)
-      );
-    if (systemData.checkabi == "vit")
-      abimod = Math.floor(
-        (actorData.abilities.str.racevalue +
-          actorData.abilities.vit.valuebase +
-          actorData.abilities.vit.valuegrowth +
-          actorData.abilities.vit.valuemodify +
-          actorData.abilities.vit.efvaluemodify) /
-          6 +
-          Number(actorData.abilities.vit.efmodify)
-      );
-    if (systemData.checkabi == "int")
-      abimod = Math.floor(
-        (actorData.abilities.int.racevalue +
-          actorData.abilities.int.valuebase +
-          actorData.abilities.int.valuegrowth +
-          actorData.abilities.int.valuemodify +
-          actorData.abilities.int.efvaluemodify) /
-          6 +
-          Number(actorData.abilities.int.efmodify)
-      );
-    if (systemData.checkabi == "mnd")
-      abimod = Math.floor(
-        (actorData.abilities.int.racevalue +
-          actorData.abilities.mnd.valuebase +
-          actorData.abilities.mnd.valuegrowth +
-          actorData.abilities.mnd.valuemodify +
-          actorData.abilities.mnd.efvaluemodify) /
-          6 +
-          Number(actorData.abilities.mnd.efmodify)
-      );
+    if (Object.hasOwn(ABILITY_RACE_PAIR, systemData.checkabi ?? ""))
+      abimod = abilityBonus(actorData.abilities, systemData.checkabi);
 
     if (!actorData.effect) systemData.efckmod = 0;
     else {
