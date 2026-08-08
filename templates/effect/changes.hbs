@@ -74,7 +74,6 @@
                     <input style="max-width: calc(60% - 7px);" type="text" class="dynamic-input" name="changes.{{i}}.key" value="{{change.key}}"/>
                 {{/if}}
             </div>
-{{log this}}
         {{#with ../fields.changes.element.fields as |changeFields|}}
             <div class="mode">
                 {{formInput changeFields.mode name=(concat "changes." i ".mode") value=change.mode choices=@root.modes}}

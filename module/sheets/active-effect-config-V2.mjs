@@ -69,48 +69,40 @@ export class SW25ActiveEffectConfigV2 extends foundry.applications.sheets
     return context;
   }
 
-  /** override render */
-  render(force = false, options = {}) {
-    const promise = super.render(force, options);
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
-    this._setupSelectObserver();
-
-    return promise;
+    // 同じ関数参照を渡しているので、再描画で何度呼ばれても
+    // addEventListener 側が重複を弾く。
+    this.element.addEventListener("change", this.#onKeynameChange);
   }
 
-  /** Add MutationObserver */
-  _setupSelectObserver() {
-    const observer = new MutationObserver(() => {
-      const selects = document.querySelectorAll(
-        ".select-keyname:not([data-listener])"
-      );
+  /**
+   * 「判定名を入力」「直接入力」を選んだら、その場でテキスト入力欄を出す。
+   * このシートは submitOnChange ではないため、選択しただけでは再描画が走らず、
+   * テンプレート側の {{#if}} による入力欄はまだ存在しない。
+   * @param {Event} event
+   */
+  #onKeynameChange = (event) => {
+    const select = event.target.closest("select.select-keyname");
+    if (!select) return;
 
-      selects.forEach((select) => {
-        select.dataset.listener = "true";
+    const container = select.closest(".key");
+    if (!container) return;
 
-        select.addEventListener("change", (event) => {
-          const value = event.target.value;
-          const container = select.closest(".key");
+    container
+      .querySelectorAll("input.dynamic-input")
+      .forEach((el) => el.remove());
 
-          if (!container) return;
+    if (select.value !== "checkinput" && select.value !== "input") return;
 
-          container
-            .querySelectorAll("input.dynamic-input")
-            .forEach((el) => el.remove());
+    const input = document.createElement("input");
+    input.type = "text";
+    input.classList.add("dynamic-input");
+    input.style.maxWidth = "calc(60% - 7px)";
+    input.name = select.name;
 
-          if (value === "checkinput" || value === "input") {
-            const input = document.createElement("input");
-            input.type = "text";
-            input.classList.add("dynamic-input");
-            input.style.maxWidth = "calc(60% - 7px)";
-            input.name = select.name.replace(".key", ".key");
-
-            container.appendChild(input);
-          }
-        });
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
+    container.appendChild(input);
+  };
 }
