@@ -6,9 +6,7 @@ import { SW25Combat } from "./documents/combat.mjs";
 // Import sheet classes.
 import { SW25ActorSheet } from "./sheets/actor-sheet.mjs";
 import { SW25ItemSheet } from "./sheets/item-sheet.mjs";
-import { SW25ActiveEffectConfigV1 } from "./sheets/active-effect-config-V1.mjs";
 import { SW25ActiveEffectConfigV2 } from "./sheets/active-effect-config-V2.mjs";
-let SW25ActiveEffectConfig;
 
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
@@ -79,23 +77,29 @@ Hooks.once("init", function () {
   CONFIG.ActiveEffect.documentClass = SW25ActiveEffect;
   CONFIG.Combat.documentClass = SW25Combat;
 
-  // Active Effects are never copied to the Actor,
-  // but will still apply to the Actor from within the Item
-  // if the transfer property on the Active Effect is true.
-  CONFIG.ActiveEffect.legacyTransferral = false;
-
   CONFIG.Item.dataModels = {
     language: LanguageData,
   }
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("sw25", SW25ActorSheet, {
+  const { DocumentSheetConfig } = foundry.applications.apps;
+
+  DocumentSheetConfig.unregisterSheet(
+    Actor,
+    "core",
+    foundry.appv1.sheets.ActorSheet
+  );
+  DocumentSheetConfig.registerSheet(Actor, "sw25", SW25ActorSheet, {
     makeDefault: true,
     label: "SW25.SheetLabels.Actor",
   });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("sw25", SW25ItemSheet, {
+
+  DocumentSheetConfig.unregisterSheet(
+    Item,
+    "core",
+    foundry.appv1.sheets.ItemSheet
+  );
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25ItemSheet, {
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });
@@ -106,20 +110,15 @@ Hooks.once("init", function () {
   });
 
   // Register Active effect sheet Class
-  DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", ActiveEffectConfig);
-
-  if (foundry.utils.isNewerVersion(game.version, "13")) {
-    // v13 or newer
-    SW25ActiveEffectConfig = SW25ActiveEffectConfigV2;
-  } else {
-    // v12 or older
-    SW25ActiveEffectConfig = SW25ActiveEffectConfigV1;
-  }
-
+  DocumentSheetConfig.unregisterSheet(
+    ActiveEffect,
+    "core",
+    foundry.applications.sheets.ActiveEffectConfig
+  );
   DocumentSheetConfig.registerSheet(
     ActiveEffect,
     "sw25",
-    SW25ActiveEffectConfig,
+    SW25ActiveEffectConfigV2,
     {
       makeDefault: true,
       label: "SW25.SheetLabels.ActiveEffect",

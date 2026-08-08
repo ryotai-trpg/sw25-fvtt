@@ -2,7 +2,8 @@
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActiveEffectConfig}
  */
-export class SW25ActiveEffectConfigV2 extends ActiveEffectConfig {
+export class SW25ActiveEffectConfigV2 extends foundry.applications.sheets
+  .ActiveEffectConfig {
   static PARTS = {
     header: { template: "templates/sheets/active-effect/header.hbs" },
     tabs: { template: "templates/generic/tab-navigation.hbs" },
