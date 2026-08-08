@@ -1,5 +1,7 @@
 import { CheckData } from "./check.mjs";
 import { LanguageData } from "./language.mjs";
+import { ResourceData } from "./resource.mjs";
+import { ItemItemData, RaceabilityData } from "./simple.mjs";
 import { SkillData } from "./skill.mjs";
 
 /**
@@ -11,8 +13,18 @@ import { SkillData } from "./skill.mjs";
  */
 export const itemDataModels = {
   check: CheckData,
+  item: ItemItemData,
   language: LanguageData,
+  raceability: RaceabilityData,
+  resource: ResourceData,
   skill: SkillData,
 };
 
-export { CheckData, LanguageData, SkillData };
+export {
+  CheckData,
+  ItemItemData,
+  LanguageData,
+  RaceabilityData,
+  ResourceData,
+  SkillData,
+};

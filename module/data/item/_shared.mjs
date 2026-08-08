@@ -26,6 +26,19 @@ export class SW25ItemDataModel extends foundry.abstract.TypeDataModel {
 }
 
 /* -------------------------------------------- */
+/*  短縮ヘルパ                                   */
+/* -------------------------------------------- */
+
+/** 入力欄のある数値。空欄を 0 と区別したいものは nullable にする。 */
+const num = (initial = 0) =>
+  new NumberField({ required: true, nullable: false, initial });
+const nullableNum = () =>
+  new NumberField({ required: true, nullable: true, initial: null });
+const bool = (initial = false) => new BooleanField({ initial });
+const str = (initial = "") =>
+  new StringField({ required: true, blank: true, initial });
+
+/* -------------------------------------------- */
 /*  共有フィールド                               */
 /*  template.json の Item.templates.* に対応     */
 /* -------------------------------------------- */
@@ -38,14 +51,51 @@ export const baseFields = () => ({
   clickitem: new StringField({ required: true, blank: true, initial: "all" }),
 });
 
-/** 入力欄のある数値。空欄を 0 と区別したいものは nullable にする。 */
-const num = (initial = 0) =>
-  new NumberField({ required: true, nullable: false, initial });
-const nullableNum = () =>
-  new NumberField({ required: true, nullable: true, initial: null });
-const bool = (initial = false) => new BooleanField({ initial });
-const str = (initial = "") =>
-  new StringField({ required: true, blank: true, initial });
+/** Item.templates.item — 個数と価格を持つ「モノ」。 */
+export const itemFields = () => ({
+  // 上限・下限を超えると prepare 側で丸められるが、入力値そのものは保存する
+  quantity: new NumberField({
+    required: true,
+    nullable: false,
+    integer: true,
+    initial: 1,
+  }),
+  qmax: nullableNum(),
+  qmin: nullableNum(),
+  // 型ごとにテキスト入力だったりセレクトだったりするが、どちらも文字列
+  type: str(),
+  price: nullableNum(),
+});
+
+/** Item.templates.battle — 装備品。 */
+export const battleFields = () => ({
+  equip: bool(true),
+  dedicated: bool(),
+  category: str(),
+  // CONFIG.SW25.ranks は B / A / S / SS の文字列。
+  // 練技(tactics)などにも rank の入力欄があるが、あちらは数値で
+  // battle テンプレートも使っていない別物なので、各型の側で宣言する。
+  rank: str(),
+  reqstr: nullableNum(),
+});
+
+/** Item.templates.ability — 特技・練技などの共通部分。 */
+export const abilityFields = () => ({
+  // 戦術(tactics)だけは prepare が system.type から入れ直すが、
+  // 他の型では素の入力なので保存対象のままにする
+  constant: bool(),
+  prep: bool(),
+  main: bool(),
+  aux: bool(),
+  decla: bool(),
+  overview: str(),
+  level: new NumberField({
+    required: true,
+    nullable: false,
+    integer: true,
+    initial: 1,
+  }),
+});
 
 /**
  * Item.templates.roll — 判定と威力のロール設定。24 型中 20 型が使う。

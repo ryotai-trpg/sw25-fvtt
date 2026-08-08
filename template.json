@@ -548,9 +548,6 @@
       "accpart": "",
       "deffect": ""
     },
-    "item": {
-      "templates": ["base", "item", "roll"]
-    },
     "spell": {
       "templates": ["base", "roll", "ability"],
       "type": "",
@@ -664,9 +661,6 @@
       "time": 0,
       "resist": ""
     },
-    "resource": {
-      "templates": ["base", "item", "roll"]
-    },
     "combatability": {
       "templates": ["base", "roll", "ability"],
       "type": "",
@@ -682,9 +676,6 @@
       "honercost": 0,
       "sectype": "",
       "limcond": ""
-    },
-    "raceability": {
-      "templates": ["base", "roll"]
     },
     "monsterability": {
       "templates": ["base", "roll", "ability"],
