@@ -22,6 +22,7 @@ import { targetRollDialog, targetSelectDialog } from "./helpers/dialogs.mjs";
 import { preparePolyglot } from "./helpers/sw25languageprovider.mjs";
 import { Migrator } from "./helpers/migrator.mjs";
 
+import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
 import { SW25LanguageSheet } from "./sheets/item-sheet-V2.mjs";
 
@@ -77,6 +78,7 @@ Hooks.once("init", function () {
   CONFIG.ActiveEffect.documentClass = SW25ActiveEffect;
   CONFIG.Combat.documentClass = SW25Combat;
 
+  CONFIG.Actor.dataModels = actorDataModels;
   CONFIG.Item.dataModels = itemDataModels;
 
   // Register sheet application classes

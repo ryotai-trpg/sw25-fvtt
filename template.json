@@ -292,40 +292,6 @@
       },
       "class": "Human"
     },
-    "npc": {
-      "templates": ["base", "fellow"],
-      "overview": "",
-      "gminfo": "",
-      "limited": false,
-      "isgm": false,
-      "udname": "",
-      "ppbase": 0,
-      "mppbase": 0,
-      "pp": 0,
-      "mpp": 0,
-      "langage": "",
-      "attributes": {
-        "advlevel": {
-          "value": ""
-        },
-        "skilllist": "",
-        "age": "",
-        "gender": "",
-        "ppmod": 0,
-        "efppmod": 0,
-        "mppmod": 0,
-        "efmppmod": 0,
-        "dreduce": 0,
-        "efdreduce": 0,
-        "languages": {
-          "conv": [],
-          "read": [],
-          "advlevel": {
-            "value": ""
-          }
-        }
-      }
-    },
     "monster": {
       "templates": ["base", "daemon"],
       "monlevel": 1,
