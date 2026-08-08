@@ -24,6 +24,9 @@ import { targetRollDialog, targetSelectDialog } from "./helpers/dialogs.mjs";
 import { preparePolyglot } from "./helpers/sw25languageprovider.mjs";
 import { Migrator } from "./helpers/migrator.mjs";
 
+import { LanguageData } from "./data/base-item.mjs";
+import { SW25LanguageSheet } from "./sheets/item-sheet-V2.mjs";
+
 // Export variable.
 export const rpt = {};
 export let effectVitResPC,
@@ -80,6 +83,10 @@ Hooks.once("init", function () {
   // if the transfer property on the Active Effect is true.
   CONFIG.ActiveEffect.legacyTransferral = false;
 
+  CONFIG.Item.dataModels = {
+    language: LanguageData,
+  }
+
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("sw25", SW25ActorSheet, {
@@ -90,6 +97,11 @@ Hooks.once("init", function () {
   Items.registerSheet("sw25", SW25ItemSheet, {
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25LanguageSheet, {
+    types: ["language"],
+    label: "新言語シート",
   });
 
   // Register Active effect sheet Class
