@@ -75,9 +75,10 @@
 }
 
 /* Global styles */
-.window-app {
-  font-family: "Roboto", sans-serif;
-}
+/* `.window-app` は Application V1 のルート。V1 のシートを消したので
+   このシステムには当たる要素が無くなった。残すと他のパッケージの
+   V1 ウィンドウの書体とリサイズハンドルだけを書き換えてしまうので、
+   font-family と .window-resizable-handle の z-index は消した */
 
 .execitemmacro:hover, .execitemmacro:focus {
   color: #000;
@@ -624,12 +625,16 @@
   z-index: 3;
 }
 
-hr {
+/* シートとチャットカードの区切り線。素の `hr` だとアプリ内すべての
+   `<hr>`(core のダイアログやジャーナル)に当たる。チャットカードは
+   `.sw25` の外に出るので `templates/roll/*.hbs` の分を別に並べる */
+.sw25 hr,
+.chat-message .message-content hr {
   border: 0;
   border-top: 1px solid var(--color-border-dark-1);
   margin: var(--spacing-xs) 0 0 0;
 }
-progress {
+.sw25 progress {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -1324,16 +1329,23 @@ progress.mp-bar::-moz-progress-bar {
   color: #862020;
 }
 
-.success {
+/* クリティカルや成功数の緑字。チャットカードの中でしか使わない。
+   core も `.success` を `.notification` / `.dice-total` / `.roll` /
+   パッケージ一覧のタグに使っていて、素で書くと通知トーストや
+   ダイスの内訳まで 0.7em の緑になっていた。core が同じ名前を重ねて
+   いる 2 つを除いて、チャットの本文だけに当てる */
+.chat-message .message-content span.success:not(.roll):not(.dice-total) {
   color: #0f6f0f;
   font-size:0.7em;
 }
-.failed {
+/* ファンブルと失敗数の赤字。`.success` の相方なので同じ範囲に閉じる
+   (`.failed` は v14 の core には無いが、素で置く理由も無い) */
+.chat-message .message-content span.failed {
   color: #862020;
   font-size:0.7em;
 }
 
-input.weakapply[type="checkbox"] {
+.sw25 input.weakapply[type="checkbox"] {
   position: relative;
   width: 16px;
   height: 16px;
@@ -1341,19 +1353,12 @@ input.weakapply[type="checkbox"] {
   vertical-align: -5px;
 }
 
-.dialog-buttons {
-  position: absolute;
-  bottom: 0;
-  width: 95%;
-  padding: 5px;
-}
-.dialog-content {
-  padding-bottom: 50px;
-}
-.dialog-buttons .buttonloot, .dialog-buttons .cancel {
-  height: 35px;
-  text-align: center;
-}
+/* かつて V1 の `Dialog` 用に置いていた `.dialog-buttons` /
+   `.dialog-content` / `.dialog-buttons .buttonloot` は消した。
+   `.dialog-buttons` は V1 だけのクラスで既に当たる要素が無く、
+   `.dialog-content` は **DialogV2 が使っているクラス**なので、
+   core のものを含むアプリ内すべてのダイアログの本文に
+   padding-bottom: 50px が乗っていた */
 
 .growth-button {
   width: 35%;
@@ -1364,7 +1369,7 @@ input.weakapply[type="checkbox"] {
   text-align:center;
   display: block;
 }
-.action-button {
+.sw25 .action-button {
   width: 90%;
   margin-top: 10px;
   border:1px solid #000;
@@ -2119,9 +2124,9 @@ input.weakapply[type="checkbox"] {
   height:  100px;
 }
 
-body, .sw25cs__body__sidebar {
-  height: 100%;
-}
+/* `body, .sw25cs__body__sidebar { height: 100% }` は消した。
+   `.sw25cs__body__sidebar` はどのテンプレートにも無く、残る `body` は
+   Foundry のページ全体。高さは core が自分で敷いている */
 
 .togglearea{
   position: absolute;
@@ -2180,16 +2185,18 @@ body, .sw25cs__body__sidebar {
   opacity: 0;
 }
 
-.adventure{
+/* キャラクターシートのサイドバー「冒険」タブ。core は Adventure
+   ドキュメントの UI に同じクラスを使う */
+.sw25 .adventure {
   overflow-y: auto;
 }
 
 
-.window-app .window-resizable-handle {
-  z-index: 1500;
-}
-
-.character {
+/* `.character` はシートのルートに付く型名(`SW25CharacterSheet` の
+   DEFAULT_OPTIONS.classes)。`.sw25` と同じ要素なので子孫ではなく
+   複合で書く。素のままだと他の UI の `.character` まで
+   高さ 100% の縦フレックスになっていた */
+.sw25.character {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -2798,7 +2805,7 @@ body, .sw25cs__body__sidebar {
   text-shadow: 0 0 10px red;
 }
 
-input[type=checkbox]:checked+.checkbox--label::after {
+.sw25 input[type=checkbox]:checked+.checkbox--label::after {
   opacity: 1;
 }
 
@@ -2829,20 +2836,20 @@ input[type=checkbox]:checked+.checkbox--label::after {
   opacity: 0;
 }
 
-input[type=checkbox]:disabled + .checkbox--label {
+.sw25 input[type=checkbox]:disabled + .checkbox--label {
   cursor: default;
 }
 
-input[type=checkbox]:disabled + .checkbox--label::before {
+.sw25 input[type=checkbox]:disabled + .checkbox--label::before {
   border-color: #aaa;
 }
 
-input[type=checkbox]:disabled + .checkbox--label::after {
+.sw25 input[type=checkbox]:disabled + .checkbox--label::after {
   border-color: #aaa;
 }
 
-input[type=checkbox]:disabled + .checkbox--label:hover,
-input[type=checkbox]:disabled + .checkbox--label:focus {
+.sw25 input[type=checkbox]:disabled + .checkbox--label:hover,
+.sw25 input[type=checkbox]:disabled + .checkbox--label:focus {
   text-shadow: none;
 }
 
