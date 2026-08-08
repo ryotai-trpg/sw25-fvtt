@@ -1,13 +1,10 @@
 import { Util } from "./utils.mjs";
 
 /**
- * アクターシートのコンテキスト作り。V1(`sheets/actor-sheet.mjs`)と
- * ApplicationV2(`sheets/actor-sheet-V2.mjs`)の両方から呼ぶ。
+ * アクターシートのコンテキスト作り。`sheets/actor-sheet-V2.mjs` の 3 型で共用する。
  *
- * V1 は `toObject(false)` を通した素のオブジェクトの配列を、
- * V2 は生の Item Document の配列を `context.items` に載せて渡す。
- * ここで見るのは `type` / `name` / `img` / `system.*` だけなので、
- * どちらでも同じように動く。
+ * `context.items` に載るのは生の Item Document。ここで見るのは
+ * `type` / `name` / `img` / `system.*` だけ。
  */
 
 /**

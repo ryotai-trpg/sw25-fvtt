@@ -13,7 +13,7 @@ const TPL = "systems/sw25/templates/actor/parts";
 /**
  * アクターシート(ApplicationV2)の共通部分。
  *
- * テンプレートは V1 と 1 本を共有する(`parts/actor-<type>-body.hbs`)。
+ * テンプレートは `parts/actor-<type>-body.hbs` の 1 本。
  * PART を 1 枚だけ置き `root: true` にしてあるのは、
  *
  *   1. `#sidebar-hidden` の隠しチェックボックスと `.sw25pc` が
@@ -23,7 +23,7 @@ const TPL = "systems/sw25/templates/actor/parts";
  *      (`handlebars-application.mjs` の `#parsePartHTML`)
  *   2. 5,900 行のテンプレートをタブごとに切り直す価値が無い
  *
- * 操作は `SW25ActorActionsMixin` 側(V1 と共通)。
+ * 操作は `SW25ActorActionsMixin` 側。
  * こちらが持つのは AppV2 固有の配線 —— コンテキスト、タブ、委譲リスナ。
  */
 export class SW25ActorSheetV2 extends SW25ActorActionsMixin(

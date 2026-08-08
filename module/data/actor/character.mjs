@@ -80,7 +80,8 @@ const abilityFields = (raceIsDerived, basename) =>
  * - `isEdit` / `isSidebar` / `isToken` は宣言に無いがシートの状態そのもの。
  *   isEdit を落とすとシートが丸ごと読み取り専用になる
  * - `attributes.fairy.{6 属性}` も宣言に無い。name= ではなく
- *   `data-path` 属性 + actor-sheet.mjs のクリックハンドラで更新される
+ *   `data-path` 属性 + sheets/actor-sheet-actions.mjs のクリックハンドラで
+ *   更新される
  * - `money` は Actor.templates にあるが character の templates から
  *   参照されていない。シートは読み書きしている
  * - `attributes.{系統}power` は宣言では入力値のように見えるが派生値。

@@ -156,9 +156,8 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
     if (header.titleSlot) context.titleSlot = header.titleSlot;
 
     // 共有パーシャル(item-usedice / item-usepower / item-elements)が
-    // label の for と input の id を組むのに使う。V1 は `{{item._id}}` で
-    // 引いていたが AppV2 のコンテキストに `item` は無いので、
-    // V1 シート側でも同じ名前を渡して 1 組のパーシャルを共有する
+    // label の for と input の id を組むのに使う。AppV2 のコンテキストに
+    // `item` は無いので、パーシャル側は `{{docId}}` で引く
     context.docId = this.document.id;
 
     // 説明は閉じたエディタに出す分だけ enrich しておく。

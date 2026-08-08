@@ -2,13 +2,12 @@
  * Manage Active Effect instances through an Actor or Item Sheet via effect control buttons.
  * @param {MouseEvent} event      The left-click event on the effect control
  * @param {Actor|Item} owner      The owning document which manages this effect
- * @param {HTMLElement} [target]  操作を持つ `.effect-control` 自身。
- *   委譲で呼ぶ場合は `event.currentTarget` がリスナを張った要素(シートの
- *   ルート)になるので、押された要素を明示的に渡す。
+ * @param {HTMLElement} a         操作を持つ `.effect-control` 自身。
+ *   リスナはシートのルートに張った委譲なので `event.currentTarget` は
+ *   ルートを指す。押された要素は呼び出し側が渡す。
  */
-export function onManageActiveEffect(event, owner, target) {
+export function onManageActiveEffect(event, owner, a) {
   event.preventDefault();
-  const a = target ?? event.currentTarget;
   const li = a.closest("li");
   const effect = li.dataset.effectId
     ? owner.effects.get(li.dataset.effectId)

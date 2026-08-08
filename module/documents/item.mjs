@@ -152,10 +152,10 @@ export class SW25Item extends Item {
   /**
    * 属性のプリセット(system.prop / 武器の system.type)を elements へ展開する。
    *
-   * V1 では sheets/item-sheet.mjs の change リスナが自前で `update()` してから
-   * `render()` していた。ApplicationV2 のシートは submitOnChange でフォーム全体を
-   * 送るので、同じことをすると 1 回の操作で 2 回書くことになる。ドキュメント側で
-   * 同じ更新に混ぜれば、シートの種類にもマクロからの更新にも同じように効く。
+   * シートは name を送るだけでよい。シート側の change リスナで自前に
+   * `update()` すると、submitOnChange のフォーム送信と合わせて 1 回の操作で
+   * 2 回書くことになる。ドキュメント側で同じ更新に混ぜれば、シートからでも
+   * マクロからの更新でも同じように効く。
    *
    * @override
    */

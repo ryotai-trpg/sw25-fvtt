@@ -4,13 +4,11 @@ import { SW25Item } from "./documents/item.mjs";
 import { SW25ActiveEffect } from "./documents/active-effect.mjs";
 import { SW25Combat } from "./documents/combat.mjs";
 // Import sheet classes.
-import { SW25ActorSheet } from "./sheets/actor-sheet.mjs";
 import {
   SW25CharacterSheet,
   SW25NpcSheet,
   SW25MonsterSheet,
 } from "./sheets/actor-sheet-V2.mjs";
-import { SW25ItemSheet } from "./sheets/item-sheet.mjs";
 import { SW25ActiveEffectConfigV2 } from "./sheets/active-effect-config-V2.mjs";
 
 // Import helper/utility classes and constants.
@@ -26,7 +24,6 @@ import { rollreq } from "./helpers/rollrequest.mjs";
 import { targetRollDialog, targetSelectDialog } from "./helpers/dialogs.mjs";
 import { preparePolyglot } from "./helpers/sw25languageprovider.mjs";
 import { Migrator } from "./helpers/migrator.mjs";
-import { bindTextareaEditors } from "./helpers/textarea-editor.mjs";
 
 import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
@@ -120,12 +117,6 @@ Hooks.once("init", function () {
     "core",
     foundry.appv1.sheets.ActorSheet
   );
-  DocumentSheetConfig.registerSheet(Actor, "sw25", SW25ActorSheet, {
-    makeDefault: true,
-    label: "SW25.SheetLabels.Actor",
-  });
-
-  // ApplicationV2 へ移した型は、型を絞った登録で V1 の既定を上書きする
   DocumentSheetConfig.registerSheet(Actor, "sw25", SW25CharacterSheet, {
     types: ["character"],
     makeDefault: true,
@@ -149,13 +140,6 @@ Hooks.once("init", function () {
     "core",
     foundry.appv1.sheets.ItemSheet
   );
-  DocumentSheetConfig.registerSheet(Item, "sw25", SW25ItemSheet, {
-    makeDefault: true,
-    label: "SW25.SheetLabels.Item",
-  });
-
-  // ApplicationV2 へ移した型は、型を絞った登録で V1 の既定を上書きする。
-  // 未移行の型は上の SW25ItemSheet(V1)が既定のまま
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25LanguageSheet, {
     types: ["language"],
     makeDefault: true,
@@ -1479,17 +1463,6 @@ Hooks.on("getSceneControlButtons", function (controls) {
     }
   }
 });
-
-// textarea edit hook
-// $() は V1 が渡す jQuery でも ApplicationV2 が渡す HTMLElement でも通るので、
-// シートを AppV2 化してもこのまま動く。document も両世代にある(object は V1 のみ)。
-// V1 シート用。ApplicationV2 のシートはクラス名の連鎖からフック名が作られるので
-// ここには飛ばない — V2 側は SW25DocumentSheetMixin#_onRender が同じ処理を張る
-const onRenderTextareaEditor = (app, element) => {
-  bindTextareaEditors(element instanceof HTMLElement ? element : element[0], app.document);
-};
-Hooks.on("renderSW25ActorSheet", onRenderTextareaEditor);
-Hooks.on("renderSW25ItemSheet", onRenderTextareaEditor);
 
 // Polyglot support
 Hooks.once("polyglot.init", (LanguageProvider) => {

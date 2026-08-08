@@ -117,10 +117,10 @@ export const SW25DocumentSheetMixin = (base) =>
     async _onRender(context, options) {
       await super._onRender(context, options);
 
-      // V1 では sw25.mjs の `renderSW25ItemSheet` / `renderSW25ActorSheet` フックが
-      // 張っていた。ApplicationV2 のフック名はクラス名の連鎖から作られるので
-      // (`Application#_doEvent` → `#callHooks`)、V2 のシートにはあのフックは飛ばない。
-      // シート側の責務としてここで張り直す
+      // `.textarea-editor` の blur 保存。ApplicationV2 のフック名は
+      // クラス名の連鎖から作られる(`Application#_doEvent` → `#callHooks`)ので、
+      // 外から `renderSW25ItemSheet` のような固定名では捕まえられない。
+      // シート側の責務としてここで張る
       bindTextareaEditors(this.element, this.document);
     }
 

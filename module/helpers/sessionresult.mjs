@@ -1,8 +1,6 @@
 /**
  * セッション記録の「結果を出力」。
- *
- * V1 シートの `_onSessionResult` をそのまま移したもの。移行後は
- * ApplicationV2 の `sessionResult` アクションと V1 シートの両方が呼ぶ。
+ * `SW25SessionSheet` の `sessionResult` アクションから呼ぶ。
  */
 export async function sessionResult(item) {
   let chatData = null;

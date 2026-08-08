@@ -5,20 +5,17 @@ import { lootRoll } from "../helpers/lootroll.mjs";
 import { growthCheck } from "../helpers/growthcheck.mjs";
 import { actionRoll } from "../helpers/actionroll.mjs";
 import { targetRollDialog, targetSelectDialog } from "../helpers/dialogs.mjs";
-import { Util } from "../helpers/utils.mjs";
+import { Util, slideToggle, slideUp } from "../helpers/utils.mjs";
 import { DamageSupporter } from "../helpers/damagesupport.mjs";
 
 /**
- * アクターシートの操作。V1(`actor-sheet.mjs`)と ApplicationV2
- * (`actor-sheet-V2.mjs`)の両方に被せる。
+ * アクターシートの操作。`actor-sheet-V2.mjs` の 3 型に被せる。
  *
  * ハンドラは ApplicationV2 の action と同じ `(event, target)` で受ける。
- * `target` は「そのハンドラが張られている要素」で、V1 では
- * `event.currentTarget`、V2 では委譲で `closest()` が返した要素にあたる。
+ * `target` は「押された要素」で、委譲リスナが `closest()` で拾ったもの。
  * `this` に求めるのは `actor` / `submit()` / `render()` の 3 つだけ。
  *
- * @param {typeof foundry.applications.api.ApplicationV2
- *        | typeof foundry.appv1.api.Application} base
+ * @param {typeof foundry.applications.api.ApplicationV2} base
  */
 export const SW25ActorActionsMixin = (base) =>
   class SW25ActorActions extends base {
@@ -30,8 +27,7 @@ export const SW25ActorActionsMixin = (base) =>
      * クリックで呼ぶもの。閲覧だけでも動く。
      *
      * ApplicationV2 の `data-action` へ振り直していないのは、
-     *   - テンプレートを V1 と共有していて、対象が 48 本の partial に
-     *     散らばった約 800 要素あること
+     *   - 対象が 48 本の partial に散らばった約 800 要素あること
      *   - `.quantity-button` などが `data-action="increase|decrease"` を
      *     **別の意味で**既に使っていること
      * の 2 つによる。
@@ -118,11 +114,6 @@ export const SW25ActorActionsMixin = (base) =>
     /**
      * 説明の開閉。
      *
-     * 高さのアニメーションだけのために jQuery の `slideToggle()` を使う。
-     * `.item-description` などは CSS で `display: none` にしてあり、
-     * 素の DOM で同じ動きを出すには高さの計測が要る。
-     * ここは見た目だけの処理なので Phase 4 でまとめて外す。
-     *
      * @param {HTMLElement} target 押された見出し
      * @param {string} rowSelector 行を探すセレクタ
      * @param {string} descSelector 開閉する説明のセレクタ
@@ -131,7 +122,7 @@ export const SW25ActorActionsMixin = (base) =>
       const row = target.closest(rowSelector);
       const description = row?.querySelector(descSelector);
       target.classList.remove("open");
-      if (description) $(description).slideToggle();
+      if (description) slideToggle(description);
     }
 
     /* -------------------------------------------- */
@@ -149,8 +140,8 @@ export const SW25ActorActionsMixin = (base) =>
       if (!item) return;
       const row = target.closest(".item");
       await item.delete();
-      if (row) $(row).slideUp(200, () => this.render(false));
-      else this.render(false);
+      if (row) await slideUp(row, 200);
+      this.render(false);
     }
 
     /**
@@ -159,7 +150,7 @@ export const SW25ActorActionsMixin = (base) =>
      * アクターのシートはアイテムのバフも並べるので、行の
      * `data-parent-id` が指す Document へ向ける。
      * `data-action` の値(create / toggle / edit / delete)は
-     * V1 から共有しているテンプレートがそのまま持っている。
+     * `parts/actor-effects.hbs` が持っている。
      */
     async _onEffectControl(event, target) {
       const row = target.closest("[data-parent-id]");
@@ -1323,9 +1314,7 @@ export const SW25ActorActionsMixin = (base) =>
     async _onActionTableDrag(event, target) {
       event.preventDefault();
       const dataset = target.dataset;
-      const data = JSON.parse(
-        (event.originalEvent ?? event).dataTransfer.getData("text/plain")
-      );
+      const data = JSON.parse(event.dataTransfer.getData("text/plain"));
       const item = await fromUuid(data.uuid);
       if (!item) return;
       if (item.type != "action") return;
@@ -1926,7 +1915,7 @@ export const SW25ActorActionsMixin = (base) =>
     async _onBookmarkDrop(event, target) {
       event.preventDefault();
 
-      const data = JSON.parse((event.originalEvent ?? event).dataTransfer.getData("text/plain"));
+      const data = JSON.parse(event.dataTransfer.getData("text/plain"));
       if (data.type !== "Item") return;
 
       const droppedItem = await fromUuid(data.uuid ?? data.data?.uuid);
