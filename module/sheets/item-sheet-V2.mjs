@@ -53,11 +53,24 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
   /** タブの見出し。本体の汎用テンプレートをそのまま使う */
   static TABS_PART = { template: "templates/generic/tab-navigation.hbs" };
 
-  /** 説明タブ。全型で共通 */
+  /** 説明タブ。全型で共通(概要カード + 本文エディタ) */
   static DESCRIPTION_PART = {
     template: `${TPL}/description.hbs`,
+    templates: [`${TPL}/parts/editor.hbs`],
     scrollable: [""],
   };
+
+  /**
+   * 概要カードの形に収まらない型の説明タブ。
+   * いまのところ技能(判定基準値のサイドバーを持つ)だけ。
+   */
+  static descriptionPart(type) {
+    return {
+      template: `${TPL}/description/${type}.hbs`,
+      templates: [`${TPL}/parts/editor.hbs`],
+      scrollable: [""],
+    };
+  }
 
   /** 詳細タブ。中身は型ごとに違うので `templates/item/details/<type>.hbs` */
   static detailsPart(type) {
@@ -205,6 +218,45 @@ export class SW25CheckSheet extends SW25ItemSheetV2 {
     context.checkDamageButtons = this._damageButtons("ck");
     context.powerDamageButtons = this._damageButtons("pw");
     context.powerTableRows = this._powerTableRows();
+
+    return context;
+  }
+}
+
+/**
+ * 技能。
+ *
+ * V1 は 24 型のうち session と並んで旧ヘッダ様式(編集トグル無し、入力は常時有効)
+ * のまま残っていた。他の型と同じ共通ヘッダに寄せ、入力も isEdit で縛る
+ * (ユーザー判断)。説明タブは概要カードではなく判定基準値のサイドバーなので
+ * 型ごとのテンプレートを使う。
+ */
+export class SW25SkillSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("skill"),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.descriptionPart("skill"),
+    details: SW25ItemSheetV2.detailsPart("skill"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** サイドバーに並べる能力値。判定基準値は毎回計算される派生値 */
+  static SKILL_BASE_ABILITIES = ["dex", "agi", "str", "vit", "int", "mnd"];
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const base = this.document.system.skillbase;
+
+    context.skillBaseRows = SW25SkillSheet.SKILL_BASE_ABILITIES.map((key) => ({
+      key,
+      label: game.i18n.localize(
+        `SW25.Ability.${key.charAt(0).toUpperCase()}${key.slice(1)}.long`
+      ),
+      value: base[key],
+    }));
 
     return context;
   }

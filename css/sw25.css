@@ -3720,8 +3720,14 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
   gap: 5px;
 }
 
-.sw25.application.item .tab prose-mirror {
-  min-height: 100%;
+/* 本文エディタ。タブ直下なら余りを埋め、技能のようにサイドバーと並ぶ
+   レイアウトでは伸びしろが無いので、最低限の高さを持たせる */
+.sw25.application.item .tab > prose-mirror {
+  flex: 1;
+}
+
+.sw25.application.item prose-mirror {
+  min-height: 8em;
 }
 
 /* 詳細タブの囲み。V1 は `.sw25item .category` で当てていたが、AppV2 には
@@ -3750,4 +3756,17 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
 .sw25.application.item .tab > fieldset,
 .sw25.application.item .tab > .grid {
   flex: 0 0 auto;
+}
+
+/* 技能の説明タブのように、サイドバーと本文を横に並べる型のための調整。
+   タブが flex 列なので、中の grid が縦に潰れないよう伸ばす */
+.sw25.application.item .tab > section.grid {
+  flex: 1;
+  min-height: 0;
+}
+
+.sw25.application.item .tab > section.grid > .main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }

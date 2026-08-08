@@ -29,6 +29,7 @@ import {
   SW25CheckSheet,
   SW25LanguageSheet,
   SW25ResourceSheet,
+  SW25SkillSheet,
   SW25WeaponSheet,
 } from "./sheets/item-sheet-V2.mjs";
 
@@ -132,6 +133,12 @@ Hooks.once("init", function () {
 
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25WeaponSheet, {
     types: ["weapon"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25SkillSheet, {
+    types: ["skill"],
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });

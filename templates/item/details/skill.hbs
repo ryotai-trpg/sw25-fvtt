@@ -1,0 +1,30 @@
+{{!-- skill の詳細タブ。
+
+     V1 は編集トグルを持たず入力が常時有効だったが、他の 22 型に合わせて
+     `isEdit` で縛るようにした(ユーザー判断)。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <div class="flexrow grid grid-8col nogapmargin">
+    <span style="text-align: center;">
+      <label for="{{docId}}system.skilllevel"><b>{{localize "SW25.Item.Skill.Skilllevel"}}</b></label><br>
+      <input id="{{docId}}system.skilllevel" type="text" name="system.skilllevel"
+             value="{{system.skilllevel}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    </span>
+    <span style="text-align: center;">
+      <b>{{localize "SW25.Item.Skill.Exptable"}}</b><br>
+      <select name="system.exptable" {{disabled (not isEdit)}}>
+        {{selectOptions config.exptables selected=system.exptable blank="-"}}
+      </select>
+    </span>
+    <span class="grid-span-2" style="text-align: center;">
+      <b>{{localize "SW25.Item.Skill.Skilltype"}}</b><br>
+      <select name="system.skilltype" {{disabled (not isEdit)}}>
+        {{selectOptions config.skillTypes selected=system.skilltype localize=true blank="-"}}
+      </select>
+    </span>
+    <div class="grid-span-3">
+      <input class="checkbox--hidden" id="{{docId}}system.dedicated" type="checkbox"
+             name="system.dedicated" data-dtype="Boolean" {{checked system.dedicated}} {{disabled (not isEdit)}}/>
+      <label class="checkbox--label" for="{{docId}}system.dedicated">{{localize "SW25.Item.Invoker"}}</label>
+    </div>
+  </div>
+</section>

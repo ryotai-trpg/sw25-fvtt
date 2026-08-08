@@ -1,0 +1,31 @@
+{{!-- skill の説明タブ。
+
+     他の型の「概要カードの並び」ではなく、判定基準値のサイドバーを持つので
+     共通の description.hbs ではなくこちらを使う。
+     基準値は能力値ごとに毎回計算される派生値で、読むだけ。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <section class="grid grid-4col">
+    <aside class="sidebar flex-between">
+      <div class="flexcol">
+        <span><b>{{localize "SW25.Check"}}{{localize "SW25.Basenumber"}}</b></span>
+        <div class="flexrow">
+          <label for="{{docId}}system.skillmod" style="text-align: right;">{{localize "SW25.Modifier"}}</label>
+          <input id="{{docId}}system.skillmod" class="resource-label" style="text-align: center;"
+                 type="text" name="system.skillmod" value="{{system.skillmod}}" data-dtype="Number"
+                 {{disabled (not isEdit)}}/>
+        </div>
+        <hr>
+        {{#each skillBaseRows as |row|}}
+          <div class="flexrow flex-group-right">
+            <span class="resource-label flexlarge">{{row.label}}</span>
+            <span class="resource-label flexlarge" style="text-align: left;">: {{row.value}}</span>
+          </div>
+        {{/each}}
+      </div>
+    </aside>
+    <section class="main grid-span-3">
+      <span><b>{{localize "SW25.Description"}}</b></span>
+      {{> "systems/sw25/templates/item/parts/editor.hbs"}}
+    </section>
+  </section>
+</section>
