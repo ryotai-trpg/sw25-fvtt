@@ -589,6 +589,16 @@
         "Conversation": "会話",
         "Reading": "読文"
       },
+      "language": {
+        "FIELDS": {
+          "conversation": {
+            "label": "会話"
+          },
+          "reading": {
+            "label": "読文"
+          }
+        }
+      },
       "Otherfeature": {
         "Type": "特技種別"
       },

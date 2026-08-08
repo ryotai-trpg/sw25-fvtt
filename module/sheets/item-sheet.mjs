@@ -275,12 +275,6 @@ export class SW25ItemSheet extends ItemSheet {
     if (itemData.type == "language") {
       this._prepareItemRollData(context);
       this._prepareLanguageData(context);
-      context.clickitemOptions = {
-        all: "SW25.Item.All",
-        power: "SW25.Item.Powerroll",
-        dice: "SW25.Item.Diceroll",
-        description: "SW25.Item.Onlydescription",
-      };
     }
 
     if (itemData.type == "spell") {

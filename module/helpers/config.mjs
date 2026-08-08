@@ -710,7 +710,6 @@ SW25.itemTypeList = [
   { type: "combatability", label: "SW25.TYPES.Item.combatability" },
   { type: "skill", label: "SW25.TYPES.Item.skill" },
   { type: "raceability", label: "SW25.TYPES.Item.raceability" },
-  { type: "language", label: "SW25.TYPES.Item.language" },
   { type: "monsterability", label: "SW25.TYPES.Item.monsterability" },
   { type: "action", label: "SW25.TYPES.Item.action" },
   { type: "session", label: "SW25.TYPES.Item.session" }

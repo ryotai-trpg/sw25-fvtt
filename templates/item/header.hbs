@@ -1,0 +1,26 @@
+
+<header class="header">
+  <section class="header__img">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+  </section>
+        <div class="name">
+        {{formInput fields.name value=source.name placeholder=(localize "DOCUMENT.FIELDS.name.label")
+        aria=(object label=(localize "DOCUMENT.FIELDS.name.label"))}}
+      </div>
+
+  <section class="header__title">
+    <h1 class="charname">
+      {{#if system.isEdit}}
+        <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+      {{else}}
+        {{item.name}}
+      {{/if}}
+    </h1>
+  </section>
+  <section class="header__subtitle">
+
+    {{formGroup systemFields.conversation value=system.conversation}}
+    {{formGroup systemFields.reading value=system.reading}}
+
+  </section>
+</header>

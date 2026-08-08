@@ -711,11 +711,6 @@
     "raceability": {
       "templates": ["base", "roll"]
     },
-    "language": {
-      "templates": ["base"],
-      "conversation": false,
-      "reading": false
-    },
     "monsterability": {
       "templates": ["base", "roll", "ability"],
       "remark": "",
