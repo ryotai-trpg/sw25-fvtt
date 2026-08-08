@@ -77,8 +77,8 @@ export async function growthCheck(actor) {
 
   ChatMessage.create(chatData);
 
-  Hooks.once("renderChatMessage", (message, html, data) => {
-    html = $(html);
+  Hooks.once("renderChatMessageHTML", (message, element, data) => {
+    const html = $(element);
     html.find(".increase-ability").click(async function (event) {
       event.preventDefault();
 

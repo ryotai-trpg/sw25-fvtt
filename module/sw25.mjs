@@ -797,8 +797,10 @@ Hooks.once("ready", async function () {
   });
 
   // Chat message button
-  Hooks.on("renderChatMessage", (chatMessage, html, data) => {
-    html = $(html);
+  Hooks.on("renderChatMessageHTML", (chatMessage, element, data) => {
+    // chatbutton.mjs がまだ jQuery 前提なので、ここで包んで渡す。
+    // DOM API への置き換えはチャットボタン側をまとめて直す時に行う。
+    const html = $(element);
     html.find(".buttonclick").click(function () {
       const button = $(this);
       const buttonType = button.data("buttontype");
@@ -1300,8 +1302,10 @@ Hooks.on("getSceneControlButtons", function (controls) {
 });
 
 // textarea edit hook
-Hooks.on("renderSW25ActorSheet", (app, html, data) => {
-  html = $(html);
+// $() は V1 が渡す jQuery でも ApplicationV2 が渡す HTMLElement でも通るので、
+// シートを AppV2 化してもこのまま動く。document も両世代にある(object は V1 のみ)。
+const onRenderTextareaEditor = (app, element) => {
+  const html = $(element);
   html.find(".textarea-editor").on("blur", async (event) => {
     const textarea = $(event.currentTarget);
     const path = "system." + textarea.data("path");
@@ -1311,23 +1315,11 @@ Hooks.on("renderSW25ActorSheet", (app, html, data) => {
     const updateData = {};
     updateData[path] = content;
     updateData[displaypath] = displaycontent;
-    await app.object.update(updateData);
+    await app.document.update(updateData);
   });
-});
-Hooks.on("renderSW25ItemSheet", (app, html, data) => {
-  html = $(html);
-  html.find(".textarea-editor").on("blur", async (event) => {
-    const textarea = $(event.currentTarget);
-    const path = "system." + textarea.data("path");
-    const displaypath = "system.display" + textarea.data("path");
-    const content = textarea.val();
-    const displaycontent = content.replace(/\n/g, "<br>");
-    const updateData = {};
-    updateData[path] = content;
-    updateData[displaypath] = displaycontent;
-    await app.object.update(updateData);
-  });
-});
+};
+Hooks.on("renderSW25ActorSheet", onRenderTextareaEditor);
+Hooks.on("renderSW25ItemSheet", onRenderTextareaEditor);
 
 // Polyglot support
 Hooks.once("polyglot.init", (LanguageProvider) => {
