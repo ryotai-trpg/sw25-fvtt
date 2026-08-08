@@ -52,6 +52,12 @@ export class SW25ItemSheet extends foundry.appv1.sheets.ItemSheet {
 
     context.config = CONFIG.SW25;
 
+    // 共有パーシャル(item-usedice / item-usepower / item-elements)が
+    // label の for と input の id を組むのに使う。V1 は `{{item._id}}` で
+    // 引けたが、ApplicationV2 のコンテキストに `item` は無い。
+    // 同じパーシャルを両方から使うため、名前を揃えてここで渡す
+    context.docId = this.item.id;
+
     context.applyOptions = {
       "-": "SW25.Item.Noapply",
       on: "SW25.Item.applyon",
