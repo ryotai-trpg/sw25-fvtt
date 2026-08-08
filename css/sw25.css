@@ -3775,80 +3775,212 @@ input[type=checkbox]:disabled + .checkbox--label:focus {
    ApplicationV2 のアクターシート(Phase 3)
 
    テンプレートは V1 と同じもの(parts/actor-<type>-body.hbs)を読むので、
-   足りないのは「V1 の枠が与えていたもの」だけ。v14 は AppV2 のシートに
-   新しい体裁(foundry2)をそのまま当て、V1 のシートにだけ
-   `body.game .app ...` で旧来の体裁へ戻す互換ルールを持っている。
-   その戻し分をアクターシートの範囲に限って置き直す。
-   `.sw25pc` 側と `.sw25.application.item` 側は触らない。
+   足りないのは「V1 の枠が与えていたもの」だけ。
+
+   v14 の core は `@layer compatibility` に `body.game .app ...` という
+   V1 専用の互換ルールを持っていて、旧来の体裁(入力欄の寸法、見出しの字面、
+   hr、img の枠、タブの並び)はそこから来ている。ApplicationV2 のシートには
+   当たらないので、このシートに効く分だけ写す。
+   **色と影と書体は写さなくてよい** —— シート側に `themed theme-light` を
+   付けてあり(`sheets/document-sheet-mixin.mjs`)、V1 のライトテーマの変数
+   一式はそれで揃う。
+
+   **`@layer system` に入れること。** core は
+   `@layer reset, variables, elements, blocks, applications,
+    compatibility, layouts, system, modules, exceptions;`
+   と宣言していて、`system` は compatibility の後・レイヤ無しの前に来る。
+   ここに置くと core の新しい体裁には勝ち、css/sw25.css / css/sw25-skin.css
+   自身のルール(レイヤ無し)には負ける —— V1 とまったく同じ強さになる。
+   **レイヤ無しで書くと `.sw25 .items-list .item-name h3` のような
+   自前のルールを詳細度で踏み潰す**(アイテム名が 12px → 17.5px になる
+   退行を出した)。
    ===================================================================== */
 
-.sw25.application.actor {
-  /* 主タブの縦帯(.tab-switcher)は right: -2.5em でシートの外へ出す。
-     ルートの <form> は AppV2 が overflow: hidden にしているので開ける */
-  overflow: visible;
+@layer system {
+  /* core が V1 の `.app` スコープでしか宣言していない変数。
+     テーマの変数ではないので `themed theme-light` を付けても降ってこない。
+     css/sw25.css と core の互換ルールの両方がこれらを参照して書かれており、
+     欠けていると `border: 1px solid var(--color-border-dark-1)` のような
+     宣言がまるごと無効になる(アイテムシートのタブの下線が消えていた)。
+     アイテムシートも読むので AppV2 のシート全体に置く */
+  .sw25.application {
+    --font-primary: "Signika", sans-serif;
+    --form-field-height: 26px;
+    --color-border-dark: #000;
+    --color-border-dark-1: #111;
+    --color-border-light-primary: #b5b3a4;
+    --color-border-light-highlight: #f0f0e0;
+    --color-underline-header: #782e22;
+    --color-shadow-primary: #ff0000;
+  }
 
-  /* 入力欄の高さ。AppV2 の既定は 2rem(32px)で、V1 の互換ルールが使う
-     26px に比べて縦に伸びる。行数の多いシートなので V1 に揃える */
-  --input-height: 26px;
-  --form-field-height: 26px;
+  /* ウィンドウの見出し。`.window-title` の実体は <h1> で、AppV2 の体裁では
+     26px の見出し書体になる(V1 は 14px)。ルート側の font-size は
+     `.application .window-header .window-title` の独自ルールに阻まれて
+     継承されないので、ここで直接指定する */
+  .sw25.application .window-header .window-title {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-14);
+    font-weight: normal;
+    line-height: normal;
+    margin: 0;
+  }
 
-  /* AppV2 は行の高さを固定値で敷く。V1 の互換ルールは line-height: unset */
-  line-height: normal;
-}
+  .sw25.application.actor {
+    /* AppV2 は行の高さと文字の大きさを固定値で敷く。
+       ウィンドウの見出しが 14px → 26px になるのもこれ */
+    line-height: normal;
+    font-size: var(--font-size-14);
 
-/* .window-content は backdrop-filter: blur() を持つため、絶対配置の
-   包含ブロックになる。V1 では .app が包含ブロックで .tab-switcher が
-   はみ出せていたので、ここで切らないようにする。
-   縦のスクロールは #main-contents / #sidebar-* が各自で持っている */
-.sw25.application.actor .window-content {
-  overflow: visible;
-}
+    /* 主タブの縦帯(.tab-switcher)は right: -2.5em でシートの外へ出す。
+       ルートの <form> は AppV2 が overflow: hidden にしているので開ける */
+    overflow: visible;
+  }
 
-/* 見出し。AppV2 の体裁ではアイテム名の <h4> が 24px の
-   Modesto Condensed になる。V1 と同じ字面に戻す */
-.sw25.application.actor :is(h1, h2, h3, h4, h5, h6) {
-  font-family: inherit;
-  font-weight: normal;
-  line-height: unset;
-  color: inherit;
-  margin: 0 0 0.5rem;
-  padding: 0;
-}
+  /* .window-content は backdrop-filter: blur() を持つため、絶対配置の
+     包含ブロックになる。V1 では .app が包含ブロックで .tab-switcher が
+     はみ出せていたので、ここで切らないようにする。
+     縦のスクロールは #main-contents / #sidebar-* が各自で持っている */
+  .sw25.application.actor .window-content {
+    overflow: visible;
+  }
 
-.sw25.application.actor :is(h4, h5, h6) {
-  font-size: inherit;
-}
+  /* V1 は `<form class="… flexcol">` が本体を包んでいた(npc / monster)。
+     AppV2 は PART の中身が .window-content の直下に並ぶので、
+     その form が持っていた役割をここへ移す */
+  .sw25.application.actor:is(.npc, .monster) .window-content {
+    display: flex;
+    flex-direction: column;
+  }
 
-.sw25.application.actor h1 {
-  font-size: 2em;
-}
+  .sw25.application.actor .flexcol > *,
+  .sw25.application.actor:is(.npc, .monster) .window-content > * {
+    flex: 1;
+  }
 
-.sw25.application.actor h2 {
-  font-size: 1.5em;
-}
+  .sw25.application.actor header.sheet-header {
+    display: flex;
+  }
 
-.sw25.application.actor h3 {
-  font-size: 1.25em;
-}
+  /* 見出し。AppV2 の体裁では <h1> が 48px の Modesto Condensed になる。
+     アイテムシートは AppV2 用に作り直したテンプレートなのでそのままでよく、
+     V1 とテンプレートを共有しているアクターシートだけ戻す。
 
-/* AppV2 は select を幅いっぱいに広げ、チェックボックスを大きくする。
-   どちらも列の詰まったこのシートでは崩れるので V1 の寸法に戻す */
-.sw25.application.actor select {
-  width: auto;
-}
+     `font-family: inherit` にしてはいけない —— 名前の <h1> は親
+     (.header__title)が Modesto Condensed なので、V1 では出ていない
+     装飾書体を拾ってしまう。V1 と同じく絶対値で戻す */
+  .sw25.application.actor :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-primary);
+    font-weight: normal;
+    line-height: unset;
+    color: inherit;
+    margin: 0 0 0.5rem;
+    padding: 0;
+  }
 
-.sw25.application.actor input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-}
+  .sw25.application.actor h4 {
+    font-size: revert;
+  }
 
-/* 選択肢の背景。AppV2 では透明になり、開いたときに字が読めなくなる */
-.sw25.application.actor option {
-  background-color: var(--color-cool-5, #dad8cc);
-}
+  .sw25.application.actor h1 {
+    font-size: 2em;
+    border-bottom: 2px solid var(--color-underline-header);
+  }
 
-/* タブの見出し。V1 は core の `.app` 側のルールで余白が付いていた。
-   キャラクターの縦帯(.tab-switcher)は自前の余白を持つので触らない */
-.sw25.application.actor nav.sheet-tabs > a {
-  padding: 8px 12px;
+  .sw25.application.actor h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid var(--color-underline-header);
+  }
+
+  .sw25.application.actor h3 {
+    font-size: 1.25em;
+    border-bottom: 1px solid var(--color-underline-header);
+  }
+
+  /* 入力欄。AppV2 の既定は高さ 2rem・幅 100% で、行の詰まった
+     このシートでは縦にも横にも溢れる */
+  .sw25.application.actor
+    :is(input[type="text"], input[type="number"], input[type="password"],
+        input[type="date"], input[type="time"], input[type="search"]) {
+    width: calc(100% - 2px);
+    min-width: 20px;
+    height: var(--form-field-height);
+    padding: 1px 3px;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: inherit;
+    line-height: inherit;
+    border-radius: 3px;
+  }
+
+  .sw25.application.actor input[type="checkbox"] {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    margin: 3px 5px;
+  }
+
+  .sw25.application.actor select {
+    width: auto;
+    height: calc(var(--form-field-height) + 1px);
+    padding: 0 3px;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    text-overflow: ellipsis;
+  }
+
+  .sw25.application.actor :is(option, optgroup) {
+    font-family: inherit;
+  }
+
+  .sw25.application.actor hr {
+    border: none;
+    border-top: 1px solid var(--color-border-light-primary);
+    border-bottom: 1px solid var(--color-border-light-highlight);
+  }
+
+  .sw25.application.actor img {
+    box-sizing: border-box;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 2px;
+    max-width: 100%;
+  }
+
+  .sw25.application.actor :is(ul, ol) li {
+    margin: unset;
+  }
+
+  .sw25.application.actor button {
+    display: unset;
+    height: unset;
+    min-height: unset;
+    padding: revert;
+    line-height: 28px;
+  }
+
+  .sw25.application.actor .tabs.sheet-tabs {
+    margin: 4px 0;
+  }
+
+  .sw25.application.actor .tabs {
+    align-items: center;
+    display: flex;
+    flex-flow: row;
+    gap: 0;
+    line-height: unset;
+    justify-content: space-around;
+  }
+
+  .sw25.application.actor .tabs > [data-tab].active {
+    text-shadow: 0 0 10px var(--color-shadow-primary);
+  }
+
+  /* タブの見出し。V1 は core の `.app` 側のルールで余白が付いていた。
+     キャラクターの縦帯(.tab-switcher)は自前の余白を持つので触らない */
+  .sw25.application.actor nav.sheet-tabs > a {
+    padding: 8px 12px;
+  }
 }

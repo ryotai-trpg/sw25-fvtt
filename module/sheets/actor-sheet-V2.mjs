@@ -29,9 +29,25 @@ const TPL = "systems/sw25/templates/actor/parts";
 export class SW25ActorSheetV2 extends SW25ActorActionsMixin(
   SW25DocumentSheetMixin(foundry.applications.sheets.ActorSheetV2)
 ) {
-  /** classes は継承チェーンでマージされる(`sw25` は mixin 側から降りてくる) */
+  /**
+   * classes は継承チェーンでマージされる(`sw25` は mixin 側から降りてくる)。
+   *
+   * `themed` / `theme-light` は core が V1 の Application 全部に強制していた
+   * もの(`appv1/api/application-v1.mjs:81`)。ApplicationV2 は代わりに
+   * 利用者のシートテーマ設定に従うので、指定しないとインターフェースの
+   * テーマ(既定はダーク)で描かれ、V1 と共有しているテンプレートの
+   * 見た目が崩れる —— 入力欄の内側の影、文字色、hr、タブの色などが
+   * すべて V1 のライトテーマの変数を前提に書かれているため。
+   *
+   * **アイテムシートには付けない。**あちらは AppV2 用に作り直した
+   * テンプレートで、core のダークテーマの色を前提にできている
+   * (`theme-light` を当てるとタブの文字が暗くなって読めなくなる)。
+   *
+   * `_initializeApplicationOptions` は `themed` が既にあれば設定を
+   * 見に行かないので、V1 と同じくこの指定が優先される。
+   */
   static DEFAULT_OPTIONS = {
-    classes: ["sheet", "actor"],
+    classes: ["sheet", "actor", "themed", "theme-light"],
     position: { width: 800, height: 700 },
   };
 
@@ -276,7 +292,7 @@ export class SW25CharacterSheet extends SW25ActorSheetV2 {
 
 /** NPC / フェロー */
 export class SW25NpcSheet extends SW25ActorSheetV2 {
-  static DEFAULT_OPTIONS = { classes: ["npc"], position: { width: 600, height: 600 } };
+  static DEFAULT_OPTIONS = { classes: ["npc"] };
 
   static PARTS = { body: { root: true, template: `${TPL}/actor-npc-body.hbs` } };
 }
