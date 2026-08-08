@@ -23,6 +23,17 @@ export class SW25ItemDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {};
   }
+
+  /** @inheritDoc */
+  static migrateData(source) {
+    // カスタム項目は配列だが、V1 のシートが Object.values() で受けていたとおり
+    // 既存ワールドではキー付きオブジェクトで保存されていることがある
+    const fields = source?.customFields;
+    if (fields && !Array.isArray(fields) && typeof fields === "object") {
+      source.customFields = Object.values(fields);
+    }
+    return super.migrateData(source);
+  }
 }
 
 /* -------------------------------------------- */
@@ -119,6 +130,19 @@ export const numberedCheckFields = (i, opts = {}) => {
     }),
   };
 };
+
+/**
+ * カスタム項目(ラベルと値の組の並び)。otherfeature と session が持つ。
+ *
+ * **template.json にも Phase 2 の DataModel にも無かった。** シートには
+ * 追加・削除・並べ替えのボタンがあるのに宣言が無く、DataModel 化してからは
+ * 書き込みが黙って捨てられて 1 行も増えない状態だった。
+ */
+export const customFieldsField = () =>
+  new ArrayField(
+    new SchemaField({ label: str(), value: str() }),
+    { required: true, initial: [] }
+  );
 
 /** 属性(武器・防具から呪文まで 10 型以上が持つ)。template.json には無い。 */
 export const elementsFields = () => ({

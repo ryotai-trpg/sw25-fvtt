@@ -2,6 +2,7 @@ import {
   SW25ItemDataModel,
   baseFields,
   commonFields,
+  customFieldsField,
   rollFields,
   BooleanField,
   NumberField,
@@ -57,6 +58,8 @@ export class SessionData extends SW25ItemDataModel {
         sword: bool(),
         custom: bool(),
       }),
+
+      customFields: customFieldsField(),
     };
   }
 

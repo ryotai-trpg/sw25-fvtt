@@ -6,6 +6,7 @@ import {
   abilityFields,
   castFields,
   costFields,
+  customFieldsField,
   elementsFields,
   resistFields,
   textareaEditorFields,
@@ -272,6 +273,7 @@ export class OtherfeatureData extends SW25ItemDataModel {
     return {
       ...abilityBase(),
       type: str(),
+      customFields: customFieldsField(),
     };
   }
 
