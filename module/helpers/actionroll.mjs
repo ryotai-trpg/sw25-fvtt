@@ -17,10 +17,10 @@ export async function actionRoll(element, actor) {
   // roll setting
   let label = game.i18n.localize("SW25.ActionRoll") + `:${actor.name}`;
   let roll, result, total;
+  const messageMode = game.settings.get("core", "messageMode");
   let chatData = {
     speaker: ChatMessage.getSpeaker({ actor: actor }),
     flavor: label,
-    rollMode: game.settings.get("core", "rollMode"),
   };
 
   if (!dataset.result) {
@@ -83,5 +83,5 @@ export async function actionRoll(element, actor) {
     }
   );
 
-  ChatMessage.create(chatData);
+  ChatMessage.create(chatData, { messageMode });
 }

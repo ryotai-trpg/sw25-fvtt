@@ -2651,7 +2651,7 @@ export class SW25Item extends Item {
     const actor = this.actor || null;
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-    const rollMode = game.settings.get("core", "rollMode");
+    const messageMode = game.settings.get("core", "messageMode");
     const usedice = item.system.usedice;
     const usedice1 = item.system.usedice1;
     const usedice2 = item.system.usedice2;
@@ -2694,7 +2694,6 @@ export class SW25Item extends Item {
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
       };
 
       let chatDescription = item.system.description;
@@ -2749,7 +2748,7 @@ export class SW25Item extends Item {
         },
       };
 
-      ChatMessage.create(chatData);
+      ChatMessage.create(chatData, { messageMode });
     }
 
     if (
@@ -2775,7 +2774,6 @@ export class SW25Item extends Item {
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
         rolls: [roll],
       };
 
@@ -2861,7 +2859,7 @@ export class SW25Item extends Item {
       );
 
       let chatMessageId;
-      await ChatMessage.create(chatData).then((chatMessage) => {
+      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
         chatMessageId = chatMessage.id;
       });
 
@@ -2929,7 +2927,6 @@ export class SW25Item extends Item {
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
         rolls: [roll.fakeResult],
       };
 
@@ -3029,7 +3026,7 @@ export class SW25Item extends Item {
       );
 
       let chatMessageId;
-      await ChatMessage.create(chatData).then((chatMessage) => {
+      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
         chatMessageId = chatMessage.id;
       });
 
@@ -3106,12 +3103,14 @@ export class SW25Item extends Item {
     }
 
     if (this.system.clickitem == "description" || !this.system.formula) {
-      ChatMessage.create({
-        speaker: speaker,
-        flavor: label,
-        rollMode: rollMode,
-        content: item.system.description ?? "",
-      });
+      ChatMessage.create(
+        {
+          speaker: speaker,
+          flavor: label,
+          content: item.system.description ?? "",
+        },
+        { messageMode }
+      );
     }
   }
 }

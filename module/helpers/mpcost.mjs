@@ -59,7 +59,7 @@ export async function mpCost(
   // Chat message
   if (meta == 1 && fluc == null) {
     const speaker = ChatMessage.getSpeaker({ actor: actor });
-    const rollMode = game.settings.get("core", "rollMode");
+    const messageMode = game.settings.get("core", "messageMode");
     let label =
       name +
       " (" +
@@ -72,7 +72,6 @@ export async function mpCost(
     let chatData = {
       speaker: speaker,
       flavor: label,
-      rollMode: rollMode,
     };
 
     chatData.content = await foundry.applications.handlebars.renderTemplate(
@@ -99,7 +98,7 @@ export async function mpCost(
       },
     };
 
-    ChatMessage.create(chatData);
+    ChatMessage.create(chatData, { messageMode });
   } else {
     let label =
       name +
@@ -207,14 +206,13 @@ export async function hpCost(token, cost, max, name, type) {
 
   // Chat message
   const speaker = ChatMessage.getSpeaker({ actor: actor });
-  const rollMode = game.settings.get("core", "rollMode");
+  const messageMode = game.settings.get("core", "messageMode");
   let label = name + " (" + game.i18n.localize("SW25.Hp") + ` ${costLabel})`;
   let baseHP = targetHP;
 
   let chatData = {
     speaker: speaker,
     flavor: label,
-    rollMode: rollMode,
     rolls: [result],
   };
 
@@ -243,5 +241,5 @@ export async function hpCost(token, cost, max, name, type) {
     },
   };
 
-  ChatMessage.create(chatData);
+  ChatMessage.create(chatData, { messageMode });
 }

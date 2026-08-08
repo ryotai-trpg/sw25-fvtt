@@ -37,13 +37,12 @@ export async function lootRoll(actor) {
   });
 
   const speaker = ChatMessage.getSpeaker({ actor: actor });
-  const rollMode = game.settings.get("core", "rollMode");
+  const messageMode = game.settings.get("core", "messageMode");
   //let label = game.i18n.localize("SW25.Monster.Loot");
 
   let chatData = {
     speaker: speaker,
     //flavor: label,
-    rollMode: rollMode,
   };
 
   chatData.content = await foundry.applications.handlebars.renderTemplate(
@@ -63,5 +62,5 @@ export async function lootRoll(actor) {
     }
   };
 
-  ChatMessage.create(chatData);
+  ChatMessage.create(chatData, { messageMode });
 }

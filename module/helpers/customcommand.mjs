@@ -145,10 +145,10 @@ export async function customCommand(command, messageData, parameters) {
       if (roll.rollCount > 0) chatExtraRoll = roll.rollCount;
       if (roll.fumble == 1) chatFumble = roll.fumble;
 
+      const messageMode = game.settings.get("core", "messageMode");
       let chatData = {
         speaker: ChatMessage.getSpeaker({ actor: messageData.speaker.actor }),
         flavor: chatLabel,
-        rollMode: game.settings.get("core", "rollMode"),
         rolls: [roll.fakeResult],
       };
 
@@ -209,7 +209,7 @@ export async function customCommand(command, messageData, parameters) {
         }
       );
 
-      ChatMessage.create(chatData);
+      ChatMessage.create(chatData, { messageMode });
 
       return roll;
 

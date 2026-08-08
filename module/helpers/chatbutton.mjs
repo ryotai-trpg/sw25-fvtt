@@ -253,7 +253,7 @@ export async function chatButton(chatMessage, buttonType) {
 
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: actor });
-    const rollMode = game.settings.get("core", "rollMode");
+    const messageMode = game.settings.get("core", "messageMode");
     let label = `${item.name}`;
     let chatresuse = "";
     let chatapply = "-";
@@ -327,7 +327,6 @@ export async function chatButton(chatMessage, buttonType) {
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
         rolls: [roll],
       };
 
@@ -381,7 +380,7 @@ export async function chatButton(chatMessage, buttonType) {
       );
 
       let chatMessageId;
-      await ChatMessage.create(chatData).then((chatMessage) => {
+      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
         chatMessageId = chatMessage.id;
       });
 
@@ -452,7 +451,6 @@ export async function chatButton(chatMessage, buttonType) {
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
         rolls: [roll.fakeResult],
       };
 
@@ -536,7 +534,7 @@ export async function chatButton(chatMessage, buttonType) {
       );
 
       let chatMessageId;
-      await ChatMessage.create(chatData).then((chatMessage) => {
+      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
         chatMessageId = chatMessage.id;
       });
 
@@ -1488,13 +1486,12 @@ export async function chatButton(chatMessage, buttonType) {
       }
 
       const speaker = ChatMessage.getSpeaker({ actor: actor });
-      const rollMode = game.settings.get("core", "rollMode");
+      const messageMode = game.settings.get("core", "messageMode");
       let label = `${chatMessage.flavor}`;
 
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
         flags: {
           sw25: {
             targetToken: targetTokenId,
@@ -1519,7 +1516,7 @@ export async function chatButton(chatMessage, buttonType) {
         }
       );
 
-      ChatMessage.create(chatData);
+      ChatMessage.create(chatData, { messageMode });
     }
   }
 
@@ -1863,7 +1860,7 @@ export async function chatButton(chatMessage, buttonType) {
     const lootActor = selectedTokens[0].actor;
     const lootItems = chatMessage.flags.sw25.loot;
     const speaker = ChatMessage.getSpeaker({ actor: lootActor });
-    const rollMode = game.settings.get("core", "rollMode");
+    const messageMode = game.settings.get("core", "messageMode");
     const rollData = lootActor.getRollData();
     let label =
       `${chatMessage.speaker.alias}` +
@@ -1881,7 +1878,6 @@ export async function chatButton(chatMessage, buttonType) {
     let chatData = {
       speaker: speaker,
       flavor: label,
-      rollMode: rollMode,
       rolls: [roll],
     };
 
@@ -1907,7 +1903,7 @@ export async function chatButton(chatMessage, buttonType) {
       }
     );
 
-    ChatMessage.create(chatData);
+    ChatMessage.create(chatData, { messageMode });
 
     const lootFlag = chatMessage.flags;
     const lootCount = chatMessage.flags.sw25.lootCount
@@ -2074,7 +2070,7 @@ export async function chatButton(chatMessage, buttonType) {
       await roll.evaluate();
 
       const speaker = ChatMessage.getSpeaker({ actor: selectActor });
-      const rollMode = game.settings.get("core", "rollMode");
+      const messageMode = game.settings.get("core", "messageMode");
       let label = `${game.i18n.localize("SW25.Check")}`;
 
       if (checkName) {
@@ -2124,7 +2120,6 @@ export async function chatButton(chatMessage, buttonType) {
         let chatData = {
           speaker: speaker,
           flavor: label,
-          rollMode: rollMode,
           rolls: [roll],
         };
 
@@ -2165,7 +2160,6 @@ export async function chatButton(chatMessage, buttonType) {
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
         rolls: [roll],
       };
 
@@ -2190,7 +2184,7 @@ export async function chatButton(chatMessage, buttonType) {
         }
       );
 
-      ChatMessage.create(chatData);
+      ChatMessage.create(chatData, { messageMode });
     }
 
     return roll;

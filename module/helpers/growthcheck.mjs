@@ -4,7 +4,7 @@
 export async function growthCheck(actor) {
   let target = actor;
 
-  const rollMode = game.settings.get("core", "rollMode");
+  const messageMode = game.settings.get("core", "messageMode");
   const formula = "2d6";
   const chatFormula = "1D6 , 1D6";
 
@@ -66,7 +66,6 @@ export async function growthCheck(actor) {
     speaker: ChatMessage.getSpeaker({ actor: actor }),
     flavor: game.i18n.localize(`SW25.Ability.Growth`),
     content: chatContent,
-    rollMode: rollMode,
     rolls: [roll],
     flags: {
       sw25: {
@@ -75,7 +74,7 @@ export async function growthCheck(actor) {
     },
   };
 
-  ChatMessage.create(chatData);
+  ChatMessage.create(chatData, { messageMode });
 
   Hooks.once("renderChatMessageHTML", (message, element, data) => {
     const html = $(element);

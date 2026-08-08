@@ -217,14 +217,13 @@ Hooks.on("updateCombat", async (combat, changes, options, userId) => {
 
       // Chat message
       const speaker = ChatMessage.getSpeaker({ actor: actor });
-      const rollMode = game.settings.get("core", "rollMode");
+      const messageMode = game.settings.get("core", "messageMode");
       let label =
         actor.name + "(" + game.i18n.localize("SW25.TurnendEffect") + ")";
 
       let chatData = {
         speaker: speaker,
         flavor: label,
-        rollMode: rollMode,
       };
 
       chatData.content = await foundry.applications.handlebars.renderTemplate(
@@ -240,7 +239,7 @@ Hooks.on("updateCombat", async (combat, changes, options, userId) => {
         }
       );
 
-      ChatMessage.create(chatData);
+      ChatMessage.create(chatData, { messageMode });
     }
   }
 });

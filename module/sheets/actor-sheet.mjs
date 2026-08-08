@@ -1026,10 +1026,10 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
         }
       }
 
+      const messageMode = game.settings.get("core", "messageMode");
       let chatData = {
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
-        rollMode: game.settings.get("core", "rollMode"),
         rolls: [roll],
       };
 
@@ -1109,7 +1109,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
       );
 
       let chatMessageId;
-      await ChatMessage.create(chatData).then((chatMessage) => {
+      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
         chatMessageId = chatMessage.id;
       });
 
@@ -1239,10 +1239,10 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     if (roll.rollCount > 0) chatExtraRoll = roll.rollCount;
     if (roll.fumble == 1) chatFumble = roll.fumble;
 
+    const messageMode = game.settings.get("core", "messageMode");
     let chatData = {
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       flavor: chatLabel,
-      rollMode: game.settings.get("core", "rollMode"),
       rolls: [roll.fakeResult],
     };
 
@@ -1336,7 +1336,7 @@ export class SW25ActorSheet extends foundry.appv1.sheets.ActorSheet {
     );
 
     let chatMessageId;
-    await ChatMessage.create(chatData).then((chatMessage) => {
+    await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
       chatMessageId = chatMessage.id;
     });
 
