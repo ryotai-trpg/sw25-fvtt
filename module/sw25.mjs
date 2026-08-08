@@ -26,6 +26,7 @@ import { bindTextareaEditors } from "./helpers/textarea-editor.mjs";
 import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
 import {
+  SW25CheckSheet,
   SW25LanguageSheet,
   SW25ResourceSheet,
 } from "./sheets/item-sheet-V2.mjs";
@@ -118,6 +119,12 @@ Hooks.once("init", function () {
 
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25ResourceSheet, {
     types: ["resource"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25CheckSheet, {
+    types: ["check"],
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });

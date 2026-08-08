@@ -1,0 +1,16 @@
+{{!-- check のヘッダ固有部分。判定の基準値と概要、右肩に固定値修正。 --}}
+<section class="header__subtitle">
+  <span class="header__subtitle--label">
+    <span class="resource-label">{{localize "SW25.Basenumber"}}</span>
+    <span class="resource-label-l">{{system.checkbase}}</span>
+  </span>
+  <div class="header__subtitle--overview">{{system.overview}}</div>
+</section>
+
+<section class="header__activate">
+  <div class="property-col">
+    <label class="property--label-col" for="{{document.id}}system.checkfixmod">{{localize "SW25.Fixmodifier"}}</label>
+    <input class="property--value" id="{{document.id}}system.checkfixmod" type="text"
+           name="system.checkfixmod" value="{{system.checkfixmod}}" data-dtype="Number"/>
+  </div>
+</section>

@@ -90,6 +90,50 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
 
     return context;
   }
+
+  /* -------------------------------------------- */
+  /*  型をまたいで使う入力の組み立て                */
+  /* -------------------------------------------- */
+
+  /**
+   * ダメージ適用ボタンの種別。判定側は ck*bt、威力側は pw*bt と
+   * 接頭辞だけが違う同じ 5 種で、20 型が同じ並びを持っている。
+   */
+  static DAMAGE_BUTTONS = [
+    { key: "pd", label: "SW25.Item.pd" },
+    { key: "md", label: "SW25.Item.md" },
+    { key: "cd", label: "SW25.Item.cd" },
+    { key: "hr", label: "SW25.Item.hr" },
+    { key: "mr", label: "SW25.Item.mr" },
+  ];
+
+  /**
+   * チャットカードに出すダメージ適用ボタンのチェックボックス。
+   * @param {"ck"|"pw"} prefix 判定側か威力側か
+   */
+  _damageButtons(prefix) {
+    const system = this.document.system;
+    return SW25ItemSheetV2.DAMAGE_BUTTONS.map(({ key, label }) => {
+      const field = `${prefix}${key}bt`;
+      return {
+        id: `${this.document.id}system.${field}`,
+        name: `system.${field}`,
+        value: system[field],
+        label: game.i18n.localize(label),
+      };
+    });
+  }
+
+  /** 威力表の 3〜12 の行。テンプレートで 10 行を書き写さないための組み立て */
+  _powerTableRows() {
+    const system = this.document.system;
+    return Array.from({ length: 10 }, (_, i) => i + 3).map((roll) => ({
+      roll,
+      id: `${this.document.id}system.pt${roll}`,
+      name: `system.pt${roll}`,
+      value: system[`pt${roll}`],
+    }));
+  }
 }
 
 /* -------------------------------------------- */
@@ -105,6 +149,48 @@ export class SW25LanguageSheet extends SW25ItemSheetV2 {
   };
 
   static TABS = SW25ItemSheetV2.tabs("description");
+}
+
+/**
+ * 判定アイテム。
+ *
+ * V1 のタブ見出しはバフがコメントアウトされていて、説明と詳細の 2 枚しか
+ * 出ていなかった(テンプレートには効果タブの中身だけが残っていた)。
+ * 挙動を変えないのでこちらも 2 枚にしている。
+ */
+export class SW25CheckSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("check"),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.DESCRIPTION_PART,
+    details: SW25ItemSheetV2.detailsPart("check"),
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const system = this.document.system;
+
+    context.overviewCards = [
+      {
+        span: 6,
+        label: game.i18n.localize("SW25.Item.Overview"),
+        value: system.overview,
+      },
+    ];
+    context.checkmethodOptions = {
+      normal: "SW25.Item.Check.Normalcheck",
+      dice: "SW25.Item.Check.Customroll",
+      power: "SW25.Item.Check.Powerroll",
+    };
+    context.checkDamageButtons = this._damageButtons("ck");
+    context.powerDamageButtons = this._damageButtons("pw");
+    context.powerTableRows = this._powerTableRows();
+
+    return context;
+  }
 }
 
 /** リソース(消耗品・素材・秘伝など)。 */
