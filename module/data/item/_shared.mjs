@@ -417,13 +417,25 @@ export const derivedStringArray = () =>
   new ArrayField(new StringField(), { required: true, persisted: false });
 
 /**
- * 型を縛らない派生値。
+ * 型を縛らない派生値の一覧(skilllist / itemlist)。
  *
  * AnyField は serializable: false が既定で、`toObject` が素通し
  * (`DataField#toObject` が値をそのまま返す)。Document を含む配列を
  * シートへ渡している箇所があるので、deepClone される field は使えない。
+ *
+ * **初期値の空配列は必須。** これらを埋めるのは documents/item.mjs の
+ * `_prepareItemRollData` / `_prepareCheckData` で、どちらも
+ * 「アクターが持っているアイテム」でしか呼ばれない(prepareDerivedData の
+ * `if (actor)` の中)。つまり持ち主のいないアイテムでは値が生えない。
+ * 初期値が undefined だと、V1 シートの
+ * `{{selectOptions system.itemlist …}}`(11 型)と
+ * `{{selectOptions system.skilllist …}}`(action / check)が
+ * `Object.entries(undefined)` で落ち、シートが開かなくなる。
+ * template.json では空文字列("")が入っていて `Object.entries("")` は
+ * 空配列になるので落ちなかった — DataModel 化で入った退行。
  */
-export const derivedAny = () => new AnyField({ required: false, persisted: false });
+export const derivedAny = () =>
+  new AnyField({ required: false, initial: () => [], persisted: false });
 
 /** 派生値だけを集めた SchemaField(まとめて保存対象から外す) */
 export const derivedSchema = (fields) =>
