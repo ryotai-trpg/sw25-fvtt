@@ -18,7 +18,7 @@ import { chatButton } from "./helpers/chatbutton.mjs";
 import { customCommand } from "./helpers/customcommand.mjs";
 import { powerRoll } from "./helpers/powerroll.mjs";
 import { lootRoll } from "./helpers/lootroll.mjs";
-import { growthCheck } from "./helpers/growthcheck.mjs";
+import { growthCheck, bindGrowthButtons } from "./helpers/growthcheck.mjs";
 import { actionRoll } from "./helpers/actionroll.mjs";
 import { rollreq } from "./helpers/rollrequest.mjs";
 import { targetRollDialog, targetSelectDialog } from "./helpers/dialogs.mjs";
@@ -969,6 +969,8 @@ Hooks.once("ready", async function () {
       button.addEventListener("click", () =>
         chatButton(chatMessage, button.dataset.buttontype)
       );
+
+    bindGrowthButtons(chatMessage, element);
 
     for (const toggler of element.querySelectorAll(".flavor-text"))
       toggler.addEventListener("click", (event) => {

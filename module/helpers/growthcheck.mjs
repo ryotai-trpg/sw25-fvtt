@@ -79,42 +79,69 @@ export async function growthCheck(actor) {
   };
 
   ChatMessage.create(chatData, { messageMode });
+}
 
-  Hooks.once("renderChatMessageHTML", (message, element, data) => {
-    for (const button of element.querySelectorAll(".increase-ability")) {
-      button.addEventListener("click", async (event) => {
-        event.preventDefault();
+/**
+ * 成長カードの能力値ボタンを配線する。`sw25.mjs` の `bindChatMessage` から
+ * カードが描かれるたびに呼ぶ。
+ *
+ * 以前は `growthCheck` の中で `Hooks.once("renderChatMessageHTML", …)` を
+ * 張っていたが、`renderChatMessageHTML` は同じメッセージに対して
+ * **サイドバーとポップアウトの 2 回飛ぶ**ので片方のカードでしか押せず、
+ * リロードすると過去のカードへは飛ばないので全部押せなくなっていた。
+ *
+ * ボタンに必要な情報はすべて DOM(`data-ability` / `data-value`)と
+ * `flags.sw25.actor` にあるのでクロージャは要らない。二重に配線されても
+ * `data-value` と現在値の突き合わせで 2 回目は弾かれる。
+ *
+ * @param {ChatMessage} chatMessage
+ * @param {HTMLElement} element
+ */
+export function bindGrowthButtons(chatMessage, element) {
+  for (const button of element.querySelectorAll(".increase-ability"))
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      increaseAbility(chatMessage, button);
+    });
+}
 
-        const beforeValueGrowth = parseInt(button.dataset.value);
-        const target = game.actors.get(message.flags.sw25.actor);
-        const growth = button.dataset.ability;
-        const currentValueGrowth = target.system.abilities[growth].valuegrowth;
-        const afterValueGrowth = currentValueGrowth + 1;
-        let ability = growth.capitalize();
-        let abilityName = game.i18n.localize(`SW25.Ability.${ability}.long`);
-        let abilityDie = game.i18n.localize(`SW25.Ability.${ability}.die`);
+/**
+ * 押された能力値を 1 つ成長させ、結果をチャットに出す。
+ *
+ * @param {ChatMessage} chatMessage
+ * @param {HTMLElement} button
+ */
+async function increaseAbility(chatMessage, button) {
+  const target = game.actors.get(chatMessage.flags?.sw25?.actor);
+  if (!target) return;
 
-        if (beforeValueGrowth == currentValueGrowth) {
-          await target.update({
-            [`system.abilities.${growth}.valuegrowth`]: afterValueGrowth,
-          });
+  const growth = button.dataset.ability;
+  const beforeValueGrowth = parseInt(button.dataset.value);
+  const currentValueGrowth = target.system.abilities[growth].valuegrowth;
+  const afterValueGrowth = currentValueGrowth + 1;
 
-          let chatContent = `<div class="growth">
+  // 同じカードが二重に配線されていても、2 回目はここで止まる
+  if (beforeValueGrowth != currentValueGrowth) return;
+
+  const ability = growth.capitalize();
+  const abilityName = game.i18n.localize(`SW25.Ability.${ability}.long`);
+  const abilityDie = game.i18n.localize(`SW25.Ability.${ability}.die`);
+
+  await target.update({
+    [`system.abilities.${growth}.valuegrowth`]: afterValueGrowth,
+  });
+
+  const chatContent = `<div class="growth">
           <span class="fontsize12">${abilityDie}${abilityName}&nbsp;</span>:&nbsp;
           ${game.i18n.localize("SW25.Ability.Growth")}&nbsp;
           <span class="fontsize12 before">${currentValueGrowth}</span>
           ><span class="fontsize11">></span><span class="fontsize12">></span>
           <span class="fontsize15 after">${afterValueGrowth}</span>
           </div>`;
-          let chatData = {
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: target }),
-            content: chatContent,
-          };
 
-          ChatMessage.create(chatData);
-        }
-      });
-    }
+  ChatMessage.create({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor: target }),
+    content: chatContent,
   });
 }
