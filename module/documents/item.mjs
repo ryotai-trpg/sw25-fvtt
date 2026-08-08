@@ -93,6 +93,98 @@ export class SW25Item extends Item {
     super.prepareData();
   }
 
+  /* -------------------------------------------- */
+  /*  属性の自動セット                              */
+  /* -------------------------------------------- */
+
+  /**
+   * 属性(system.prop)を選んだときに立てる elements の組み合わせ。
+   * 選ばなかったものは #CLEARED_ELEMENTS で false に戻す。
+   */
+  static PROP_ELEMENTS = {
+    earth: { magic: { earth: true } },
+    ice: { magic: { ice: true } },
+    fire: { magic: { fire: true } },
+    wind: { magic: { wind: true } },
+    thunder: { magic: { thunder: true } },
+    energy: { magic: { energy: true } },
+    cut: { magic: { cut: true } },
+    impact: { magic: { impact: true } },
+    poison: { magic: { poison: true } },
+    disease: { magic: { disease: true } },
+    mental: { magic: { mental: true } },
+    mentalw: { magic: { mentalw: true } },
+    curse: { magic: { curse: true } },
+    curseMental: { type: "or", magic: { curse: true, mental: true } },
+    mentalPoison: { type: "or", magic: { mental: true, poison: true } },
+    other: {},
+    fandw: { type: "and", magic: { fire: true, wind: true } },
+    iandt: { type: "and", magic: { ice: true, thunder: true } },
+  };
+
+  /** 武器の種別(system.type)から立てる物理属性 */
+  static WEAPON_TYPE_ELEMENTS = {
+    blade: { physical: { blade: true } },
+    blow: { physical: { blow: true } },
+    both: { physical: { blade: true, blow: true } },
+    other: {},
+  };
+
+  /** 属性(prop)を選び直したときに一旦倒す分 */
+  static #CLEARED_BY_PROP = {
+    type: "",
+    magic: {
+      earth: false, ice: false, fire: false, wind: false, thunder: false,
+      energy: false, cut: false, impact: false, poison: false, disease: false,
+      curse: false, mental: false, mentalw: false, healing: false,
+    },
+    physical: { blade: false, blow: false, mithril: false },
+  };
+
+  /**
+   * 武器の種別を選び直したときに一旦倒す分。
+   * prop と違って**斬撃・打撃だけ**で、魔法属性やミスリルは残す(V1 と同じ)。
+   */
+  static #CLEARED_BY_WEAPON_TYPE = {
+    physical: { blade: false, blow: false },
+  };
+
+  /**
+   * 属性のプリセット(system.prop / 武器の system.type)を elements へ展開する。
+   *
+   * V1 では sheets/item-sheet.mjs の change リスナが自前で `update()` してから
+   * `render()` していた。ApplicationV2 のシートは submitOnChange でフォーム全体を
+   * 送るので、同じことをすると 1 回の操作で 2 回書くことになる。ドキュメント側で
+   * 同じ更新に混ぜれば、シートの種類にもマクロからの更新にも同じように効く。
+   *
+   * @override
+   */
+  async _preUpdate(changes, options, user) {
+    const allowed = await super._preUpdate(changes, options, user);
+    if (allowed === false) return false;
+
+    const preset = (key, map, cleared) => {
+      const value = foundry.utils.getProperty(changes, `system.${key}`);
+      if (value === undefined || !(value in map)) return;
+      foundry.utils.mergeObject(changes, {
+        system: {
+          elements: foundry.utils.mergeObject(
+            foundry.utils.deepClone(cleared),
+            map[value]
+          ),
+        },
+      });
+    };
+
+    // 属性を持たない型(言語・技能など)には elements が無いので触らない
+    if (!this.system.schema.getField("elements")) return;
+
+    preset("prop", SW25Item.PROP_ELEMENTS, SW25Item.#CLEARED_BY_PROP);
+    if (this.type === "weapon") {
+      preset("type", SW25Item.WEAPON_TYPE_ELEMENTS, SW25Item.#CLEARED_BY_WEAPON_TYPE);
+    }
+  }
+
   static migrateData(source) {
     if (source?.system?.category === "-") source.system.category = "";
     if (source?.system?.type === "-") source.system.type = "";
