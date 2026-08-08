@@ -1,8 +1,5 @@
 # ソード・ワールド 2.5 (for FoundryVTT)
 
-![Foundry v11](https://img.shields.io/badge/foundry-v11-green)
-![Foundry v12](https://img.shields.io/badge/foundry-v12-green)
-![Foundry v13](https://img.shields.io/badge/foundry-v13-green)
 ![Foundry v14](https://img.shields.io/badge/foundry-v14-green)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X8X415YUSP)
@@ -52,9 +49,10 @@ FVTT用ソード・ワールド2.5ゲームシステム
 ## 検証環境
 - OS:Windows 10
 - ブラウザ:GoogleChrome
-- FVTT:バージョン12.343
+- FVTT:バージョン14.365
 
 ## 注意事項
+- **2.5.0からFoundryVTT v14専用です。** v13以前では動きません。
 - FoundryVTTのv11対応は、v1.4.1で終了しています。
 - バグを見つけたら報告していただけると助かります。
 - Modとの相性などはほとんど検証していません。「Dice So Nice!」「Times Up」「Chat Commander」「Token Action HUD」「Polyglot」は簡単に検証済み。

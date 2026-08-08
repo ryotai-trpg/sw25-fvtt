@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2.5.0
+- **FoundryVTT v14専用に変更**（v13以前では動きません）
+- 非推奨APIを一掃（`renderTemplate` / `Dialog` / `rollMode` / `ACTIVE_EFFECT_MODES` ほか）。v14のコンソールに警告が出ない状態にした
+- アクター3型・アイテム24型のデータをDataModel化。`template.json`は型の一覧だけになった
+- アクター3型・アイテム24型のシートをApplicationV2化し、Application V1のシートを削除
+- ロールモードが一度も効いていなかった不具合を修正（`ChatMessage.create`に読まれない書き方で渡していた）
+- v14で`changes`が`system.changes`へ移ったことにより、バフ設定シートの種別・値・優先度・削除ボタンが描画されなくなっていたのを修正
+- 素材リソースの色・階級が未設定だとアクターシートが開けなくなる不具合を修正
+- 判定値の増減ボタンが、どのボタンからでも「判定3」の修正値だけを書き換えていた不具合を修正
+- ダイアログの本文やダイスの内訳など、システム外のUIまでこのシステムのCSSが書き換えていたのを修正
+
 ## 2.4.1
 - Korean support  by [CC8788](https://github.com/CC8788)
 
