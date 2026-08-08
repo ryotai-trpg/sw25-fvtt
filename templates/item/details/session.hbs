@@ -1,0 +1,66 @@
+{{!-- session の詳細タブ。セッションの日付・報酬をまとめる。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      <div class="flexcol">
+
+        <fieldset class="target-select">
+          <legend id="session-info">
+            <span class="session-title">{{localize "SW25.Item.Session.Information"}}</span>
+          </legend>
+
+          <div class="flexrow grid grid-10col session-detail">
+            <span class="grid-span-2" style="text-align: left;"><label for="{{docId}}system.session.date"><b>{{localize "SW25.Item.Session.Date"}}</b></label><br>
+              <input id="{{docId}}system.session.date" type="text" name="system.session.date" value="{{system.session.date}}" data-dtype="String"/></span>
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.gamemaster"><b>{{localize "SW25.Item.Session.GM"}}</b></label><br>
+              <input id="{{docId}}system.session.gamemaster" type="text" name="system.session.gamemaster" value="{{system.session.gamemaster}}" data-dtype="String"/></span>
+            <span class="grid-span-1" style="text-align: left;"><label for="{{docId}}system.session.pcnum"><b>{{localize "SW25.Item.Session.PC"}}</b></label><br>
+              <input id="{{docId}}system.session.pcnum" type="number" name="system.session.pcnum" value="{{system.session.pcnum}}" data-dtype="String"/></span>
+            <span class="grid-span-4" style="text-align: left;"></span>
+
+            <span class="grid-span-10" style="text-align: left;"><label for="{{docId}}system.session.player"><b>{{localize "SW25.Item.Session.Player"}}</b></label><br>
+              <input id="{{docId}}system.session.player" type="text" name="system.session.player" value="{{system.session.player}}" data-dtype="String"/></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="target-select">
+          <legend id="session-info">
+            <span class="session-title">{{localize "SW25.Item.Session.Mission"}}</span>
+          </legend>
+
+          <div class="flexrow grid grid-10col session-detail">
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.mission.exp"><b>{{localize "SW25.Item.Session.Exp"}}</b></label><br>
+              <input id="{{docId}}system.session.mission.exp" type="number" name="system.session.mission.exp" value="{{system.session.mission.exp}}" data-dtype="String"/></span>
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.mission.gamel"><b>{{localize "SW25.Item.Session.Gamel"}}</b></label><br>
+              <input id="{{docId}}system.session.mission.gamel" type="number" name="system.session.mission.gamel" value="{{system.session.mission.gamel}}" data-dtype="String"/></span>
+            <span class="grid-span-2" style="text-align: left;"><label for="{{docId}}system.session.mission.honor"><b>{{localize "SW25.Item.Session.Honor"}}</b></label><br>
+              <input id="{{docId}}system.session.mission.honor" type="number" name="system.session.mission.honor" value="{{system.session.mission.honor}}" data-dtype="String"/></span>
+            <span class="grid-span-2" style="text-align: left;"></span>
+
+          </div>
+        </fieldset>
+
+        <fieldset class="target-select">
+          <legend id="session-info">
+            <span class="session-title">{{localize "SW25.Item.Session.Middle"}}</span>
+          </legend>
+
+          <div class="flexrow grid grid-10col session-detail">
+
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.middle.exp"><b>{{localize "SW25.Item.Session.Exp"}}</b></label><br>
+              <input id="{{docId}}system.session.middle.exp" type="number" name="system.session.middle.exp" value="{{system.session.middle.exp}}" data-dtype="String"/></span>
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.middle.gamel"><b>{{localize "SW25.Item.Session.Gamel"}}</b></label><br>
+              <input id="{{docId}}system.session.middle.gamel" type="number" name="system.session.middle.gamel" value="{{system.session.middle.gamel}}" data-dtype="String"/></span>
+            <span class="grid-span-2" style="text-align: left;"><label for="{{docId}}system.session.middle.sword"><b>{{localize "SW25.Item.Session.Sword"}}</b></label><br>
+              <input id="{{docId}}system.session.middle.sword" type="number" name="system.session.middle.sword" value="{{system.session.middle.sword}}" data-dtype="String"/></span>
+            <span class="grid-span-2" style="text-align: left;"></span>
+
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.middle.abyss"><b>{{localize "SW25.Item.Session.Abyss"}}</b></label><br>
+              <input id="{{docId}}system.session.middle.abyss" type="number" name="system.session.middle.abyss" value="{{system.session.middle.abyss}}" data-dtype="String"/></span>
+            <span class="grid-span-3" style="text-align: left;"><label for="{{docId}}system.session.middle.tresure"><b>{{localize "SW25.Item.Session.Tresure"}}</b></label><br>
+              <input id="{{docId}}system.session.middle.tresure" type="number" name="system.session.middle.tresure" value="{{system.session.middle.tresure}}" data-dtype="String"/></span>
+            <span class="grid-span-4" style="text-align: left;"></span>
+          </div>
+        </fieldset>
+
+      </div>
+</section>

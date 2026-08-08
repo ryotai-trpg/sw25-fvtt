@@ -1,0 +1,12 @@
+{{!-- action のヘッダ固有部分。行動表と行動値(行動結果)。 --}}
+<section class="header__subtitle">
+  <span class="header__subtitle--label">
+    {{localize "SW25.ActionTable"}} : {{system.actiondicename}}
+  </span>
+  <div class="header__subtitle--overview">
+    {{localize "SW25.Item.Action.ActionValue"}} ({{localize "SW25.Item.Action.ActionResult"}}) :
+    {{system.actionvalue}} ({{system.actionresult}})
+  </div>
+</section>
+
+{{> "systems/sw25/templates/item/parts/header-activation.hbs"}}

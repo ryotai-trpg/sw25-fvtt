@@ -1,25 +1,31 @@
-{{!-- 抵抗設定。特技・呪文系では判定使用ブロックの中に入る。 --}}
+{{!-- 抵抗設定。特技・呪文系では判定使用ブロックの中に入る。
+
+      対象は `resist` で受ける({name, type, input, result})。既定は
+      `system.resistinfo` で、SW25ItemSheetV2#_prepareContext が積む。
+      番号付きの判定ブロックを持つ型(魔物能力・行動)は
+      `system.dice1.resist` のように保存先が違うので、
+      `{{> "…/detail-resist.hbs" resist=block.resist}}` と渡し替える。 --}}
 <fieldset class="subcategory grid-span-7 flexrow grid grid-7col">
   <legend class="category__title">{{localize "SW25.Item.Field.Resist"}}</legend>
   <div class="grid-span-3 property">
-    <label class="property--label" for="{{docId}}system.resistinfo.type">{{localize "SW25.Item.Resisttype"}}</label>
-    <select class="property--value" id="{{docId}}system.resistinfo.type"
-            name="system.resistinfo.type" {{disabled (not isEdit)}}>
-      {{selectOptions config.resistCheck selected=system.resistinfo.type localize=true blank="-"}}
+    <label class="property--label" for="{{docId}}{{resist.name}}.type">{{localize "SW25.Item.Resisttype"}}</label>
+    <select class="property--value" id="{{docId}}{{resist.name}}.type"
+            name="{{resist.name}}.type" {{disabled (not isEdit)}}>
+      {{selectOptions config.resistCheck selected=resist.type localize=true blank="-"}}
     </select>
   </div>
-  {{#if (eq system.resistinfo.type "input")}}
+  {{#if (eq resist.type "input")}}
     <div class="grid-span-2 property">
-      <input class="property--value" id="{{docId}}system.resistinfo.input" type="text"
-             name="system.resistinfo.input" value="{{system.resistinfo.input}}" data-dtype="String"
+      <input class="property--value" id="{{docId}}{{resist.name}}.input" type="text"
+             name="{{resist.name}}.input" value="{{resist.input}}" data-dtype="String"
              {{disabled (not isEdit)}}/>
     </div>
   {{/if}}
   <div class="grid-span-2 property">
-    <label class="property--label" for="{{docId}}system.resistinfo.result">{{localize "SW25.Item.Resist"}}</label>
-    <select class="property--value" id="{{docId}}system.resistinfo.result"
-            name="system.resistinfo.result" {{disabled (not isEdit)}}>
-      {{selectOptions config.resistResult selected=system.resistinfo.result localize=true blank="-"}}
+    <label class="property--label" for="{{docId}}{{resist.name}}.result">{{localize "SW25.Item.Resist"}}</label>
+    <select class="property--value" id="{{docId}}{{resist.name}}.result"
+            name="{{resist.name}}.result" {{disabled (not isEdit)}}>
+      {{selectOptions config.resistResult selected=resist.result localize=true blank="-"}}
     </select>
   </div>
 </fieldset>

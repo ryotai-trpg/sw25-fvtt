@@ -27,6 +27,7 @@ import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
 import {
   SW25AccessorySheet,
+  SW25ActionSheet,
   SW25AlchemytechSheet,
   SW25ArmorSheet,
   SW25BarbarousskillSheet,
@@ -35,6 +36,7 @@ import {
   SW25EssenceweaveSheet,
   SW25InfusionSheet,
   SW25MagicalsongSheet,
+  SW25MonsterabilitySheet,
   SW25OtherfeatureSheet,
   SW25PhaseareaSheet,
   SW25RaceabilitySheet,
@@ -45,6 +47,7 @@ import {
   SW25ItemItemSheet,
   SW25LanguageSheet,
   SW25ResourceSheet,
+  SW25SessionSheet,
   SW25SkillSheet,
   SW25WeaponSheet,
 } from "./sheets/item-sheet-V2.mjs";
@@ -251,6 +254,24 @@ Hooks.once("init", function () {
 
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25CombatabilitySheet, {
     types: ["combatability"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25MonsterabilitySheet, {
+    types: ["monsterability"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25ActionSheet, {
+    types: ["action"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25SessionSheet, {
+    types: ["session"],
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });

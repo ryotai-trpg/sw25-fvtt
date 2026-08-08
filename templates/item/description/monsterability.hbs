@@ -1,0 +1,132 @@
+{{!-- monsterability の説明タブ。概要カードに fa アイコンや条件付きの並びが
+     入るので、共通の description.hbs(overviewCards)には畳まず
+     マークアップのまま持つ。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      <div class="grid grid-6col flex-group-left">
+        <div class="grid-span-6 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Overview"}}
+          </div>
+          <div class="overview--value">
+            {{system.overview}}
+          </div>
+        </div>
+
+        {{#if system.usedice1}}
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Action"}}
+          </div>
+          <div class="overview--value">
+            {{system.label1}} {{system.checkbase1}}({{system.checkbasefix1}})
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Method"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.usefix1}}{{localize "SW25.Item.Monsterability.Usefix"}}{{else}}{{localize "SW25.Item.Monsterability.Roll"}}{{/if}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Resist"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.dice1}}
+              {{localizeResistType system.dice1.resist.type system.dice1.resist.input}}
+              {{#if system.dice1.resist.result}}
+                &nbsp;/&nbsp;{{localizeResist system.dice1.resist.result}}
+              {{/if}}
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if system.usedice2}}
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Action"}}
+          </div>
+          <div class="overview--value">
+            {{system.label2}} {{system.checkbase2}}({{system.checkbasefix2}})
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Method"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.usefix2}}{{localize "SW25.Item.Monsterability.Usefix"}}{{else}}{{localize "SW25.Item.Monsterability.Roll"}}{{/if}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Resist"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.dice2}}
+              {{localizeResistType system.dice2.resist.type system.dice2.resist.input}}
+              {{#if system.dice2.resist.result}}
+                &nbsp;/&nbsp;{{localizeResist system.dice2.resist.result}}
+              {{/if}}
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if system.usedice3}}
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Action"}}
+          </div>
+          <div class="overview--value">
+            {{system.label3}} {{system.checkbase3}}({{system.checkbasefix3}})
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Method"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.usefix3}}{{localize "SW25.Item.Monsterability.Usefix"}}{{else}}{{localize "SW25.Item.Monsterability.Roll"}}{{/if}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Resist"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.dice3}}
+              {{localizeResistType system.dice1.resist.type system.dice3.resist.input}}
+              {{#if system.dice3.resist.result}}
+                &nbsp;/&nbsp;{{localizeResist system.dice3.resist.result}}
+              {{/if}}
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if system.usepower}}
+        <div class="grid-span-6 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Monsterability.Action"}}
+          </div>
+          <div class="overview--value">
+            {{system.labelmonpow}}
+            k{{system.power}}
+            {{#if system.totalcvalue}}@{{system.totalcvalue}}{{else}}@{{system.cvalue}}{{/if}}
+            {{#if system.powerbase}}+{{system.powerbase}}{{else}}+{{system.powermod}}{{/if}}
+            {{#if system.lethaltech}}#{{system.lethaltech}}{{/if}}
+            {{#if system.criticalray}}$+{{system.criticalray}}{{/if}}
+            {{#if system.pharmtool}}tf{{system.pharmtool}}{{/if}}
+            {{#if system.powup}}r{{system.powup}}{{/if}}
+            {{#if system.halfpowmod}}+{{system.halfpowmod}}{{/if}}
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      {{> "systems/sw25/templates/item/parts/editor.hbs"}}
+</section>

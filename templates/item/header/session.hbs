@@ -1,0 +1,22 @@
+{{!-- session のヘッダ固有部分。
+
+     「結果を出力」ボタンと、チャットに何を載せるかの 4 つのチェック。
+     V1 は旧ヘッダ様式(編集トグル無し)だったが、他の 23 型に合わせて
+     共通ヘッダに寄せた(ユーザー判断)。 --}}
+<section class="header__subtitle">
+  <div class="session-result" data-action="sessionResult" role="button" tabindex="0">
+    {{localize "SW25.Item.Session.OutputResult"}}
+  </div>
+</section>
+
+<section class="header__activate">
+  <div class="grid grid-4col flex-group-left nogapmargin">
+    {{#each resultToggles as |toggle|}}
+      <div class="session-result-title">
+        <label for="{{toggle.id}}" class="nobreak">{{toggle.label}}</label><br>
+        <input id="{{toggle.id}}" type="checkbox" name="{{toggle.name}}" {{checked toggle.value}}
+               data-dtype="Boolean" class="{{toggle.key}}"/>
+      </div>
+    {{/each}}
+  </div>
+</section>

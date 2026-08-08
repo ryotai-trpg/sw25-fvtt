@@ -14,7 +14,7 @@
   <div style="display: {{#if system.usedice}}block{{else}}none{{/if}};">
     {{> "systems/sw25/templates/item/parts/item-usedice.hbs"}}
     {{#if withResist}}
-      {{> "systems/sw25/templates/item/parts/detail-resist.hbs"}}
+      {{> "systems/sw25/templates/item/parts/detail-resist.hbs" resist=resistInfo}}
     {{/if}}
   </div>
 </fieldset>

@@ -1,4 +1,5 @@
 import { SW25DocumentSheetMixin } from "./document-sheet-mixin.mjs";
+import { sessionResult } from "../helpers/sessionresult.mjs";
 
 const TPL = "systems/sw25/templates/item";
 
@@ -169,6 +170,10 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
         { relativeTo: this.document, rollData: this.document.getRollData() }
       );
 
+    // 抵抗設定。既定は system.resistinfo。番号付きの判定ブロックを持つ型は
+    // ブロックごとに保存先が違うので、そちらのシートが渡し替える
+    context.resistInfo = this._resistInfo("resistinfo");
+
     // 判定結果の適用先。monsterability だけ custom を出さないので上書きする
     context.applyOptions = {
       "-": "SW25.Item.Noapply",
@@ -183,10 +188,6 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
   /*  型をまたいで使う入力の組み立て                */
   /* -------------------------------------------- */
 
-  /**
-   * ダメージ適用ボタンの種別。判定側は ck*bt、威力側は pw*bt と
-   * 接頭辞だけが違う同じ 5 種で、20 型が同じ並びを持っている。
-   */
   /** アイコンをクリックしたときに何を出すか。防具・装飾品・道具ほかで共通 */
   static CLICKITEM_BASIC = {
     all: "SW25.Item.All",
@@ -213,6 +214,10 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
     description: "SW25.Item.Onlydescription",
   };
 
+  /**
+   * ダメージ適用ボタンの種別。判定側は ck*bt、威力側は pw*bt と
+   * 接頭辞だけが違う同じ 5 種で、20 型が同じ並びを持っている。
+   */
   static DAMAGE_BUTTONS = [
     { key: "pd", label: "SW25.Item.pd" },
     { key: "md", label: "SW25.Item.md" },
@@ -295,6 +300,21 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
         `TYPES.Item.${this.document.type}`
       )}`,
     ];
+  }
+
+  /**
+   * 抵抗設定 1 組。`parts/detail-resist.hbs` に渡す。
+   *
+   * @param {string} path `system.` を除いた保存先。"resistinfo" や "dice1.resist"
+   */
+  _resistInfo(path) {
+    const value = foundry.utils.getProperty(this.document.system, path) ?? {};
+    return {
+      name: `system.${path}`,
+      type: value.type,
+      input: value.input,
+      result: value.result,
+    };
   }
 
   /** 威力表の 3〜12 の行。テンプレートで 10 行を書き写さないための組み立て */
@@ -605,6 +625,124 @@ export class SW25CombatabilitySheet extends SW25AbilitySheet {
   /** @override */
   _abilitySubtitle() {
     return [this.document.system.typename];
+  }
+}
+
+/**
+ * セッション記録。
+ *
+ * V1 では 24 型のうち skill と並んで旧ヘッダ様式(編集トグル無し)のまま
+ * 残っていた。共通ヘッダに寄せ、「結果を出力」ボタンとチャットに載せる
+ * 項目のチェックをヘッダに置く(ユーザー判断)。
+ */
+export class SW25SessionSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("session"),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.descriptionPart("session"),
+    details: SW25ItemSheetV2.detailsPart("session"),
+    customs: SW25ItemSheetV2.CUSTOMS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "customs");
+
+  static DEFAULT_OPTIONS = {
+    actions: { sessionResult: this.#onSessionResult },
+  };
+
+  /** チャットに載せる項目。ヘッダのチェックボックス 4 つ */
+  static RESULT_TOGGLES = [
+    { key: "basic", label: "SW25.Item.Session.BasicResult" },
+    { key: "sword", label: "SW25.Item.Session.SwordResult" },
+    { key: "character", label: "SW25.Item.Session.CharaResult" },
+    { key: "custom", label: "SW25.Item.Session.CustomResult" },
+  ];
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const result = this.document.system.result;
+    context.resultToggles = SW25SessionSheet.RESULT_TOGGLES.map(({ key, label }) => ({
+      key,
+      id: `${this.document.id}system.result.${key}`,
+      name: `system.result.${key}`,
+      value: result[key],
+      label: game.i18n.localize(label),
+    }));
+    return context;
+  }
+
+  static async #onSessionResult() {
+    await sessionResult(this.document);
+  }
+}
+
+/**
+ * 魔物能力。
+ *
+ * 判定ブロックを 3 本持ち、それぞれに抵抗設定(`system.diceN.resist`)が付く。
+ * 適用先の選択肢だけ他の型と違い、custom を出さない。
+ */
+export class SW25MonsterabilitySheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("monsterability"),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.descriptionPart("monsterability"),
+    details: SW25ItemSheetV2.detailsPart("monsterability"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.timingMarks = this._timingMarks([]);
+    context.powerTableRows = this._powerTableRows();
+    // 魔物能力だけは「任意の判定名」を出さない
+    context.applyOptions = {
+      "-": "SW25.Item.Noapply",
+      on: "SW25.Item.applyon",
+    };
+    // V1 はこの 6 択を option でベタ書きしていた。判定 1〜3 は
+    // 番号付きなので翻訳キー 1 本にならず、ここで組み立てる
+    const t = (key) => game.i18n.localize(key);
+    context.clickitemOptions = {
+      all: t("SW25.Item.All"),
+      description: t("SW25.Item.Onlydescription"),
+      dice1: `${t("SW25.Check")} 1`,
+      dice2: `${t("SW25.Check")} 2`,
+      dice3: `${t("SW25.Check")} 3`,
+      power: t("SW25.Item.Powerroll"),
+    };
+    return context;
+  }
+}
+
+/** 行動(フェロー・デーモンの行動表)。判定ブロックを 1 本持つ */
+export class SW25ActionSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("action"),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.descriptionPart("action"),
+    details: SW25ItemSheetV2.detailsPart("action"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.clickitemOptions = {
+      all: "SW25.Item.All",
+      power: "SW25.Item.Power",
+      dice2: "SW25.Check",
+      dice1: "SW25.Item.Action.ActionValue",
+      mpcost: "SW25.Item.Mpcost",
+      description: "SW25.Item.Onlydescription",
+    };
+    return context;
   }
 }
 
