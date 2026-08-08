@@ -1,0 +1,15 @@
+{{!-- 使用タイミング(常時 / 主動作 / 補助動作 / 準備 / 宣言)。
+
+     どれを編集させるかは型ごとに違う(常時と主動作が種別から決まる型では
+     読むだけ)ので、シート側が `timingMarks` に editable を付けて渡す。 --}}
+<fieldset class="subcategory flexrow grid grid-10col">
+  <legend class="category__title">{{localize "SW25.Item.Field.Timing"}}</legend>
+  {{#each timingMarks as |mark|}}
+    <div class="timing grid-span-2">
+      <input class="checkbox--hidden" id="{{mark.id}}" type="checkbox" name="{{mark.name}}"
+             data-dtype="Boolean" {{checked mark.value}}
+             {{#unless mark.editable}}disabled{{else}}{{disabled (not ../isEdit)}}{{/unless}}/>
+      <label class="checkbox--label" for="{{mark.id}}">{{mark.label}}</label>
+    </div>
+  {{/each}}
+</fieldset>

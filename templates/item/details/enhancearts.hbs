@@ -1,0 +1,27 @@
+{{!-- enhancearts の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Enhancearts Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Enhancearts"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.time">{{localize "SW25.Time"}}</label>
+          <input class="property--value" id="{{docId}}system.time" type="text" name="system.time" value="{{system.time}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3"></div>
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resource.hbs" mpcost=true}}
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs" withResist=true}}
+</section>

@@ -1,0 +1,82 @@
+{{!-- combatability の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Combatability Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Combatability"}}
+        </legend>
+        <div class="grid-span-3 property">
+          <label class="property--label" for="{{docId}}system.type">{{localize "SW25.Item.Combatability.Type"}}</label>
+          <select class="property--value" id="{{docId}}system.type" name="system.type" {{disabled (not isEdit)}}>
+            {{selectOptions config.combatabilityTypes selected=system.type localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-3 property">
+          <input class="checkbox--hidden" id="{{docId}}system.vag" type="checkbox" name="system.vag" data-dtype="Boolean" {{checked system.vag}} {{disabled (not isEdit)}}/>
+          <label class="checkbox--label" for="{{docId}}system.vag">{{localize "SW25.Item.Combatability.Vag"}}</label>
+        </div>
+        <div class="grid-span-3 property">
+          <input class="checkbox--hidden" id="{{docId}}system.dancer" type="checkbox" name="system.dancer" data-dtype="Boolean" {{checked system.dancer}} {{disabled (not isEdit)}}/>
+          <label class="checkbox--label" for="{{docId}}system.dancer">{{localize "SW25.Item.Combatability.Dancer"}}</label>
+        </div>
+        <div class="grid-span-1 blank"></div>
+        <div class="grid-span-3 property">
+          <label class="property--label" for="{{docId}}system.condtype">{{localize "SW25.Condition"}}</label>
+          <select class="property--value" id="{{docId}}system.condtype" name="system.condtype" {{disabled (not isEdit)}}>
+            {{selectOptions config.combatabilityCondTypes selected=system.condtype localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-4 property">
+          <input class="property--value" id="{{docId}}system.cond" type="text" name="system.cond" value="{{system.cond}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3 blank"></div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.use">{{localize "SW25.Item.Combatability.Use"}}</label>
+          <input class="property--value" id="{{docId}}system.use" type="text" name="system.use" value="{{system.use}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.app">{{localize "SW25.Item.Combatability.App"}}</label>
+          <input class="property--value" id="{{docId}}system.app" type="text" name="system.app" value="{{system.app}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.risk">{{localize "SW25.Item.Combatability.Risk"}}</label>
+          <input class="property--value" id="{{docId}}system.risk" type="text" name="system.risk" value="{{system.risk}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+
+        {{!-- Secret Category --}}
+        <fieldset class="subcategory flexrow grid grid-10col">
+          <legend class="category__title">
+            <input class="checkbox--hidden" id="{{docId}}system.secret" type="checkbox" name="system.secret" data-dtype="Boolean" {{checked system.secret}} {{disabled (not isEdit)}}/>
+            <label class="checkbox--label" for="{{docId}}system.secret">{{localize "SW25.Item.Combatability.Secret"}}</label>
+          </legend>
+          {{#if system.secret}}
+          <div class="grid-span-5 property">
+            <label class="property--label" for="{{docId}}system.school">{{localize "SW25.Item.Combatability.Scholl"}}</label>
+            <input class="property--value" id="{{docId}}system.school" type="text" name="system.school" value="{{system.school}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-3 property">
+            <label class="property--label" for="{{docId}}system.honercost">{{localize "SW25.Item.Combatability.Honercost"}}</label>
+            <input class="property--value" id="{{docId}}system.honercost" type="text" name="system.honercost" value="{{system.honercost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-2 blank"></div>
+          <div class="grid-span-5 property">
+            <label class="property--label" for="{{docId}}system.sectype">{{localize "SW25.Item.Combatability.Sectype"}}</label>
+            <input class="property--value" id="{{docId}}system.sectype" type="text" name="system.sectype" value="{{system.sectype}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-5 property">
+            <label class="property--label" for="{{docId}}system.limcond">{{localize "SW25.Item.Combatability.Limcond"}}</label>
+            <input class="property--value" id="{{docId}}system.limcond" type="text" name="system.limcond" value="{{system.limcond}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          {{/if}}
+        </fieldset>
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resource.hbs" hpcost=true maxhpcost=true mpcost=true resuse=true}}
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs" withResist=true}}
+</section>

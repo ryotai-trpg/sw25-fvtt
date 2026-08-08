@@ -54,6 +54,9 @@ export const preloadHandlebarsTemplates = async function () {
     "systems/sw25/templates/actor/parts/actor-bookmark-item.hbs",
     // Item partials
     "systems/sw25/templates/item/parts/detail-basic.hbs",
+    "systems/sw25/templates/item/parts/detail-resist.hbs",
+    "systems/sw25/templates/item/parts/detail-timing.hbs",
+    "systems/sw25/templates/item/parts/header-activation.hbs",
     "systems/sw25/templates/item/parts/detail-magicitem.hbs",
     "systems/sw25/templates/item/parts/detail-resource.hbs",
     "systems/sw25/templates/item/parts/detail-rolls.hbs",

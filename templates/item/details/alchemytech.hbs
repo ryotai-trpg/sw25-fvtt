@@ -1,0 +1,90 @@
+{{!-- alchemytech の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Alchemytech Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Alchemytech"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-4 property">
+          <label class="property--label" for="{{docId}}system.time">{{localize "SW25.Time"}}</label>
+          <input class="property--value" id="{{docId}}system.time" type="text" name="system.time" value="{{system.time}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-4 blank"></div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.target">{{localize "SW25.Target"}}</label>
+          <input class="property--value" id="{{docId}}system.target" type="text" name="system.target" value="{{system.target}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.rangeshape">{{localize "SW25.Rangeshape"}}</label>
+          <input class="property--value" id="{{docId}}system.rangeshape" type="text" name="system.rangeshape" value="{{system.rangeshape}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resist.hbs"}}
+
+        {{!-- Resource Category --}}
+        <fieldset class="subcategory grid-span-5 flexrow grid grid-5col">
+          <legend class="category__title">
+            {{localize "SW25.Item.Field.Resource"}}({{localize "SW25.Item.Alchemytech.MaterialCard"}})
+          </legend>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.red">{{localize "SW25.Item.Alchemytech.Red"}}</label>
+            <input class="property--value" id="{{docId}}system.red" type="text" name="system.red" value="{{system.red}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.green">{{localize "SW25.Item.Alchemytech.Green"}}</label>
+            <input class="property--value" id="{{docId}}system.green" type="text" name="system.green" value="{{system.green}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.black">{{localize "SW25.Item.Alchemytech.Black"}}</label>
+            <input class="property--value" id="{{docId}}system.black" type="text" name="system.black" value="{{system.black}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.white">{{localize "SW25.Item.Alchemytech.White"}}</label>
+            <input class="property--value" id="{{docId}}system.white" type="text" name="system.white" value="{{system.white}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.gold">{{localize "SW25.Item.Alchemytech.Gold"}}</label>
+            <input class="property--value" id="{{docId}}system.gold" type="text" name="system.gold" value="{{system.gold}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+        </fieldset>
+
+        <fieldset class="subcategory grid-span-7 flexrow grid grid-7col">
+          <legend class="category__title">
+            {{localize "SW25.Item.Field.ChangeEffect"}}
+          </legend>
+          <div class="grid-span-3 property-col">
+            <label class="property--label-col" for="{{docId}}system.effectvalue.type">{{localize "SW25.Item.Alchemytech.EffectiveValue"}}</label>
+            <select class="property--value" id="{{docId}}system.effectvalue.type" name="system.effectvalue.type" {{disabled (not isEdit)}}>
+              {{selectOptions config.alchemyEffecive selected=system.effectvalue.type localize=true blank="-"}}
+            </select>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.effectvalue.b">{{localize "SW25.Item.Alchemytech.B"}}</label>
+            <input class="property--value" id="{{docId}}system.effectvalue.b" type="text" name="system.effectvalue.b" value="{{system.effectvalue.b}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.effectvalue.a">{{localize "SW25.Item.Alchemytech.A"}}</label>
+            <input class="property--value" id="{{docId}}system.effectvalue.a" type="text" name="system.effectvalue.a" value="{{system.effectvalue.a}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.effectvalue.s">{{localize "SW25.Item.Alchemytech.S"}}</label>
+            <input class="property--value" id="{{docId}}system.effectvalue.s" type="text" name="system.effectvalue.s" value="{{system.effectvalue.s}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-1 property-col">
+            <label class="property--label-col" for="{{docId}}system.effectvalue.ss">{{localize "SW25.Item.Alchemytech.SS"}}</label>
+            <input class="property--value" id="{{docId}}system.effectvalue.ss" type="text" name="system.effectvalue.ss" value="{{system.effectvalue.ss}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs"}}
+</section>

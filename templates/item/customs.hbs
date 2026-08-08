@@ -1,0 +1,41 @@
+{{!-- カスタム項目タブ。V1 の `parts/item-customs.hbs` を data-action へ移したもの。
+      操作は SW25ItemSheetV2 の fieldCreate / fieldDelete / fieldMoveUp / fieldMoveDown。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <ol class="items-list custom-list">
+    <li class="items-header flexrow">
+      <div class="custom-name">
+        <h3 class="item-name">{{localize "SW25.Customs"}}</h3>
+      </div>
+      <div class="custom-value">{{localize "SW25.Custom.Value"}}</div>
+      <div class="item-controls custom-controls flexrow" style="flex: 0 0 70px;">
+        <a class="add-field" data-action="fieldCreate" data-tooltip="{{localize "SW25.Adding"}}">
+          <i class="fas fa-plus"></i> {{localize "DOCUMENT.New" type=""}}
+        </a>
+      </div>
+    </li>
+
+    {{#each system.customFields as |field idx|}}
+      <li class="item custom flexrow" data-idx="{{idx}}">
+        <div class="custom-name">
+          <input type="text" name="system.customFields.{{idx}}.label" value="{{field.label}}"
+                 placeholder="{{localize "SW25.Custom.Name"}}"/>
+        </div>
+        <div class="custom-value">
+          <input type="text" name="system.customFields.{{idx}}.value" value="{{field.value}}"
+                 placeholder="{{localize "SW25.Custom.Value"}}"/>
+        </div>
+        <div class="item-controls custom-controls flexrow" style="flex: 0 0 70px;">
+          <a class="move-up" data-action="fieldMoveUp" data-tooltip="{{localize "SW25.Custom.MoveUp"}}">
+            <i class="fa-solid fa-arrow-up"></i>
+          </a>
+          <a class="move-down" data-action="fieldMoveDown" data-tooltip="{{localize "SW25.Custom.MoveDown"}}">
+            <i class="fa-solid fa-arrow-down"></i>
+          </a>
+          <a class="remove-field" data-action="fieldDelete" data-tooltip="{{localize "SW25.Custom.Delete"}}">
+            <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </li>
+    {{/each}}
+  </ol>
+</section>

@@ -1,0 +1,54 @@
+{{!-- otherfeature の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Otherfeature Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Otherfeature"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-4 property">
+          <label class="property--label" for="{{docId}}system.type">{{localize "SW25.Item.Otherfeature.Type"}}</label>
+          <input class="property--value" id="{{docId}}system.type" type="text" name="system.type" value="{{system.type}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-4 property">
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.target">{{localize "SW25.Target"}}</label>
+          <input class="property--value" id="{{docId}}system.target" type="text" name="system.target" value="{{system.target}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.rangeshape">{{localize "SW25.Rangeshape"}}</label>
+          <input class="property--value" id="{{docId}}system.rangeshape" type="text" name="system.rangeshape" value="{{system.rangeshape}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.time">{{localize "SW25.Time"}}</label>
+          <input class="property--value" id="{{docId}}system.time" type="text" name="system.time" value="{{system.time}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3 property">
+          <label class="property--label">{{localize "SW25.Item.Prop"}}</label>
+          <select class="property--value" name="system.prop" {{disabled (not isEdit)}}>
+            {{selectOptions config.spellProps selected=system.prop localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-2"></div>
+
+        {{#if (eq system.prop "other")}}
+        {{!-- Elements Category --}}
+        <div class="grid-span-10">
+          {{> "systems/sw25/templates/item/parts/item-elements.hbs" isMagic=true isPhysical=false}}
+        </div>
+        {{/if}}
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resource.hbs" hpcost=true maxhpcost=true mpcost=true resuse=true}}
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs" withResist=true}}
+</section>

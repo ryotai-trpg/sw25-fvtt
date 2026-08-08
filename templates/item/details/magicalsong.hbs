@@ -1,0 +1,134 @@
+{{!-- magicalsong の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Magicalsong Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Magicalsong"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-2 property">
+          <select class="property--value" name="system.type" {{disabled (not isEdit)}}>
+            {{selectOptions config.magicalsongTypes selected=system.type localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-4 property">
+          <label class="property--label">{{localize "SW25.Item.Prop"}}</label>
+          <select class="property--value" name="system.prop" {{disabled (not isEdit)}}>
+            {{selectOptions config.magicalsongProps selected=system.prop localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-2 property"></div>
+        <div class="grid-span-2 property">
+          <input class="checkbox--hidden" id="{{docId}}system.sing" type="checkbox" name="system.sing" data-dtype="Boolean" {{checked system.sing}} {{disabled (not isEdit)}}/>
+          <label class="checkbox--label" for="{{docId}}system.sing">{{localize "SW25.Item.Magicalsong.Sing"}}</label>
+        </div>
+        <div class="grid-span-4 property">
+          <label class="property--label" for="{{docId}}system.pet">{{localize "SW25.Item.Magicalsong.Pet"}}</label>
+          <input class="property--value" id="{{docId}}system.pet" type="text" name="system.pet" value="{{system.pet}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-4"></div>
+
+        {{#if (eq system.prop "")}}
+        {{!-- Elements Category --}}
+        <div class="grid-span-10">
+          {{> "systems/sw25/templates/item/parts/item-elements.hbs" isMagic=true isPhysical=false}}
+        </div>
+        {{/if}}
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resist.hbs"}}
+
+        {{!-- Resource Category --}}
+        <fieldset class="subcategory flexrow grid grid-10col">
+          <legend class="category__title">
+            {{localize "SW25.Item.Field.Resource"}}
+          </legend>
+          {{#if (eq system.type "song")}}
+            <fieldset class="subcategory grid-span-3 flexrow grid grid-3col">
+              <legend class="category__title">
+                {{localize "SW25.Item.Magicalsong.Get"}}
+              </legend>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.upget"><i class="fa-solid fa-arrow-turn-up"></i></label>
+                <input class="property--value" id="{{docId}}system.upget" type="text" name="system.upget" value="{{system.upget}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.downget"><i class="fa-solid fa-arrow-turn-down"></i></label>
+                <input class="property--value" id="{{docId}}system.downget" type="text" name="system.downget" value="{{system.downget}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.charmget"><i class="fa-regular fa-heart"></i></label>
+                <input class="property--value" id="{{docId}}system.charmget" type="text" name="system.charmget" value="{{system.charmget}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+            </fieldset>
+            <fieldset class="subcategory grid-span-4 flexrow grid grid-4col">
+              <legend class="category__title">
+                {{localize "SW25.Adding"}}
+              </legend>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.upget"><i class="fa-solid fa-arrow-turn-up"></i></label>
+                <input class="property--value" id="{{docId}}system.upadd" type="text" name="system.upadd" value="{{system.upadd}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.downget"><i class="fa-solid fa-arrow-turn-down"></i></label>
+                <input class="property--value" id="{{docId}}system.downadd" type="text" name="system.downadd" value="{{system.downadd}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.charmget"><i class="fa-regular fa-heart"></i></label>
+                <input class="property--value" id="{{docId}}system.charmadd" type="text" name="system.charmadd" value="{{system.charmadd}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.singpoint">{{localize "SW25.Item.Magicalsong.Singpoint"}}</label>
+                <input class="property--value" id="{{docId}}system.singpoint" type="text" name="system.singpoint" value="{{system.singpoint}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+            </fieldset>
+            <fieldset class="subcategory grid-span-3 flexrow grid grid-3col">
+              <legend class="category__title">
+                {{localize "SW25.Item.Magicalsong.Cond"}}
+              </legend>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.upget"><i class="fa-solid fa-arrow-turn-up"></i></label>
+                <input class="property--value" id="{{docId}}system.upcond" type="text" name="system.upcond" value="{{system.upcond}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.downget"><i class="fa-solid fa-arrow-turn-down"></i></label>
+                <input class="property--value" id="{{docId}}system.downcond" type="text" name="system.downcond" value="{{system.downcond}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.charmget"><i class="fa-regular fa-heart"></i></label>
+                <input class="property--value" id="{{docId}}system.charmcond" type="text" name="system.charmcond" value="{{system.charmcond}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+            </fieldset>
+          {{/if}}
+
+          {{#if (eq system.type "final")}}
+            <fieldset class="subcategory grid-span-3 flexrow grid grid-3col">
+              <legend class="category__title">
+                {{localize "SW25.Item.Magicalsong.Cost"}}
+              </legend>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.upcost"><i class="fa-solid fa-arrow-turn-up"></i></label>
+                <input class="property--value" id="{{docId}}system.upcost" type="text" name="system.upcost" value="{{system.upcost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.downcost"><i class="fa-solid fa-arrow-turn-down"></i></label>
+                <input class="property--value" id="{{docId}}system.downcost" type="text" name="system.downcost" value="{{system.downcost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+              <div class="property-col">
+                <label class="property--label-col" for="{{docId}}system.charmcost"><i class="fa-regular fa-heart"></i></label>
+                <input class="property--value" id="{{docId}}system.charmcost" type="text" name="system.charmcost" value="{{system.charmcost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+              </div>
+            </fieldset>
+          {{/if}}
+        </fieldset>
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs"}}
+</section>

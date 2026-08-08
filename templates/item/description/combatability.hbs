@@ -1,0 +1,83 @@
+{{!-- combatability の説明タブ。概要カードに fa アイコンや条件付きの並びが
+     入るので、共通の description.hbs(overviewCards)には畳まず
+     マークアップのまま持つ。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      <div class="grid grid-6col flex-group-left">
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{#if condtype}}{{system.condtypename}}{{else}}{{localize "SW25.Condition"}}{{/if}}
+          </div>
+          <div class="overview--value">
+            {{system.cond}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.Use"}}
+          </div>
+          <div class="overview--value">
+            {{system.use}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.App"}}
+          </div>
+          <div class="overview--value">
+            {{system.app}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.Risk"}}
+          </div>
+          <div class="overview--value">
+            {{system.risk}}
+          </div>
+        </div>
+        {{#if system.secret}}
+        <div class="grid-span-4 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.Scholl"}}
+          </div>
+          <div class="overview--value">
+            {{system.school}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.Sectype"}}
+          </div>
+          <div class="overview--value">
+            {{system.sectype}}
+          </div>
+        </div>
+        <div class="grid-span-4 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.Limcond"}}
+          </div>
+          <div class="overview--value">
+            {{system.limcond}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Combatability.Honercost"}}
+          </div>
+          <div class="overview--value">
+            {{system.honercost}}
+          </div>
+        </div>
+        {{/if}}
+        <div class="grid-span-6 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Overview"}}
+          </div>
+          <div class="overview--value">
+            {{system.overview}}
+          </div>
+        </div>
+      </div>
+      {{> "systems/sw25/templates/item/parts/editor.hbs"}}
+</section>

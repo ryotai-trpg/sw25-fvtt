@@ -1,0 +1,25 @@
+{{!-- 抵抗設定。特技・呪文系では判定使用ブロックの中に入る。 --}}
+<fieldset class="subcategory grid-span-7 flexrow grid grid-7col">
+  <legend class="category__title">{{localize "SW25.Item.Field.Resist"}}</legend>
+  <div class="grid-span-3 property">
+    <label class="property--label" for="{{docId}}system.resistinfo.type">{{localize "SW25.Item.Resisttype"}}</label>
+    <select class="property--value" id="{{docId}}system.resistinfo.type"
+            name="system.resistinfo.type" {{disabled (not isEdit)}}>
+      {{selectOptions config.resistCheck selected=system.resistinfo.type localize=true blank="-"}}
+    </select>
+  </div>
+  {{#if (eq system.resistinfo.type "input")}}
+    <div class="grid-span-2 property">
+      <input class="property--value" id="{{docId}}system.resistinfo.input" type="text"
+             name="system.resistinfo.input" value="{{system.resistinfo.input}}" data-dtype="String"
+             {{disabled (not isEdit)}}/>
+    </div>
+  {{/if}}
+  <div class="grid-span-2 property">
+    <label class="property--label" for="{{docId}}system.resistinfo.result">{{localize "SW25.Item.Resist"}}</label>
+    <select class="property--value" id="{{docId}}system.resistinfo.result"
+            name="system.resistinfo.result" {{disabled (not isEdit)}}>
+      {{selectOptions config.resistResult selected=system.resistinfo.result localize=true blank="-"}}
+    </select>
+  </div>
+</fieldset>

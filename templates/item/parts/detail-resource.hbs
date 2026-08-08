@@ -1,35 +1,48 @@
 {{!-- 詳細タブの「リソース設定」。HP/MP 消費と消費リソースの指定。
-      武器・防具・装飾品が同じ形で持つ。 --}}
+
+      どの欄を出すかは型ごとに違うので、呼ぶ側が真偽値で選ぶ:
+      `{{> "…/detail-resource.hbs" hpcost=true maxhpcost=true mpcost=true resuse=true}}`
+      装備品系は 4 つとも、練技(enhancearts)は mpcost だけ、というように使う。 --}}
 <fieldset class="subcategory flexrow grid grid-10col">
   <legend class="category__title">{{localize "SW25.Item.Field.Resource"}}</legend>
-  <div class="grid-span-2 property">
-    <label class="property--label" for="{{docId}}system.basehpcost">HP{{localize "SW25.Cost"}}</label>
-    <input class="property--value" id="{{docId}}system.basehpcost" type="text"
-           name="system.basehpcost" value="{{system.basehpcost}}" data-dtype="String" {{disabled (not isEdit)}}/>
-  </div>
-  <div class="grid-span-1 property">
-    <input class="property--value" id="{{docId}}system.maxhpcost" type="text"
-           name="system.maxhpcost" value="{{system.maxhpcost}}" data-dtype="Number"
-           placeholder="{{localize "SW25.Max"}}" {{disabled (not isEdit)}}/>
-  </div>
-  <div class="grid-span-2 property">
-    <label class="property--label" for="{{docId}}system.basempcost">MP{{localize "SW25.Cost"}}</label>
-    <input class="property--value" id="{{docId}}system.basempcost" style="max-width: calc(50% - 7px);"
-           type="text" name="system.basempcost" value="{{system.basempcost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
-  </div>
+
+  {{#if hpcost}}
+    <div class="grid-span-2 property">
+      <label class="property--label" for="{{docId}}system.basehpcost">HP{{localize "SW25.Cost"}}</label>
+      <input class="property--value" id="{{docId}}system.basehpcost" type="text"
+             name="system.basehpcost" value="{{system.basehpcost}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    </div>
+  {{/if}}
+  {{#if maxhpcost}}
+    <div class="grid-span-1 property">
+      <input class="property--value" id="{{docId}}system.maxhpcost" type="text"
+             name="system.maxhpcost" value="{{system.maxhpcost}}" data-dtype="Number"
+             placeholder="{{localize "SW25.Max"}}" {{disabled (not isEdit)}}/>
+    </div>
+  {{/if}}
+  {{#if mpcost}}
+    <div class="grid-span-2 property">
+      <label class="property--label" for="{{docId}}system.basempcost">MP{{localize "SW25.Cost"}}</label>
+      <input class="property--value" id="{{docId}}system.basempcost" style="max-width: calc(50% - 7px);"
+             type="text" name="system.basempcost" value="{{system.basempcost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    </div>
+  {{/if}}
   <div class="grid-span-5"></div>
-  <div class="grid-span-7 property">
-    <label class="property--label">{{localize "SW25.Item.Resuse"}}</label>
-    <select class="property--value" name="system.resuse" {{disabled (not isEdit)}}>
-      {{selectOptions system.itemlist selected=system.resuse valueAttr="itemId" labelAttr="itemName" blank="SW25.Item.None" localize=true}}
-    </select>
-  </div>
-  <div class="grid-span-3 property">
-    <input class="property--value" id="{{docId}}system.resusequantity" type="text"
-           name="system.resusequantity" value="{{system.resusequantity}}" data-dtype="Number"
-           placeholder="{{localize "SW25.Item.Resquantity"}}" {{disabled (not isEdit)}}/>
-    <input class="checkbox--hidden" id="{{docId}}system.autouseres" type="checkbox"
-           name="system.autouseres" data-dtype="Boolean" {{checked system.autouseres}} {{disabled (not isEdit)}}/>
-    <label class="checkbox--label" for="{{docId}}system.autouseres">{{localize "SW25.Item.AutoUseres"}}</label>
-  </div>
+
+  {{#if resuse}}
+    <div class="grid-span-7 property">
+      <label class="property--label">{{localize "SW25.Item.Resuse"}}</label>
+      <select class="property--value" name="system.resuse" {{disabled (not isEdit)}}>
+        {{selectOptions system.itemlist selected=system.resuse valueAttr="itemId" labelAttr="itemName" blank="SW25.Item.None" localize=true}}
+      </select>
+    </div>
+    <div class="grid-span-3 property">
+      <input class="property--value" id="{{docId}}system.resusequantity" type="text"
+             name="system.resusequantity" value="{{system.resusequantity}}" data-dtype="Number"
+             placeholder="{{localize "SW25.Item.Resquantity"}}" {{disabled (not isEdit)}}/>
+      <input class="checkbox--hidden" id="{{docId}}system.autouseres" type="checkbox"
+             name="system.autouseres" data-dtype="Boolean" {{checked system.autouseres}} {{disabled (not isEdit)}}/>
+      <label class="checkbox--label" for="{{docId}}system.autouseres">{{localize "SW25.Item.AutoUseres"}}</label>
+    </div>
+  {{/if}}
 </fieldset>

@@ -1,0 +1,62 @@
+{{!-- tactics の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Tactics Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Tactics"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-2 property">
+          <select class="property--value" name="system.type" {{disabled (not isEdit)}}>
+            {{selectOptions config.tacticsTypes selected=system.type localize=true blank="-"}}
+          </select>
+        </div>
+        {{#if (eq system.type "drum")}}
+        <div class="grid-span-2 property">
+          <select class="property--value" name="system.line" {{disabled (not isEdit)}}>
+            {{selectOptions config.tacticsLines selected=system.line localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.rank">{{localize "SW25.Item.Tactics.Rank"}}</label>
+          <input class="property--value" id="{{docId}}system.rank" type="text" name="system.rank" value="{{system.rank}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-2 blank"></div>
+        {{/if}}
+        {{#if (eq system.type "camp")}}
+        <div class="grid-span-6 property">
+          <label class="property--label" for="{{docId}}system.premise">{{localize "SW25.Item.Tactics.Premise"}}</label>
+          <input class="property--value" id="{{docId}}system.premise" type="text" name="system.premise" value="{{system.premise}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-10 property">
+          <label class="property--label" for="{{docId}}system.cond">{{localize "SW25.Condition"}}</label>
+          <input class="property--value" id="{{docId}}system.cond" type="text" name="system.cond" value="{{system.cond}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        {{/if}}
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{!-- Resource Category --}}
+        <fieldset class="subcategory grid-span-6 flexrow grid grid-6col">
+          <legend class="category__title">
+            {{localize "SW25.Item.Field.Resource"}}({{localize "SW25.Item.Tactics.Tacspower"}})
+          </legend>
+          <div class="grid-span-3 property">
+            <label class="property--label" for="{{docId}}system.get">{{localize "SW25.Item.Tactics.Tacspower"}}{{localize "SW25.Item.Tactics.Get"}}</label>
+            <input class="property--value" id="{{docId}}system.get" type="text" name="system.get" value="{{system.get}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-3 property">
+            <label class="property--label" for="{{docId}}system.cost">{{localize "SW25.Item.Tactics.Tacspower"}}{{localize "SW25.Cost"}}</label>
+            <input class="property--value" id="{{docId}}system.cost" type="text" name="system.cost" value="{{system.cost}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs" withResist=true}}
+</section>

@@ -1,0 +1,115 @@
+{{!-- spell の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Spell Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Spell"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{#if (or (eq system.type "fairy") (eq system.type "bibliomancer"))}}{{localize "SW25.Item.Rank"}}{{else}}{{localize "SW25.Level"}}{{/if}}</label>
+          <input class="property--value" id="{{docId}}system.level" style="max-width: calc(50% - 7px);" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-2 property">
+          <select class="property--value" name="system.type" {{disabled (not isEdit)}}>
+            {{selectOptions config.spellTypes selected=system.type localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-6 property">
+        {{#if (eq system.type "priest")}}
+        <select class="property--value" name="system.faith" data-tooltip="{{localize "SW25.Item.Spell.Faith"}}" {{disabled (not isEdit)}}>
+          {{selectOptions config.faiths selected=system.faith localize=true blank="-"}}
+        </select>
+        <input class="property--value" id="{{docId}}system.sect" type="text" name="system.sect" value="{{system.sect}}" data-dtype="String" placeholder="{{localize "SW25.Item.Spell.Specialpriest"}}" {{disabled (not isEdit)}}/>
+        {{/if}}
+        {{#if (eq system.type "magitech")}}
+        <label class="property--label" for="{{docId}}system.magispfere">{{localize "SW25.Item.Spell.Magispfere"}}</label>
+        <input class="property--value" id="{{docId}}system.magispfere" type="text" name="system.magispfere" value="{{system.magispfere}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        <div class="property--fixed"></div>
+        {{/if}}
+        {{#if (eq system.type "fairy")}}
+        <select class="property--fixed" name="system.fairytype" data-tooltip="{{localize "SW25.Item.Spell.Fairytype"}}" {{disabled (not isEdit)}}>
+          {{selectOptions config.fairyTypes selected=system.fairytype localize=true blank="-"}}
+        </select>
+        {{#if (eq system.fairytype "propfairy")}}
+        <select class="property--fixed" name="system.fairyprop" data-tooltip="{{localize "SW25.Item.Spell.Fairyprop"}}" {{disabled (not isEdit)}}>
+          {{selectOptions config.fairyProps selected=system.fairyprop localize=true blank="-"}}
+        </select>
+        {{else}}
+        <div class="property--fixed"></div>
+        {{/if}}
+        <div class="property--fixed"></div>
+        {{/if}}
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.target">{{localize "SW25.Target"}}</label>
+          <input class="property--value" id="{{docId}}system.target" type="text" name="system.target" value="{{system.target}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.rangeshape">{{localize "SW25.Rangeshape"}}</label>
+          <input class="property--value" id="{{docId}}system.rangeshape" type="text" name="system.rangeshape" value="{{system.rangeshape}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-5 property">
+          <label class="property--label" for="{{docId}}system.time">{{localize "SW25.Time"}}</label>
+          <input class="property--value" id="{{docId}}system.time" type="text" name="system.time" value="{{system.time}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3 property">
+          <label class="property--label">{{localize "SW25.Item.Prop"}}</label>
+          <select class="property--value" name="system.prop" {{disabled (not isEdit)}}>
+            {{selectOptions config.spellProps selected=system.prop localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-2"></div>
+        {{#if (eq system.type "abyssal")}}
+        <fieldset class="subcategory grid-span-10 flexrow grid grid-10col">
+          <legend class="category__title">{{localize "SW25.Item.Field.AbyssEx"}} 1</legend>
+          <div class="grid-span-5 property">
+            <label class="property--label" for="{{docId}}system.excost1">{{localize "SW25.Item.Spell.ExCost"}}</label>
+            <input class="property--value" id="{{docId}}system.excost1" type="text" name="system.excost1" value="{{system.excost1}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-3 property">
+            <label class="property--label" for="{{docId}}system.extime1">{{localize "SW25.Item.Spell.ExTime"}}</label>
+            <input class="property--value" id="{{docId}}system.extime1" type="text" name="system.extime1" value="{{system.extime1}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-2"></div>
+          <div class="grid-span-10 property">
+            <label class="property--label" for="{{docId}}system.expansion1">{{localize "SW25.Item.Spell.Expansion"}}</label><br>
+            <textarea class="textarea-editor property--value" id="{{docId}}system.expansion1" data-path="expansion1" {{disabled (not isEdit)}}>{{system.expansion1}}</textarea>
+          </div>
+        </fieldset>
+        <fieldset class="subcategory grid-span-10 flexrow grid grid-10col">
+          <legend class="category__title">{{localize "SW25.Item.Field.AbyssEx"}} 2</legend>
+          <div class="grid-span-5 property">
+            <label class="property--label" for="{{docId}}system.excost2">{{localize "SW25.Item.Spell.ExCost"}}</label>
+            <input class="property--value" id="{{docId}}system.excost2" type="text" name="system.excost2" value="{{system.excost2}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-3 property">
+            <label class="property--label" for="{{docId}}system.extime2">{{localize "SW25.Item.Spell.ExTime"}}</label>
+            <input class="property--value" id="{{docId}}system.extime2" type="text" name="system.extime2" value="{{system.extime2}}" data-dtype="String" {{disabled (not isEdit)}}/>
+          </div>
+          <div class="grid-span-2"></div>
+          <div class="grid-span-10 property">
+            <label class="property--label" for="{{docId}}system.expansion2">{{localize "SW25.Item.Spell.Expansion"}}</label><br>
+            <textarea class="textarea-editor property--value" id="{{docId}}system.expansion2" data-path="expansion2" {{disabled (not isEdit)}}>{{system.expansion2}}</textarea>
+          </div>
+        </fieldset>
+        {{/if}}
+
+        {{#if (eq system.prop "other")}}
+        {{!-- Elements Category --}}
+        <div class="grid-span-10">
+          {{> "systems/sw25/templates/item/parts/item-elements.hbs" isMagic=true isPhysical=true}}
+        </div>
+        {{/if}}
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+      </fieldset>
+
+        {{> "systems/sw25/templates/item/parts/detail-resist.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resource.hbs" hpcost=true mpcost=true resuse=true}}
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs"}}
+</section>

@@ -1,0 +1,13 @@
+{{!-- 特技・呪文系 13 型の共通ヘッダ。
+
+     見出し下の行は型ごとに文面が違うだけなので、翻訳済みの文字列を
+     シート側が `subtitleLabels` に組む(`_abilitySubtitle()`)。
+     右肩の起動 / ブックマークは 13 型とも同じ。 --}}
+<section class="header__subtitle">
+  {{#each subtitleLabels as |label|}}
+    <span class="header__subtitle--label">{{label}}</span>
+  {{/each}}
+  <div class="header__subtitle--overview">{{system.overview}}</div>
+</section>
+
+{{> "systems/sw25/templates/item/parts/header-activation.hbs"}}

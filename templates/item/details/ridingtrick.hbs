@@ -1,0 +1,34 @@
+{{!-- ridingtrick の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Ridingtrick Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Ridingtrick"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3 property">
+          <label class="property--label" for="{{docId}}system.premise">{{localize "SW25.Item.Premise"}}</label>
+          <input class="property--value" id="{{docId}}system.premise" type="text" name="system.premise" value="{{system.premise}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3 property">
+          <label class="property--label" for="{{docId}}system.support">{{localize "SW25.Item.Ridingtrick.Support"}}</label>
+          <input class="property--value" id="{{docId}}system.support" type="text" name="system.support" value="{{system.support}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.rtpart">{{localize "SW25.Item.Part"}}</label>
+          <input class="property--value" id="{{docId}}system.rtpart" type="text" name="system.rtpart" value="{{system.rtpart}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resource.hbs" mpcost=true resuse=true}}
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs" withResist=true}}
+</section>

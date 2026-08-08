@@ -1,8 +1,10 @@
 {{!-- 詳細タブの「判定使用」「威力使用」。チェックを外すと中身を隠す。
 
-      中身は V1 と同じ共有パーシャル。表示の出し入れは V1 と同じく
-      inline の display で、`{{#if}}` にすると入力がフォームから抜けるので
-      挙動を変えないため踏襲している。 --}}
+      特技・呪文系は抵抗設定が判定使用ブロックの中に入るので
+      `{{> "…/detail-rolls.hbs" withResist=true}}` で差し込む。
+
+      表示の出し入れは V1 と同じく inline の display で、`{{#if}}` にすると
+      入力がフォームから抜けるので挙動を変えないため踏襲している。 --}}
 <fieldset class="category">
   <legend class="category__title">
     <input class="checkbox--hidden" id="{{docId}}system.usedice" type="checkbox"
@@ -11,6 +13,9 @@
   </legend>
   <div style="display: {{#if system.usedice}}block{{else}}none{{/if}};">
     {{> "systems/sw25/templates/item/parts/item-usedice.hbs"}}
+    {{#if withResist}}
+      {{> "systems/sw25/templates/item/parts/detail-resist.hbs"}}
+    {{/if}}
   </div>
 </fieldset>
 

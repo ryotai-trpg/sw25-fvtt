@@ -1,0 +1,44 @@
+{{!-- infusion の詳細タブ。共通部分は parts/detail-*.hbs。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+      {{!-- Infusion Category --}}
+      <fieldset class="category flexrow grid grid-10col">
+        <legend class="category__title">
+          {{localize "SW25.Item.Field.Infusion"}}
+        </legend>
+        <div class="grid-span-2 property">
+          <label class="property--label" for="{{docId}}system.level">{{localize "SW25.Level"}}</label>
+          <input class="property--value" id="{{docId}}system.level" type="text" name="system.level" value="{{system.level}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-3 property">
+          <select class="property--value" name="system.type" {{disabled (not isEdit)}}>
+            {{selectOptions config.infusionTypes selected=system.type localize=true blank="-"}}
+          </select>
+        </div>
+        <div class="grid-span-5 property">
+        {{#if (eq system.type "race")}}
+          <input class="property--value" id="{{docId}}system.race" type="text" name="system.race" value="{{system.race}}" data-dtype="String" placeholder="{{localize "SW25.Item.Infusion.InputRace"}}" {{disabled (not isEdit)}}/>
+        {{/if}}
+        </div>
+        <div class="grid-span-4 property">
+          <label class="property--label" for="{{docId}}system.premise">{{localize "SW25.Item.Premise"}}</label>
+          <input class="property--value" id="{{docId}}system.premise" type="text" name="system.premise" value="{{system.premise}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-4 property">
+          <label class="property--label" for="{{docId}}system.itpart">{{localize "SW25.Item.Part"}}</label>
+          <input class="property--value" id="{{docId}}system.itpart" type="text" name="system.itpart" value="{{system.itpart}}" data-dtype="String" {{disabled (not isEdit)}}/>
+        </div>
+        <div class="grid-span-2 property">
+          <input class="checkbox--hidden" id="{{docId}}system.humanoid" type="checkbox" name="system.humanoid" data-dtype="Boolean" {{checked system.humanoid}} {{disabled (not isEdit)}}/>
+          <label class="checkbox--label" for="{{docId}}system.humanoid">{{localize "SW25.Item.Infusion.HumanoidForm"}}</label>
+        </div>
+
+        {{> "systems/sw25/templates/item/parts/detail-timing.hbs"}}
+
+        {{> "systems/sw25/templates/item/parts/detail-resource.hbs" hpcost=true maxhpcost=true mpcost=true resuse=true}}
+      </fieldset>
+
+      {{> "systems/sw25/templates/item/parts/detail-rolls.hbs" withResist=true}}
+</section>

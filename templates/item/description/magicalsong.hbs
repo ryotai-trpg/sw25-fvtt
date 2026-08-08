@@ -1,0 +1,110 @@
+{{!-- magicalsong の説明タブ。概要カードに fa アイコンや条件付きの並びが
+     入るので、共通の description.hbs(overviewCards)には畳まず
+     マークアップのまま持つ。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      <div class="grid grid-6col flex-group-left">
+
+        {{#if (eq system.type "song")}}
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Magicalsong.Sing"}}
+          </div>
+          <div class="overview--value">
+            {{#if system.sing}}{{localize "SW25.Item.Magicalsong.Singing"}}{{else}}{{localize "SW25.Item.Magicalsong.Instrumental"}}{{/if}}
+          </div>
+        </div>
+        <div class="grid-span-4 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Magicalsong.Pet"}}
+          </div>
+          <div class="overview--value">
+            {{system.pet}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Magicalsong.Cond"}}
+          </div>
+          <div class="overview--value">
+            {{#unless (eq system.upcond 0)}} <i class="fa-solid fa-arrow-turn-up"></i>{{system.upcond}}{{/unless}}{{#unless (eq system.downcond 0)}} <i class="fa-solid fa-arrow-turn-down"></i>{{system.downcond}}{{/unless}}{{#unless (eq system.charmcond 0)}} <i class="fa-regular fa-heart"></i>{{system.charmcond}}{{/unless}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Resist"}}
+          </div>
+          <div class="overview--value">
+            {{localizeResist system.resistinfo.result}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Prop"}}
+          </div>
+          <div class="overview--value">
+            {{localizeProp system.prop}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Magicalsong.Get"}}
+          </div>
+          <div class="overview--value">
+            {{#unless (eq system.upget 0)}} <i class="fa-solid fa-arrow-turn-up"></i>{{system.upget}}{{/unless}}{{#unless (eq system.downget 0)}} <i class="fa-solid fa-arrow-turn-down"></i>{{system.downget}}{{/unless}}{{#unless (eq system.charmget 0)}} <i class="fa-regular fa-heart"></i>{{system.charmget}}{{/unless}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Magicalsong.Singpoint"}}
+          </div>
+          <div class="overview--value">
+            {{system.singpoint}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Adding"}}
+          </div>
+          <div class="overview--value">
+            {{#unless (eq system.upadd 0)}} <i class="fa-solid fa-arrow-turn-up"></i>{{system.upadd}}{{/unless}}{{#unless (eq system.downadd 0)}} <i class="fa-solid fa-arrow-turn-down"></i>{{system.downadd}}{{/unless}}{{#unless (eq system.charmadd 0)}} <i class="fa-regular fa-heart"></i>{{system.charmadd}}{{/unless}}
+          </div>
+        </div>
+        {{/if}}
+        {{#if (eq system.type "final")}}
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Cost"}}
+          </div>
+          <div class="overview--value">
+            {{#unless (eq system.upcost 0)}} <i class="fa-solid fa-arrow-turn-up"></i>{{system.upcost}}{{/unless}}{{#unless (eq system.downcost 0)}} <i class="fa-solid fa-arrow-turn-down"></i>{{system.downcost}}{{/unless}}{{#unless (eq system.charmcost 0)}} <i class="fa-regular fa-heart"></i>{{system.charmcost}}{{/unless}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Resist"}}
+          </div>
+          <div class="overview--value">
+            {{localizeResist system.resistinfo.result}}
+          </div>
+        </div>
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Prop"}}
+          </div>
+          <div class="overview--value">
+            {{localizeProp system.prop}}
+          </div>
+        </div>
+        {{/if}}
+        <div class="grid-span-6 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Overview"}}
+          </div>
+          <div class="overview--value">
+            {{system.overview}}
+          </div>
+        </div>
+      </div>
+      {{> "systems/sw25/templates/item/parts/editor.hbs"}}
+</section>

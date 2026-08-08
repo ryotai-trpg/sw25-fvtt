@@ -1,0 +1,77 @@
+{{!-- tactics の説明タブ。概要カードに fa アイコンや条件付きの並びが
+     入るので、共通の description.hbs(overviewCards)には畳まず
+     マークアップのまま持つ。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+      <div class="grid grid-6col flex-group-left">
+        {{#if (eq system.type "drum")}}
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Tactics.Line"}}
+          </div>
+          <div class="overview--value">
+            {{system.linename}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Tactics.Rank"}}
+          </div>
+          <div class="overview--value">
+            {{system.rank}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Tactics.Tacspower"}}{{localize "SW25.Cost"}}
+          </div>
+          <div class="overview--value">
+            {{system.cost}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Tactics.Tacspower"}}{{localize "SW25.Item.Tactics.Get"}}
+          </div>
+          <div class="overview--value">
+            {{system.get}}
+          </div>
+        </div>
+        {{/if}}
+        {{#if (eq system.type "camp")}}
+        <div class="grid-span-2 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Tactics.Premise"}}
+          </div>
+          <div class="overview--value">
+            {{system.premise}}
+          </div>
+        </div>
+        <div class="grid-span-3 overview">
+          <div class="overview--label">
+            {{localize "SW25.Condition"}}
+          </div>
+          <div class="overview--value">
+            {{system.cond}}
+          </div>
+        </div>
+        <div class="grid-span-1 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Tactics.Tacspower"}}{{localize "SW25.Cost"}}
+          </div>
+          <div class="overview--value">
+            {{system.cost}}
+          </div>
+        </div>
+        {{/if}}
+        <div class="grid-span-6 overview">
+          <div class="overview--label">
+            {{localize "SW25.Item.Overview"}}
+          </div>
+          <div class="overview--value">
+            {{system.overview}}
+          </div>
+        </div>
+      </div>
+      {{> "systems/sw25/templates/item/parts/editor.hbs"}}
+</section>

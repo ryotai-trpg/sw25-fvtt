@@ -27,7 +27,20 @@ import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
 import {
   SW25AccessorySheet,
+  SW25AlchemytechSheet,
   SW25ArmorSheet,
+  SW25BarbarousskillSheet,
+  SW25CombatabilitySheet,
+  SW25EnhanceartsSheet,
+  SW25EssenceweaveSheet,
+  SW25InfusionSheet,
+  SW25MagicalsongSheet,
+  SW25OtherfeatureSheet,
+  SW25PhaseareaSheet,
+  SW25RaceabilitySheet,
+  SW25RidingtrickSheet,
+  SW25SpellSheet,
+  SW25TacticsSheet,
   SW25CheckSheet,
   SW25ItemItemSheet,
   SW25LanguageSheet,
@@ -160,6 +173,84 @@ Hooks.once("init", function () {
 
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25ItemItemSheet, {
     types: ["item"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25SpellSheet, {
+    types: ["spell"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25EnhanceartsSheet, {
+    types: ["enhancearts"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25MagicalsongSheet, {
+    types: ["magicalsong"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25RidingtrickSheet, {
+    types: ["ridingtrick"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25AlchemytechSheet, {
+    types: ["alchemytech"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25PhaseareaSheet, {
+    types: ["phasearea"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25TacticsSheet, {
+    types: ["tactics"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25InfusionSheet, {
+    types: ["infusion"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25BarbarousskillSheet, {
+    types: ["barbarousskill"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25EssenceweaveSheet, {
+    types: ["essenceweave"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25OtherfeatureSheet, {
+    types: ["otherfeature"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25RaceabilitySheet, {
+    types: ["raceability"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25CombatabilitySheet, {
+    types: ["combatability"],
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });
