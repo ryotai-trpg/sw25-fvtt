@@ -1,0 +1,92 @@
+{{!--
+    core の templates/sheets/active-effect/change.hbs と同じ構成。
+    キーの欄だけを本システム用の分類付きセレクトに差し替えている。
+    種別・値・優先度・削除は core と同じものを使う。
+--}}
+<li data-index="{{index}}">
+    {{#if changeType}}
+    <div class="key">
+        <select name="{{change.keyPath}}" class="select-keyname">
+            <option value></option>
+            <optgroup label={{localize "SW25.Effect.Battle"}}>
+            {{selectOptions effectOptions.battle selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.Check"}}>
+            {{selectOptions effectOptions.check selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.Parameter"}}>
+            {{selectOptions effectOptions.parameter selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.MagicPower"}}>
+            {{selectOptions effectOptions.magicpower selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.MagicCKRoll"}}>
+            {{selectOptions effectOptions.magicckroll selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.MagicPWRoll"}}>
+            {{selectOptions effectOptions.magicpwroll selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.MPSave"}}>
+            {{selectOptions effectOptions.mpsave selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Features"}}>
+            {{selectOptions effectOptions.feature selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.Powertable"}}>
+            {{selectOptions effectOptions.powertable selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ClassPdamage"}}>
+            {{selectOptions effectOptions.classPdamage selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ClassPdecay"}}>
+            {{selectOptions effectOptions.classPdecay selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ElementPdamage"}}>
+            {{selectOptions effectOptions.elementPdamage selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ElementPdecay"}}>
+            {{selectOptions effectOptions.elementPdecay selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ClassMdamage"}}>
+            {{selectOptions effectOptions.classMdamage selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ClassMdecay"}}>
+            {{selectOptions effectOptions.classMdecay selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ElementMdamage"}}>
+            {{selectOptions effectOptions.elementMdamage selected=change.key localize=true}}
+            </optgroup>
+            <optgroup label={{localize "SW25.Effect.ElementMdecay"}}>
+            {{selectOptions effectOptions.elementMdecay selected=change.key localize=true}}
+            </optgroup>
+            <option value="checkinput"{{#if (eq change.keyClassification "checkinput")}} selected{{/if}}>{{localize "SW25.Effect.ChecknameInput"}}</option>
+            <option value="input"{{#if (eq change.keyClassification "input")}} selected{{/if}}>{{localize "SW25.Effect.DirectInput"}}</option>
+        </select>
+        {{#if (eq change.keyClassification "checkinput")}}
+            <input style="max-width: calc(60% - 7px);" type="text" class="dynamic-input" name="{{change.keyPath}}" value="{{change.checkname}}"/>
+        {{/if}}
+        {{#if (eq change.keyClassification "input")}}
+            <input style="max-width: calc(60% - 7px);" type="text" class="dynamic-input" name="{{change.keyPath}}" value="{{change.key}}"/>
+        {{/if}}
+    </div>
+    <div class="type">
+        {{formInput fields.type name=change.typePath value=change.type choices=changeTypes}}
+    </div>
+    <div class="value">
+        {{formInput fields.value name=change.valuePath value=change.value elementType="input"}}
+    </div>
+    <input type="hidden" name="{{change.phasePath}}" value="{{change.phase}}">
+    {{else}}
+    <div class="unregistered notification warning">
+        {{localize "EFFECT.CHANGES.Unregistered" type=change.type}}
+    </div>
+    {{/if}}
+
+    <div class="priority">
+        {{formInput fields.priority name=change.priorityPath value=change.priority placeholder=defaultPriority
+                    disabled=(not changeType)}}
+    </div>
+    <div class="controls">
+        <button type="button" class="inline-control icon fa-solid fa-trash" data-action="deleteChange"></button>
+    </div>
+</li>

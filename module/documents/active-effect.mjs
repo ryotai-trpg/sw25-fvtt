@@ -15,19 +15,30 @@ export class SW25ActiveEffect extends ActiveEffect {
     const effectData = this;
   }
 
-  /** @override */
-  async update(data, options = {}) {
-    if (data.changes) {
+  /**
+   * v14 で changes はトップレベルから system.changes へ移った。
+   * 旧形式で渡された場合も拾えるように両方を見る。
+   * @param {object} data
+   */
+  static #normalizeChangeData(data) {
+    if (data?.system?.changes) {
+      data.system.changes = SW25ActiveEffect.applyChangeData(
+        data.system.changes
+      );
+    } else if (data?.changes) {
       data.changes = SW25ActiveEffect.applyChangeData(data.changes);
     }
+  }
+
+  /** @override */
+  async update(data, options = {}) {
+    SW25ActiveEffect.#normalizeChangeData(data);
     return super.update(data, options);
   }
 
   /** @override */
   static async create(data, options = {}) {
-    if (data.changes) {
-      data.changes = SW25ActiveEffect.applyChangeData(data.changes);
-    }
+    SW25ActiveEffect.#normalizeChangeData(data);
     return super.create(data, options);
   }
 

@@ -21,53 +21,80 @@ export class SW25ActiveEffectConfigV2 extends foundry.applications.sheets
 
   /* -------------------------------------------- */
 
-  /** @override */
-  async _prepareContext() {
-    const context = await super._prepareContext();
-
-    const systemPrefixedEffects = {};
+  /**
+   * CONFIG.SW25.Effect のカテゴリを、実際の change.key に合わせて
+   * system. を付けた形に直したもの。キー選択の optgroup に使う。
+   * @returns {Record<string, Record<string, string>>}
+   */
+  static #systemPrefixedEffects() {
+    const options = {};
     for (const [category, entries] of Object.entries(CONFIG.SW25.Effect)) {
       if (category === "keyClassifications") {
-        systemPrefixedEffects[category] = entries;
+        options[category] = entries;
         continue;
       }
-
-      systemPrefixedEffects[category] = Object.fromEntries(
+      options[category] = Object.fromEntries(
         Object.entries(entries).map(([key, value]) => [`system.${key}`, value])
       );
     }
+    return options;
+  }
 
-    context.effectOptions = systemPrefixedEffects;
+  /* -------------------------------------------- */
 
-    // checkinput , input 
-    if (context.source?.changes) {
-      context.source.changes = context.source.changes.map((change) => {
-        if (!change.key) return change;
+  /**
+   * 1 行分の change を描画する。
+   *
+   * core の実装(client/applications/sheets/active-effect-config.mjs)は
+   * templates/sheets/active-effect/change.hbs を描くだけなので、
+   * キーの欄だけを本システム用に差し替えた change.hbs を代わりに描く。
+   * name のパスは core と同じ system.changes.<index>.<field> を使う。
+   *
+   * @override
+   */
+  async _renderChange(context) {
+    const { change, index } = context;
 
-        const match = change.key.match(/^system\.effect\.checkinputmod\.(.+)$/);
-
-        if (match) {
-          const [, checkname] = match;
-          change.keyClassification = "checkinput";
-          change.checkname = checkname;
-        } else {
-          let isInput = true;
-
-          const categories = Object.keys(systemPrefixedEffects).filter(k => k !== "keyClassifications");
-          for (const category of categories) {
-            const keys = Object.keys(systemPrefixedEffects[category]);
-            if (keys.includes(change.key)) isInput = false;
-          }
-          if (isInput) {
-            change.keyClassification = "input";
-          }
+    if ("value" in change && typeof change.value !== "string") {
+      change.value = JSON.stringify(change.value);
+    }
+    Object.assign(
+      change,
+      ["key", "type", "value", "phase", "priority"].reduce((paths, field) => {
+        if (field in change) {
+          paths[`${field}Path`] = `system.changes.${index}.${field}`;
         }
-        return change;
-      });
+        return paths;
+      }, {})
+    );
+
+    context.changeType = ActiveEffect.CHANGE_TYPES[change.type];
+
+    const effectOptions = SW25ActiveEffectConfigV2.#systemPrefixedEffects();
+    context.effectOptions = effectOptions;
+
+    // 既存のキーが「判定名を入力」「直接入力」のどちらで作られたのかを復元する。
+    // どのカテゴリにも無いキーは直接入力されたものとみなす。
+    const key = change.key ?? "";
+    const checkinput = key.match(/^system\.effect\.checkinputmod\.(.+)$/);
+    if (checkinput) {
+      change.keyClassification = "checkinput";
+      change.checkname = checkinput[1];
+    } else if (key) {
+      const known = Object.entries(effectOptions).some(
+        ([category, entries]) =>
+          category !== "keyClassifications" && key in entries
+      );
+      if (!known) change.keyClassification = "input";
     }
 
-    return context;
+    return foundry.applications.handlebars.renderTemplate(
+      "systems/sw25/templates/effect/change.hbs",
+      context
+    );
   }
+
+  /* -------------------------------------------- */
 
   /** @override */
   async _onRender(context, options) {
