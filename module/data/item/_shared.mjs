@@ -73,6 +73,37 @@ export const commonFields = () => ({
 export const derivedString = () =>
   new StringField({ required: true, blank: true, persisted: false });
 
+/**
+ * 番号付きの判定ブロック(label1 / checkbase1 …)。
+ * 魔物能力は 3 本、行動は 2 本(そちらは技能と適用ボタンも付く)。
+ *
+ * @param {number} i 何本目か
+ * @param {{skill?: boolean, buttons?: boolean, usedice?: boolean}} [opts]
+ */
+export const numberedCheckFields = (i, opts = {}) => {
+  const { skill = false, buttons = false, usedice = false } = opts;
+  return {
+    [`usedice${i}`]: bool(usedice),
+    [`label${i}`]: str(`Label${i}`),
+    [`checkbasefix${i}`]: num(7),
+    [`checkbasemod${i}`]: num(),
+    [`usefix${i}`]: bool(),
+    [`checkmod${i}`]: num(),
+    [`customdice${i}`]: bool(),
+    [`customformula${i}`]: str("2d6"),
+    // checkbase は毎回計算される
+    [`checkbase${i}`]: derivedNumber(),
+    ...(skill && { [`checkskill${i}`]: str(), [`checkabi${i}`]: str() }),
+    ...(buttons && {
+      [`ckpdbt${i}`]: bool(true),
+      [`ckmdbt${i}`]: bool(true),
+      [`ckcdbt${i}`]: bool(true),
+      [`ckhrbt${i}`]: bool(true),
+      [`ckmrbt${i}`]: bool(true),
+    }),
+  };
+};
+
 /** 属性(武器・防具から呪文まで 10 型以上が持つ)。template.json には無い。 */
 export const elementsFields = () => ({
   elements: new SchemaField({
@@ -131,7 +162,21 @@ export const castFields = () => ({
   }),
 });
 
-/** 魔法のアイテムまわり(製作・名誉点・HP/MP 消費)。template.json には無い。 */
+/**
+ * HP / MP 消費。装備品から呪文・特技まで広く持つ。
+ *
+ * basehpcost だけ入力が String(「2点」のような書き方を許している)。
+ * hpcost / mpcost は base から毎回引き直す。
+ */
+export const costFields = () => ({
+  basehpcost: str(),
+  basempcost: nullableNum(),
+  maxhpcost: nullableNum(),
+  hpcost: new StringField({ required: true, blank: true, persisted: false }),
+  mpcost: derivedNumber(),
+});
+
+/** 魔法のアイテムまわり(製作・名誉点)。template.json には無い。 */
 export const magicItemFields = () => ({
   info: new SchemaField({
     category: str(),
@@ -142,10 +187,6 @@ export const magicItemFields = () => ({
   honor: nullableNum(),
   isHonoritem: bool(),
   isMagicitem: bool(),
-  // basehpcost だけ入力が String(「2点」のような書き方を許している)
-  basehpcost: str(),
-  basempcost: nullableNum(),
-  maxhpcost: nullableNum(),
 });
 
 /** Item.templates.item — 個数と価格を持つ「モノ」。 */

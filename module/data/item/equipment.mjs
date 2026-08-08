@@ -5,6 +5,7 @@ import {
   itemFields,
   rollFields,
   battleFields,
+  costFields,
   elementsFields,
   magicItemFields,
   derivedString,
@@ -22,6 +23,7 @@ const equipmentBase = () => ({
   ...itemFields(),
   ...rollFields(),
   ...battleFields(),
+  ...costFields(),
   ...elementsFields(),
   ...magicItemFields(),
   // 分類の表示名。category から毎回引き直す
