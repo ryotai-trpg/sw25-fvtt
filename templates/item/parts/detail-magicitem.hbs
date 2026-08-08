@@ -1,0 +1,34 @@
+{{!-- 詳細タブの「アイテム設定」のうち、魔法のアイテム / 名誉点と
+      知名度・形状・製造時期の 2 行。武器・防具・装飾品が同じ形で持つ。
+      価格や分類は型ごとに並びが違うので、呼ぶ側が前に置く。 --}}
+<div class="grid-span-3 property">
+  <input class="checkbox--hidden" id="{{docId}}system.isMagicitem" type="checkbox"
+         name="system.isMagicitem" data-dtype="Boolean" {{checked system.isMagicitem}} {{disabled (not isEdit)}}/>
+  <label class="checkbox--label" for="{{docId}}system.isMagicitem">{{localize "SW25.Item.MagicItem"}}</label>
+</div>
+<div class="grid-span-3 property">
+  <input class="checkbox--hidden" id="{{docId}}system.isHonoritem" type="checkbox"
+         name="system.isHonoritem" data-dtype="Boolean" {{checked system.isHonoritem}} {{disabled (not isEdit)}}/>
+  <label class="checkbox--label" for="{{docId}}system.isHonoritem">{{localize "SW25.Item.HonorItem"}}</label>
+</div>
+<div class="grid-span-4 property">
+  <label class="property--label" for="{{docId}}system.honor">{{localize "SW25.Item.Honor"}}</label>
+  <input class="property--value" id="{{docId}}system.honor" type="text"
+         name="system.honor" value="{{system.honor}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+</div>
+
+<div class="grid-span-1 property-col">
+  <label class="property--label-col" for="{{docId}}system.info.popularity">{{localize "SW25.Item.Popularity"}}</label>
+  <input class="property--value" id="{{docId}}system.info.popularity" type="number"
+         name="system.info.popularity" value="{{system.info.popularity}}" data-dtype="String" {{disabled (not isEdit)}}/>
+</div>
+<div class="grid-span-7 property-col">
+  <label class="property--label-col" for="{{docId}}system.info.shape">{{localize "SW25.Item.Shape"}}</label>
+  <input class="property--value" id="{{docId}}system.info.shape" type="text"
+         name="system.info.shape" value="{{system.info.shape}}" data-dtype="String" {{disabled (not isEdit)}}/>
+</div>
+<div class="grid-span-2 property-col">
+  <label class="property--label-col" for="{{docId}}system.info.create">{{localize "SW25.Item.Create"}}</label>
+  <input class="property--value" id="{{docId}}system.info.create" type="text"
+         name="system.info.create" value="{{system.info.create}}" data-dtype="String" {{disabled (not isEdit)}}/>
+</div>

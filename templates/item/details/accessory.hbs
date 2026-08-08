@@ -1,0 +1,40 @@
+{{!-- accessory の詳細タブ。共通部分は parts/detail-*.hbs、
+      ここに残るのは装飾品固有の並び(装備部位・価格・専用効果)。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+  {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+  <fieldset class="category flexrow grid grid-10col">
+    <legend class="category__title">{{localize "SW25.Item.Field.Item"}}</legend>
+
+    <div class="grid-span-3 property">
+      <label class="property--label" for="{{docId}}system.accpart">{{localize "SW25.Item.Accessory.Part"}}</label>
+      <select class="property--value" id="{{docId}}system.accpart" name="system.accpart" {{disabled (not isEdit)}}>
+        {{selectOptions config.accparts selected=system.accpart localize=true blank="-"}}
+      </select>
+    </div>
+    <div class="grid-span-2 blank"></div>
+    <div class="grid-span-5 property">
+      <label class="property--label" for="{{docId}}system.price">{{localize "SW25.Item.Price"}}</label>
+      <input class="property--value" id="{{docId}}system.price" type="text"
+             name="system.price" value="{{system.price}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    </div>
+
+    {{> "systems/sw25/templates/item/parts/detail-magicitem.hbs"}}
+
+    <div class="grid-span-2 property-col">
+      <label class="property--label-col" for="{{docId}}system.deffect">{{localize "SW25.Item.Dedicated"}}</label>
+      <select class="property--value" id="{{docId}}system.deffect" name="system.deffect" {{disabled (not isEdit)}}>
+        {{selectOptions config.deffects selected=system.deffect localize=true blank="-"}}
+      </select>
+    </div>
+
+    <div class="grid-span-10">
+      {{> "systems/sw25/templates/item/parts/item-elements.hbs" isMagic=true isPhysical=true}}
+    </div>
+
+    {{> "systems/sw25/templates/item/parts/detail-resource.hbs"}}
+  </fieldset>
+
+  {{> "systems/sw25/templates/item/parts/detail-rolls.hbs"}}
+</section>

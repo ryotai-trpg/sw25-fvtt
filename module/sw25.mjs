@@ -26,7 +26,10 @@ import { bindTextareaEditors } from "./helpers/textarea-editor.mjs";
 import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
 import {
+  SW25AccessorySheet,
+  SW25ArmorSheet,
   SW25CheckSheet,
+  SW25ItemItemSheet,
   SW25LanguageSheet,
   SW25ResourceSheet,
   SW25SkillSheet,
@@ -139,6 +142,24 @@ Hooks.once("init", function () {
 
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25SkillSheet, {
     types: ["skill"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25ArmorSheet, {
+    types: ["armor"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25AccessorySheet, {
+    types: ["accessory"],
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
+  });
+
+  DocumentSheetConfig.registerSheet(Item, "sw25", SW25ItemItemSheet, {
+    types: ["item"],
     makeDefault: true,
     label: "SW25.SheetLabels.Item",
   });

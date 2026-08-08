@@ -1,0 +1,68 @@
+{{!-- item(道具)の詳細タブ。
+
+     リソース設定は持たない(V1 も同じ)。知名度〜製造時期の行は
+     分類(info.category)が挟まって span が違うので共有パーシャルを使わず
+     ここに書いてある。 --}}
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+  {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
+
+  <fieldset class="category flexrow grid grid-10col">
+    <legend class="category__title">{{localize "SW25.Item.Field.Item"}}</legend>
+
+    <div class="grid-span-5 property">
+      <label class="property--label" for="{{docId}}system.type">{{localize "SW25.Item.Item.Type"}}</label>
+      <select class="property--value" id="{{docId}}system.type" name="system.type" {{disabled (not isEdit)}}>
+        {{selectOptions config.itemTypes selected=system.type localize=true blank="SW25.Item.Item.General"}}
+      </select>
+    </div>
+    <div class="grid-span-5 property">
+      <label class="property--label" for="{{docId}}system.price">{{localize "SW25.Item.Price"}}</label>
+      <input class="property--value" id="{{docId}}system.price" type="text"
+             name="system.price" value="{{system.price}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    </div>
+
+    <div class="grid-span-3 property">
+      <input class="checkbox--hidden" id="{{docId}}system.isMagicitem" type="checkbox"
+             name="system.isMagicitem" data-dtype="Boolean" {{checked system.isMagicitem}} {{disabled (not isEdit)}}/>
+      <label class="checkbox--label" for="{{docId}}system.isMagicitem">{{localize "SW25.Item.MagicItem"}}</label>
+    </div>
+    <div class="grid-span-3 property">
+      <input class="checkbox--hidden" id="{{docId}}system.isHonoritem" type="checkbox"
+             name="system.isHonoritem" data-dtype="Boolean" {{checked system.isHonoritem}} {{disabled (not isEdit)}}/>
+      <label class="checkbox--label" for="{{docId}}system.isHonoritem">{{localize "SW25.Item.HonorItem"}}</label>
+    </div>
+    <div class="grid-span-4 property">
+      <label class="property--label" for="{{docId}}system.honor">{{localize "SW25.Item.Honor"}}</label>
+      <input class="property--value" id="{{docId}}system.honor" type="text"
+             name="system.honor" value="{{system.honor}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    </div>
+
+    <div class="grid-span-1 property-col">
+      <label class="property--label-col" for="{{docId}}system.info.popularity">{{localize "SW25.Item.Popularity"}}</label>
+      <input class="property--value" id="{{docId}}system.info.popularity" type="number"
+             name="system.info.popularity" value="{{system.info.popularity}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    </div>
+    <div class="grid-span-5 property-col">
+      <label class="property--label-col" for="{{docId}}system.info.shape">{{localize "SW25.Item.Shape"}}</label>
+      <input class="property--value" id="{{docId}}system.info.shape" type="text"
+             name="system.info.shape" value="{{system.info.shape}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    </div>
+    <div class="grid-span-2 property-col">
+      <label class="property--label-col" for="{{docId}}system.info.category">{{localize "SW25.Item.Category"}}</label>
+      <input class="property--value" id="{{docId}}system.info.category" type="text"
+             name="system.info.category" value="{{system.info.category}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    </div>
+    <div class="grid-span-2 property-col">
+      <label class="property--label-col" for="{{docId}}system.info.create">{{localize "SW25.Item.Create"}}</label>
+      <input class="property--value" id="{{docId}}system.info.create" type="text"
+             name="system.info.create" value="{{system.info.create}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    </div>
+
+    <div class="grid-span-10">
+      {{> "systems/sw25/templates/item/parts/item-elements.hbs" isMagic=true isPhysical=true}}
+    </div>
+  </fieldset>
+
+  {{> "systems/sw25/templates/item/parts/detail-rolls.hbs"}}
+</section>

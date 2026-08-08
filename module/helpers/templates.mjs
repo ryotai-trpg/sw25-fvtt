@@ -53,6 +53,12 @@ export const preloadHandlebarsTemplates = async function () {
     "systems/sw25/templates/actor/parts/actor-spell-item.hbs",
     "systems/sw25/templates/actor/parts/actor-bookmark-item.hbs",
     // Item partials
+    "systems/sw25/templates/item/parts/detail-basic.hbs",
+    "systems/sw25/templates/item/parts/detail-magicitem.hbs",
+    "systems/sw25/templates/item/parts/detail-resource.hbs",
+    "systems/sw25/templates/item/parts/detail-rolls.hbs",
+    "systems/sw25/templates/item/parts/editor.hbs",
+    "systems/sw25/templates/item/parts/title-magicitem.hbs",
     "systems/sw25/templates/item/parts/item-customs.hbs",
     "systems/sw25/templates/item/parts/item-effects.hbs",
     "systems/sw25/templates/item/parts/item-elements.hbs",

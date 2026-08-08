@@ -1,11 +1,10 @@
-{{!-- resource のヘッダ固有部分。種別の表示名と概要、右肩に個数。
-
-     ラベルは V1 と同じ翻訳キーを使う。`SW25.Item.resource.FIELDS.*` は
-     まだ無く、既存キーと二重管理になるので今は増やさない
-     (language / skill だけ Phase 2 で FIELDS が入っている)。 --}}
+{{!-- item(道具)のヘッダ固有部分。価格・名誉点と概要、右肩に個数だけ。 --}}
 <section class="header__subtitle">
   <span class="header__subtitle--label">
-    {{localize "SW25.Item.Resource.Type"}} : {{localizeResourceType system.resource.type}}
+    {{localize "SW25.Item.Price"}} : {{system.price}}
+    {{#if system.isHonoritem}}
+      + {{system.honor}} {{localize "SW25.Item.Honor"}}
+    {{/if}}
   </span>
   <div class="header__subtitle--overview">{{system.overview}}</div>
 </section>

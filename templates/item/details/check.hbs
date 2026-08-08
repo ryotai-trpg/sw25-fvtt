@@ -10,8 +10,8 @@
   <fieldset class="category flexrow grid grid-10col">
     <legend class="category__title">{{localize "SW25.Item.Field.Basic"}}</legend>
     <div class="grid-span-10 property">
-      <label class="property--label" for="{{document.id}}system.overview">{{localize "SW25.Item.Overview"}}</label>
-      <input class="property--value" id="{{document.id}}system.overview" type="text"
+      <label class="property--label" for="{{docId}}system.overview">{{localize "SW25.Item.Overview"}}</label>
+      <input class="property--value" id="{{docId}}system.overview" type="text"
              name="system.overview" value="{{system.overview}}" data-dtype="String" {{disabled (not isEdit)}}/>
     </div>
   </fieldset>
@@ -21,7 +21,7 @@
     <legend class="category__title">{{localize "SW25.Item.Field.Check"}}</legend>
 
     <div class="grid-span-3 property">
-      <select class="property--value" id="{{document.id}}system.checkmethod"
+      <select class="property--value" id="{{docId}}system.checkmethod"
               name="system.checkmethod" {{disabled (not isEdit)}}>
         {{selectOptions checkmethodOptions selected=system.checkmethod localize=true}}
       </select>
@@ -33,9 +33,9 @@
       </select>
     </div>
     <div class="grid-span-2 property">
-      <input class="checkbox--hidden" id="{{document.id}}system.showbtcheck" type="checkbox"
+      <input class="checkbox--hidden" id="{{docId}}system.showbtcheck" type="checkbox"
              name="system.showbtcheck" data-dtype="Boolean" {{checked system.showbtcheck}} {{disabled (not isEdit)}}/>
-      <label class="checkbox--label" for="{{document.id}}system.showbtcheck">{{localize "SW25.Battle"}}</label>
+      <label class="checkbox--label" for="{{docId}}system.showbtcheck">{{localize "SW25.Battle"}}</label>
     </div>
     <div class="grid-span-2 blank"></div>
 
@@ -54,14 +54,14 @@
       </select>
     </div>
     <div class="grid-span-1 property-col">
-      <label class="property--label-col" for="{{document.id}}system.checkmod">{{localize "SW25.Modifier"}}</label>
-      <input class="property--value" id="{{document.id}}system.checkmod" type="text"
+      <label class="property--label-col" for="{{docId}}system.checkmod">{{localize "SW25.Modifier"}}</label>
+      <input class="property--value" id="{{docId}}system.checkmod" type="text"
              name="system.checkmod" value="{{system.checkmod}}" data-dtype="Number" {{disabled (not isEdit)}}/>
     </div>
     {{#if (eq system.checkmethod "dice")}}
       <div class="grid-span-4 property-col">
-        <label class="property--label-col" for="{{document.id}}system.customformula">{{localize "SW25.Item.Formula"}}</label>
-        <input class="property--value" id="{{document.id}}system.customformula" type="text"
+        <label class="property--label-col" for="{{docId}}system.customformula">{{localize "SW25.Item.Formula"}}</label>
+        <input class="property--value" id="{{docId}}system.customformula" type="text"
                name="system.customformula" value="{{system.customformula}}" data-dtype="String" {{disabled (not isEdit)}}/>
       </div>
     {{else}}
@@ -106,24 +106,24 @@
 
       <div class="flexrow grid grid-8col">
         <span style="text-align: center;">
-          <label for="{{document.id}}system.power"><b>{{localize "SW25.Item.Power"}}</b></label><br>
-          <input id="{{document.id}}system.power" type="text" name="system.power"
+          <label for="{{docId}}system.power"><b>{{localize "SW25.Item.Power"}}</b></label><br>
+          <input id="{{docId}}system.power" type="text" name="system.power"
                  value="{{system.power}}" data-dtype="Number" {{disabled (not isEdit)}}/>
         </span>
         <span style="text-align: center;">
-          <label for="{{document.id}}system.cvalue"><b>{{localize "SW25.Item.Cvalue"}}</b></label><br>
-          <input id="{{document.id}}system.cvalue" type="text" name="system.cvalue"
+          <label for="{{docId}}system.cvalue"><b>{{localize "SW25.Item.Cvalue"}}</b></label><br>
+          <input id="{{docId}}system.cvalue" type="text" name="system.cvalue"
                  value="{{system.cvalue}}" data-dtype="Number" {{disabled (not isEdit)}}/>
         </span>
         <span style="text-align: center;">
-          <label for="{{document.id}}system.halfpow"><b>{{localize "SW25.Item.Halfpow"}}</b></label><br>
-          <input id="{{document.id}}system.halfpow" type="checkbox" name="system.halfpow"
+          <label for="{{docId}}system.halfpow"><b>{{localize "SW25.Item.Halfpow"}}</b></label><br>
+          <input id="{{docId}}system.halfpow" type="checkbox" name="system.halfpow"
                  data-dtype="Boolean" {{checked system.halfpow}} {{disabled (not isEdit)}}/>
         </span>
         <div class="grid-span-3"></div>
         <span class="grid-span-2" style="text-align: center;">
-          <label for="{{document.id}}system.showpowmod"><b>{{localize "SW25.Item.Particularmod"}}</b></label><br>
-          <input id="{{document.id}}system.showpowmod" type="checkbox" name="system.showpowmod"
+          <label for="{{docId}}system.showpowmod"><b>{{localize "SW25.Item.Particularmod"}}</b></label><br>
+          <input id="{{docId}}system.showpowmod" type="checkbox" name="system.showpowmod"
                  data-dtype="Boolean" {{checked system.showpowmod}} {{disabled (not isEdit)}}/>
         </span>
       </div>
@@ -143,30 +143,30 @@
       <div style="display: {{#if system.showpowmod}}block{{else}}none{{/if}};">
         <div class="flexcol">
           <div class="flexrow grid grid-10col">
-            <label for="{{document.id}}system.halfpowmod" class="grid-span-2" style="text-align: center;">
+            <label for="{{docId}}system.halfpowmod" class="grid-span-2" style="text-align: center;">
               <b>{{localize "SW25.Item.Halfpowmod"}}</b><br>
-              <input id="{{document.id}}system.halfpowmod" style="max-width: calc(50% - 7px);" type="text"
+              <input id="{{docId}}system.halfpowmod" style="max-width: calc(50% - 7px);" type="text"
                      name="system.halfpowmod" value="{{system.halfpowmod}}" data-dtype="Number" {{disabled (not isEdit)}}/>
             </label>
             {{!-- lethaltech / criticalray は V1 でも isEdit で縛られていない --}}
-            <label for="{{document.id}}system.lethaltech" class="grid-span-2" style="text-align: center;">
+            <label for="{{docId}}system.lethaltech" class="grid-span-2" style="text-align: center;">
               <b>{{localize "SW25.Item.Lethaltech"}}</b><br>
-              <input id="{{document.id}}system.lethaltech" style="max-width: calc(50% - 7px);" type="text"
+              <input id="{{docId}}system.lethaltech" style="max-width: calc(50% - 7px);" type="text"
                      name="system.lethaltech" value="{{system.lethaltech}}" data-dtype="Number"/>
             </label>
-            <label for="{{document.id}}system.criticalray" class="grid-span-2" style="text-align: center;">
+            <label for="{{docId}}system.criticalray" class="grid-span-2" style="text-align: center;">
               <b>{{localize "SW25.Item.Criticalray"}}</b><br>
-              <input id="{{document.id}}system.criticalray" style="max-width: calc(50% - 7px);" type="text"
+              <input id="{{docId}}system.criticalray" style="max-width: calc(50% - 7px);" type="text"
                      name="system.criticalray" value="{{system.criticalray}}" data-dtype="String"/>
             </label>
-            <label for="{{document.id}}system.pharmtool" class="grid-span-2" style="text-align: center;">
+            <label for="{{docId}}system.pharmtool" class="grid-span-2" style="text-align: center;">
               <b>{{localize "SW25.Item.Pharmtool"}}</b><br>
-              <input id="{{document.id}}system.pharmtool" style="max-width: calc(50% - 7px);" type="text"
+              <input id="{{docId}}system.pharmtool" style="max-width: calc(50% - 7px);" type="text"
                      name="system.pharmtool" value="{{system.pharmtool}}" data-dtype="Number" {{disabled (not isEdit)}}/>
             </label>
-            <label for="{{document.id}}system.powup" class="grid-span-2" style="text-align: center;">
+            <label for="{{docId}}system.powup" class="grid-span-2" style="text-align: center;">
               <b>{{localize "SW25.Item.Powup"}}</b><br>
-              <input id="{{document.id}}system.powup" style="max-width: calc(50% - 7px);" type="text"
+              <input id="{{docId}}system.powup" style="max-width: calc(50% - 7px);" type="text"
                      name="system.powup" value="{{system.powup}}" data-dtype="Number" {{disabled (not isEdit)}}/>
             </label>
           </div>
@@ -187,22 +187,24 @@
     <fieldset class="subcategory flexrow grid grid-10col">
       <legend class="category__title">{{localize "SW25.Item.Field.Resist"}}</legend>
       <div class="grid-span-3 property">
-        <label class="property--label" for="{{document.id}}system.resistinfo.type">{{localize "SW25.Item.Resisttype"}}</label>
-        <select class="property--value" name="system.resistinfo.type" {{disabled (not isEdit)}}>
+        <label class="property--label" for="{{docId}}system.resistinfo.type">{{localize "SW25.Item.Resisttype"}}</label>
+        <select class="property--value" id="{{docId}}system.resistinfo.type"
+                name="system.resistinfo.type" {{disabled (not isEdit)}}>
           {{selectOptions config.resistCheck selected=system.resistinfo.type localize=true blank="-"}}
         </select>
       </div>
       {{#if (eq system.resistinfo.type "input")}}
         <div class="grid-span-2 property">
-          <input class="property--value" id="{{document.id}}system.resistinfo.input" type="text"
+          <input class="property--value" id="{{docId}}system.resistinfo.input" type="text"
                  name="system.resistinfo.input" value="{{system.resistinfo.input}}" data-dtype="String"
                  {{disabled (not isEdit)}}/>
         </div>
       {{/if}}
       <div class="blank"></div>
       <div class="grid-span-2 property">
-        <label class="property--label" for="{{document.id}}system.resistinfo.result">{{localize "SW25.Item.Resist"}}</label>
-        <select class="property--value" name="system.resistinfo.result" {{disabled (not isEdit)}}>
+        <label class="property--label" for="{{docId}}system.resistinfo.result">{{localize "SW25.Item.Resist"}}</label>
+        <select class="property--value" id="{{docId}}system.resistinfo.result"
+                name="system.resistinfo.result" {{disabled (not isEdit)}}>
           {{selectOptions config.resistResult selected=system.resistinfo.result localize=true blank="-"}}
         </select>
       </div>

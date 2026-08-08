@@ -129,6 +129,14 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
    * ダメージ適用ボタンの種別。判定側は ck*bt、威力側は pw*bt と
    * 接頭辞だけが違う同じ 5 種で、20 型が同じ並びを持っている。
    */
+  /** アイコンをクリックしたときに何を出すか。防具・装飾品・道具で共通 */
+  static CLICKITEM_BASIC = {
+    all: "SW25.Item.All",
+    power: "SW25.Item.Powerroll",
+    dice: "SW25.Item.Diceroll",
+    description: "SW25.Item.Onlydescription",
+  };
+
   static DAMAGE_BUTTONS = [
     { key: "pd", label: "SW25.Item.pd" },
     { key: "md", label: "SW25.Item.md" },
@@ -152,6 +160,24 @@ export class SW25ItemSheetV2 extends SW25DocumentSheetMixin(
         label: game.i18n.localize(label),
       };
     });
+  }
+
+  /**
+   * 装備品系(武器・防具・装飾品・道具)の説明タブの概要カード。
+   * 5 枚の並びは同じで、「カテゴリ」の値だけが型ごとに違う。
+   *
+   * @param {string} category カテゴリ欄に出す文字列
+   */
+  _equipmentOverviewCards(category) {
+    const system = this.document.system;
+    const t = (key) => game.i18n.localize(key);
+    return [
+      { span: 1, label: t("SW25.Item.Popularity"), value: system.info.popularity },
+      { span: 3, label: t("SW25.Item.Shape"), value: system.info.shape },
+      { span: 2, label: t("SW25.Item.Category"), value: category },
+      { span: 4, label: t("SW25.Item.Overview"), value: system.overview },
+      { span: 2, label: t("SW25.Item.Create"), value: system.info.create },
+    ];
   }
 
   /** 威力表の 3〜12 の行。テンプレートで 10 行を書き写さないための組み立て */
@@ -286,13 +312,9 @@ export class SW25WeaponSheet extends SW25ItemSheetV2 {
     const system = this.document.system;
     const t = (key) => game.i18n.localize(key);
 
-    context.overviewCards = [
-      { span: 1, label: t("SW25.Item.Popularity"), value: system.info.popularity },
-      { span: 3, label: t("SW25.Item.Shape"), value: system.info.shape },
-      { span: 2, label: t("SW25.Item.Category"), value: `〈${system.categoryname}〉${system.rank}` },
-      { span: 4, label: t("SW25.Item.Overview"), value: system.overview },
-      { span: 2, label: t("SW25.Item.Create"), value: system.info.create },
-    ];
+    context.overviewCards = this._equipmentOverviewCards(
+      `〈${system.categoryname}〉${system.rank}`
+    );
     context.clickitemOptions = {
       all: "SW25.Item.All",
       power: "SW25.Item.Powerroll",
@@ -300,6 +322,85 @@ export class SW25WeaponSheet extends SW25ItemSheetV2 {
       rescost: "SW25.Item.Resourcecost",
       description: "SW25.Item.Onlydescription",
     };
+
+    return context;
+  }
+}
+
+/** 防具。武器と同じ骨格で、固有欄は用法・必筋・回避・防護点 */
+export class SW25ArmorSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("armor", { title: true }),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.DESCRIPTION_PART,
+    details: SW25ItemSheetV2.detailsPart("armor"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const system = this.document.system;
+
+    context.overviewCards = this._equipmentOverviewCards(
+      `〈${system.categoryname}〉${system.rank}`
+    );
+    context.clickitemOptions = SW25ItemSheetV2.CLICKITEM_BASIC;
+
+    return context;
+  }
+}
+
+/** 装飾品。固有欄は装備部位と専用効果 */
+export class SW25AccessorySheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("accessory", { title: true }),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.DESCRIPTION_PART,
+    details: SW25ItemSheetV2.detailsPart("accessory"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const system = this.document.system;
+
+    // 装備部位が未設定("-")のときは種別名だけを出す
+    const part = system.accpartname === "-" ? "" : `:${system.accpartname}`;
+    context.overviewCards = this._equipmentOverviewCards(
+      `${game.i18n.localize("TYPES.Item.accessory")}${part}`
+    );
+    context.clickitemOptions = SW25ItemSheetV2.CLICKITEM_BASIC;
+
+    return context;
+  }
+}
+
+/** 道具。リソース設定を持たない以外は装備品系と同じ骨格 */
+export class SW25ItemItemSheet extends SW25ItemSheetV2 {
+  static PARTS = {
+    header: SW25ItemSheetV2.headerPart("item", { title: true }),
+    tabs: SW25ItemSheetV2.TABS_PART,
+    description: SW25ItemSheetV2.DESCRIPTION_PART,
+    details: SW25ItemSheetV2.detailsPart("item"),
+    effects: SW25ItemSheetV2.EFFECTS_PART,
+  };
+
+  static TABS = SW25ItemSheetV2.tabs("description", "details", "effects");
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+
+    context.overviewCards = this._equipmentOverviewCards(
+      this.document.system.info.category
+    );
+    context.clickitemOptions = SW25ItemSheetV2.CLICKITEM_BASIC;
 
     return context;
   }

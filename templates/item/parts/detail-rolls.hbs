@@ -1,0 +1,26 @@
+{{!-- 詳細タブの「判定使用」「威力使用」。チェックを外すと中身を隠す。
+
+      中身は V1 と同じ共有パーシャル。表示の出し入れは V1 と同じく
+      inline の display で、`{{#if}}` にすると入力がフォームから抜けるので
+      挙動を変えないため踏襲している。 --}}
+<fieldset class="category">
+  <legend class="category__title">
+    <input class="checkbox--hidden" id="{{docId}}system.usedice" type="checkbox"
+           name="system.usedice" data-dtype="Boolean" {{checked system.usedice}} {{disabled (not isEdit)}}/>
+    <label class="checkbox--label" for="{{docId}}system.usedice">{{localize "SW25.Item.Usedice"}}</label>
+  </legend>
+  <div style="display: {{#if system.usedice}}block{{else}}none{{/if}};">
+    {{> "systems/sw25/templates/item/parts/item-usedice.hbs"}}
+  </div>
+</fieldset>
+
+<fieldset class="category">
+  <legend class="category__title">
+    <input class="checkbox--hidden" id="{{docId}}system.usepower" type="checkbox"
+           name="system.usepower" data-dtype="Boolean" {{checked system.usepower}} {{disabled (not isEdit)}}/>
+    <label class="checkbox--label" for="{{docId}}system.usepower">{{localize "SW25.Item.Usepower"}}</label>
+  </legend>
+  <div style="display: {{#if system.usepower}}block{{else}}none{{/if}};">
+    {{> "systems/sw25/templates/item/parts/item-usepower.hbs"}}
+  </div>
+</fieldset>

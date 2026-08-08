@@ -1,9 +1,5 @@
-{{!-- weapon の詳細タブ。
-
-     基本設定・魔法のアイテム欄・リソース設定・判定/威力設定は装備品系で
-     共通なので `parts/detail-*.hbs` に切り出してある。ここに残るのは
-     武器固有の並び(分類・階級・価格・種別・用法・必筋・命中・追加D・射程)だけ。
-     属性は V1 と同じ `parts/item-elements.hbs` をそのまま使う。 --}}
+{{!-- armor の詳細タブ。共通部分は parts/detail-*.hbs、
+      ここに残るのは防具固有の並び(分類・階級・価格・用法・必筋・回避・防護点)。 --}}
 <section class="tab {{tab.id}} {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
 
   {{> "systems/sw25/templates/item/parts/detail-basic.hbs"}}
@@ -14,7 +10,7 @@
     <div class="grid-span-4 property">
       <label class="property--label" for="{{docId}}system.category">{{localize "SW25.Item.Category"}}</label>
       <select class="property--value" id="{{docId}}system.category" name="system.category" {{disabled (not isEdit)}}>
-        {{selectOptions config.weaponCategories selected=system.category localize=true blank="-"}}
+        {{selectOptions config.armorCategorys selected=system.category localize=true blank="-"}}
       </select>
     </div>
     <div class="grid-span-1 property">
@@ -31,36 +27,30 @@
     {{> "systems/sw25/templates/item/parts/detail-magicitem.hbs"}}
 
     <div class="grid-span-2 property-col">
-      <label class="property--label-col" for="{{docId}}system.type">{{localize "SW25.Item.Weapon.Type"}}</label>
-      <select class="property--value" id="{{docId}}system.type" name="system.type" {{disabled (not isEdit)}}>
-        {{selectOptions config.weaponTypes selected=system.type localize=true blank="-"}}
-      </select>
-    </div>
-    <div class="grid-span-2 property-col">
       <label class="property--label-col" for="{{docId}}system.usage">{{localize "SW25.Item.Weapon.Usage"}}</label>
       <select class="property--value" id="{{docId}}system.usage" name="system.usage" {{disabled (not isEdit)}}>
         {{selectOptions config.weaponUsages selected=system.usage localize=true blank="-"}}
       </select>
     </div>
-    <div class="grid-span-1 property-col">
+    <div class="grid-span-2 property-col">
       <label class="property--label-col" for="{{docId}}system.reqstr">{{localize "SW25.Item.Reqstr"}}</label>
       <input class="property--value" id="{{docId}}system.reqstr" type="text"
              name="system.reqstr" value="{{system.reqstr}}" data-dtype="Number" {{disabled (not isEdit)}}/>
     </div>
-    <div class="grid-span-1 property-col">
-      <label class="property--label-col" for="{{docId}}system.hit">{{localize "SW25.Item.Weapon.Hit"}}</label>
-      <input class="property--value" id="{{docId}}system.hit" type="text"
-             name="system.hit" value="{{system.hit}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    <div class="grid-span-2 property-col">
+      <label class="property--label-col" for="{{docId}}system.dodge">{{localize "SW25.Item.Armor.Dodge"}}</label>
+      <input class="property--value" id="{{docId}}system.dodge" type="text"
+             name="system.dodge" value="{{system.dodge}}" data-dtype="Number" {{disabled (not isEdit)}}/>
     </div>
-    <div class="grid-span-1 property-col">
-      <label class="property--label-col" for="{{docId}}system.dmod">{{localize "SW25.Item.Weapon.Dmod"}}</label>
-      <input class="property--value" id="{{docId}}system.dmod" type="text"
-             name="system.dmod" value="{{system.dmod}}" data-dtype="Number" {{disabled (not isEdit)}}/>
+    <div class="grid-span-2 property-col">
+      <label class="property--label-col" for="{{docId}}system.pp">{{localize "SW25.Attributes.Protectionpoint.long"}}</label>
+      <input class="property--value" id="{{docId}}system.pp" type="text"
+             name="system.pp" value="{{system.pp}}" data-dtype="Number" {{disabled (not isEdit)}}/>
     </div>
-    <div class="grid-span-3 property-col">
-      <label class="property--label-col" for="{{docId}}system.range">{{localize "SW25.Item.Weapon.Range"}}</label>
-      <input class="property--value" id="{{docId}}system.range" type="text"
-             name="system.range" value="{{system.range}}" data-dtype="String" {{disabled (not isEdit)}}/>
+    <div class="grid-span-2 property-col">
+      <label class="property--label-col" for="{{docId}}system.mpp">{{localize "SW25.Attributes.Magicprotection.abbr"}}</label>
+      <input class="property--value" id="{{docId}}system.mpp" type="text"
+             name="system.mpp" value="{{system.mpp}}" data-dtype="Number" {{disabled (not isEdit)}}/>
     </div>
 
     <div class="grid-span-10">

@@ -1,0 +1,9 @@
+{{!-- 閲覧時の見出し。魔法のアイテムの印を名前の前に添えるだけの型が使う
+      (防具・装飾品・道具)。武器は種別の印も付くので専用のものを持つ。 --}}
+{{#if system.isMagicitem}}
+  <span class="icon-stack">
+    <i class="mgc_diamond_square_fill"></i>
+    <i class="mgc_quill_pen_line" style="color: #ffffff"></i>
+  </span>
+{{/if}}
+{{document.name}}
