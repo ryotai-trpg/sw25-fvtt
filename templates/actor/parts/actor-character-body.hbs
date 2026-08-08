@@ -861,8 +861,8 @@
               <input class="property--value" id="{{actor._id}}system.attributes.faith" type="text" name="system.attributes.faith" value="{{system.attributes.faith}}" data-dtype="String"{{#unless system.isEdit}} disabled{{/unless}}/>
             </div>
             <div class="grid-span-2 property-col">
-              <label class="property--label-col" for="system.classType">{{localize "SW25.Actor.Type"}}</label>
-              <select class="property--value" name="system.classType"{{#unless system.isEdit}} disabled{{/unless}}>
+              <label class="property--label-col" for="{{actor._id}}system.classType">{{localize "SW25.Actor.Type"}}</label>
+              <select class="property--value" id="{{actor._id}}system.classType" name="system.classType"{{#unless system.isEdit}} disabled{{/unless}}>
                 {{selectOptions config.actorClasses selected=system.classType localize=true blank="SW25.Item.None"}}
               </select>
             </div>
@@ -925,23 +925,23 @@
               <fieldset class="subcategory grid-span-6 grid grid-6col nogapmargin">
                 <legend class="category__title">{{localize "SW25.Actor.ColorSetting.Main"}}</legend>
                 <div class="grid-span-3">
-                  <label for="system.color.main.bg">{{localize "SW25.Actor.ColorSetting.Background"}}</label>
-                  <input type="color" name="system.color.main.bg" value="{{system.color.main.bg}}" />
+                  <label for="{{actor._id}}system.color.main.bg">{{localize "SW25.Actor.ColorSetting.Background"}}</label>
+                  <input id="{{actor._id}}system.color.main.bg" type="color" name="system.color.main.bg" value="{{system.color.main.bg}}" />
                 </div>
                 <div class="grid-span-3">
-                  <label for="system.color.main.text">{{localize "SW25.Actor.ColorSetting.Text"}}</label>
-                  <input type="color" name="system.color.main.text" value="{{system.color.main.text}}" />
+                  <label for="{{actor._id}}system.color.main.text">{{localize "SW25.Actor.ColorSetting.Text"}}</label>
+                  <input id="{{actor._id}}system.color.main.text" type="color" name="system.color.main.text" value="{{system.color.main.text}}" />
                 </div>
               </fieldset>
               <fieldset class="subcategory grid-span-6 grid grid-6col nogapmargin">
                 <legend class="category__title">{{localize "SW25.Actor.ColorSetting.Sub"}}</legend>
                 <div class="grid-span-3">
-                  <label for="system.color.sub.bg">{{localize "SW25.Actor.ColorSetting.Background"}}</label>
-                  <input type="color" name="system.color.sub.bg" value="{{system.color.sub.bg}}" />
+                  <label for="{{actor._id}}system.color.sub.bg">{{localize "SW25.Actor.ColorSetting.Background"}}</label>
+                  <input id="{{actor._id}}system.color.sub.bg" type="color" name="system.color.sub.bg" value="{{system.color.sub.bg}}" />
                 </div>
                 <div class="grid-span-3">
-                  <label for="system.color.sub.text">{{localize "SW25.Actor.ColorSetting.Text"}}</label>
-                  <input type="color" name="system.color.sub.text" value="{{system.color.sub.text}}" />
+                  <label for="{{actor._id}}system.color.sub.text">{{localize "SW25.Actor.ColorSetting.Text"}}</label>
+                  <input id="{{actor._id}}system.color.sub.text" type="color" name="system.color.sub.text" value="{{system.color.sub.text}}" />
                 </div>
               </fieldset>
           </fieldset>
