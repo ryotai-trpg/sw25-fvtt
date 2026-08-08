@@ -197,7 +197,14 @@ export const SW25ActorActionsMixin = (base) =>
     }
 
     /**
-     * Handle clickable rolls.
+     * アイテム行のマクロ実行ボタン(`.execitemmacro`)。
+     *
+     * `Item#executeMacro` は Item Macro モジュール(`flags.itemacro.macro`)が
+     * 生やすもので、本システムには無い。ボタンは
+     * `flags.itemacro.macro.command` があるときだけ出るが、そのフラグは
+     * モジュールを外してもワールドのデータに残るので、
+     * モジュール抜きでボタンだけが出ている状態になりうる。
+     *
      * @param {Event} event   The originating click event
      * @private
      */
@@ -209,11 +216,15 @@ export const SW25ActorActionsMixin = (base) =>
         dataset.itemid ??
         target.closest("[data-item-id]")?.dataset.itemId ??
         null;
-      
+
       // Handle item macro.
       const item = this.actor.items.get(itemId);
       if (!item) return;
-      item.executeMacro(event);
+      if (typeof item.executeMacro !== "function") {
+        ui.notifications.warn(game.i18n.localize("SW25.Itemmacrowarn"));
+        return;
+      }
+      await item.executeMacro(event);
     }
 
     /**

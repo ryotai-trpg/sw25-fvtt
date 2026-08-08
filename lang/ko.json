@@ -96,6 +96,7 @@
     "Noselectwarn": "토큰이 지정되지 않았습니다.",
     "Multiselectwarn": "토큰이 여러개 지정되었습니다.",
     "SummonMpwarn": "소환자의 토큰을 선택하십시오.",
+    "Itemmacrowarn": "Item Macro 모듈이 활성화되어 있지 않습니다.",
     "InputPlaceHolder": "여기에 입력",
     "NotTokenwarn": "토큰이 존재하지 않습니다.",
 
@@ -231,6 +232,7 @@
       "CheckB": "판정",
       "PowerB": "위력",
       "EffectB": "버프",
+      "MacroB": "매크로",
       "CostB": "소비",
       "MPB": "MP",
       "Clickitem": "아이콘 클릭 시",
