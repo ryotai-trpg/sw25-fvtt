@@ -51,6 +51,103 @@ export const baseFields = () => ({
   clickitem: new StringField({ required: true, blank: true, initial: "all" }),
 });
 
+/**
+ * template.json のどのテンプレートにも無いが、ほぼ全型のシートが持っている入力。
+ *
+ * isEdit はシートの編集モード切り替え。テンプレート側で
+ * {{#unless system.isEdit}} disabled {{/unless}} として使われているので、
+ * 宣言し忘れるとシートが丸ごと読み取り専用になる。
+ *
+ * equip は Item.templates.battle にもあり、そちらは初期値 true。
+ * battleFields() を後に展開すれば装備品だけ true になる。
+ */
+export const commonFields = () => ({
+  isEdit: bool(),
+  selfbuff: bool(),
+  bookmark: bool(),
+  equip: bool(),
+  overview: str(),
+});
+
+/** prepare が毎回入れ直す表示名 */
+export const derivedString = () =>
+  new StringField({ required: true, blank: true, persisted: false });
+
+/** 属性(武器・防具から呪文まで 10 型以上が持つ)。template.json には無い。 */
+export const elementsFields = () => ({
+  elements: new SchemaField({
+    type: str(),
+    physical: new SchemaField({
+      blade: bool(),
+      blow: bool(),
+      gun: bool(),
+      mithril: bool(),
+    }),
+    magic: new SchemaField({
+      fire: bool(),
+      ice: bool(),
+      thunder: bool(),
+      wind: bool(),
+      earth: bool(),
+      energy: bool(),
+      impact: bool(),
+      cut: bool(),
+      poison: bool(),
+      disease: bool(),
+      curse: bool(),
+      mental: bool(),
+      mentalw: bool(),
+      healing: bool(),
+    }),
+  }),
+});
+
+/** 抵抗の指定。template.json には無い。 */
+export const resistFields = () => ({
+  resistinfo: new SchemaField({
+    type: str(),
+    input: str(),
+    result: str(),
+  }),
+  // 表示名は毎回引き直す
+  resistname: new StringField({
+    required: true,
+    blank: true,
+    persisted: false,
+  }),
+});
+
+/** 対象・射程形状・時間・属性。呪文や特技系が広く持つ。template.json には無い。 */
+export const castFields = () => ({
+  target: str(),
+  rangeshape: str(),
+  time: str(),
+  prop: str(),
+  // 属性の表示名は毎回引き直す
+  propname: new StringField({
+    required: true,
+    blank: true,
+    persisted: false,
+  }),
+});
+
+/** 魔法のアイテムまわり(製作・名誉点・HP/MP 消費)。template.json には無い。 */
+export const magicItemFields = () => ({
+  info: new SchemaField({
+    category: str(),
+    create: str(),
+    popularity: str(),
+    shape: str(),
+  }),
+  honor: nullableNum(),
+  isHonoritem: bool(),
+  isMagicitem: bool(),
+  // basehpcost だけ入力が String(「2点」のような書き方を許している)
+  basehpcost: str(),
+  basempcost: nullableNum(),
+  maxhpcost: nullableNum(),
+});
+
 /** Item.templates.item — 個数と価格を持つ「モノ」。 */
 export const itemFields = () => ({
   // 上限・下限を超えると prepare 側で丸められるが、入力値そのものは保存する
@@ -88,7 +185,7 @@ export const abilityFields = () => ({
   main: bool(),
   aux: bool(),
   decla: bool(),
-  overview: str(),
+  // overview は commonFields 側にある
   level: new NumberField({
     required: true,
     nullable: false,

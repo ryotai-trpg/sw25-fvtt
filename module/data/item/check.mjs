@@ -1,7 +1,9 @@
 import {
   SW25ItemDataModel,
   baseFields,
+  commonFields,
   rollFields,
+  resistFields,
   derivedNumber,
   BooleanField,
   NumberField,
@@ -17,7 +19,9 @@ export class CheckData extends SW25ItemDataModel {
   static defineSchema() {
     return {
       ...baseFields(),
+      ...commonFields(),
       ...rollFields(),
+      ...resistFields(),
 
       checkfixmod: new NumberField({
         required: true,
@@ -30,6 +34,8 @@ export class CheckData extends SW25ItemDataModel {
         blank: true,
         initial: "normal",
       }),
+      // template.json には無いがシートにセレクトがある
+      checkpackage: new StringField({ required: true, blank: true }),
 
       /* ---- 派生値 ---- */
       efckmod: derivedNumber(),

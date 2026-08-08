@@ -1,6 +1,7 @@
 import {
   SW25ItemDataModel,
   baseFields,
+  commonFields,
   itemFields,
   rollFields,
   BooleanField,
@@ -27,6 +28,7 @@ export class ResourceData extends SW25ItemDataModel {
   static defineSchema() {
     return {
       ...baseFields(),
+      ...commonFields(),
       ...itemFields(),
       ...rollFields(),
 

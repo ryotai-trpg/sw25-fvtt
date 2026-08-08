@@ -529,25 +529,6 @@
         "level": 1
       }
     },
-    "weapon": {
-      "templates": ["base", "item", "roll", "battle"],
-      "type": "",
-      "usage": "",
-      "hit": 0,
-      "dmod": 0,
-      "range": ""
-    },
-    "armor": {
-      "templates": ["base", "item", "roll", "battle"],
-      "dodge": 0,
-      "pp": 0,
-      "mpp": 0
-    },
-    "accessory": {
-      "templates": ["base", "item", "roll", "battle"],
-      "accpart": "",
-      "deffect": ""
-    },
     "spell": {
       "templates": ["base", "roll", "ability"],
       "type": "",

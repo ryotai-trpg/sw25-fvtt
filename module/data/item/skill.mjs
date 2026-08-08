@@ -1,6 +1,7 @@
 import {
   SW25ItemDataModel,
   baseFields,
+  commonFields,
   derivedNumber,
   derivedSchema,
   BooleanField,
@@ -26,6 +27,7 @@ export class SkillData extends SW25ItemDataModel {
   static defineSchema() {
     return {
       ...baseFields(),
+      ...commonFields(),
 
       skilllevel: new NumberField({
         required: true,
