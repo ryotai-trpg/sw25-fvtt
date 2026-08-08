@@ -108,7 +108,9 @@
         <div class="header__overview--race">
           {{system.race}}
           &nbsp;/&nbsp;{{system.attributes.gender}}
-          &nbsp;/&nbsp;{{localize "SW25.Attributes.AgeLabel" age=system.attributes.age}}
+          {{!-- 年齢は data-dtype="Number" なので未入力だと null。
+                localize は引数を String() するので、素通しすると "null歳" と出る --}}
+          {{#if system.attributes.age}}&nbsp;/&nbsp;{{localize "SW25.Attributes.AgeLabel" age=system.attributes.age}}{{/if}}
         </div>
         <div class="header__overview--rank">
           <i class="fa-solid fa-medal"></i>{{system.attributes.honer.rank}}

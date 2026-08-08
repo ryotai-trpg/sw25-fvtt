@@ -69,6 +69,21 @@ export const derivedBool = (initial = false) =>
   new BooleanField({ initial, persisted: false });
 
 /**
+ * 条件が揃ったときだけ prepare が入れる数値。
+ *
+ * 初期値を 0 にすると、値が無いときにシートが "0" を描いてしまう
+ * (装備武器を選んでいないのに「命中 : 0」と出るなど)。
+ * null なら Handlebars は空文字を描くので、移行前の undefined と同じ見え方になる。
+ */
+export const derivedNullableNumber = () =>
+  new NumberField({
+    required: true,
+    nullable: true,
+    initial: null,
+    persisted: false,
+  });
+
+/**
  * 型を縛らない派生値。
  *
  * AnyField は serializable: false が既定で `toObject` が素通しなので、
