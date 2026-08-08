@@ -1,3 +1,4 @@
+import { MonsterData } from "./monster.mjs";
 import { NpcData } from "./npc.mjs";
 
 /**
@@ -8,5 +9,6 @@ import { NpcData } from "./npc.mjs";
  * 型が存在するかどうかは今も template.json(game.model)が決めている。
  */
 export const actorDataModels = {
+  monster: MonsterData,
   npc: NpcData,
 };

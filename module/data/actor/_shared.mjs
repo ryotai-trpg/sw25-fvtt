@@ -64,6 +64,10 @@ export const derivedNumber = (initial = 0) =>
 export const derivedString = (initial = "") =>
   new StringField({ required: true, blank: true, initial, persisted: false });
 
+/** prepareDerivedData が毎回入れ直す真偽値 */
+export const derivedBool = (initial = false) =>
+  new BooleanField({ initial, persisted: false });
+
 /**
  * 型を縛らない派生値。
  *
@@ -265,9 +269,33 @@ export const effectAttributeFields = () => ({
   decay: damageTableFields(),
 });
 
+/** 魔法系統の略号。sc=ソーサラー … bm=ビブリオマンサー */
+const MAGIC_SCHOOLS = [
+  "sc",
+  "cn",
+  "wz",
+  "pr",
+  "mt",
+  "fr",
+  "dr",
+  "dm",
+  "ab",
+  "bm",
+];
+
+/**
+ * 系統ごとの魔力修正。
+ *
+ * character はシートに name="system.attributes.scmod" などの入力があり、
+ * monster は入力こそ無いが documents/item.mjs の呪文の準備が
+ * `actorData.attributes.scmod` を読むので、どちらも保存対象。
+ */
+export const magicSchoolModFields = () =>
+  Object.fromEntries(MAGIC_SCHOOLS.map((s) => [`${s}mod`, num()]));
+
 /** 魔法系統ごとの効果適用先。10 系統 × 4 種 + 全系統の 3 種 */
 const magicSchoolEffectFields = () => {
-  const schools = ["sc", "cn", "wz", "pr", "mt", "fr", "dr", "dm", "ab", "bm"];
+  const schools = MAGIC_SCHOOLS;
   const fields = {};
   for (const s of schools) {
     // 魔力 / 行使判定 / 威力 / MP 消費
@@ -349,8 +377,8 @@ export const unidentifiedFields = () => ({
   displayoverview: str(),
 
   /* ---- 派生値。閲覧者の権限から毎回決まる ---- */
-  limited: new BooleanField({ initial: false, persisted: false }),
-  isgm: new BooleanField({ initial: false, persisted: false }),
+  limited: derivedBool(),
+  isgm: derivedBool(),
 });
 
 export {
