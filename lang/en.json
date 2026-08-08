@@ -651,6 +651,38 @@
         "Conversation": "Speak",
         "Reading": "Read"
       },
+      "language": {
+        "FIELDS": {
+          "conversation": {
+            "label": "Speak"
+          },
+          "reading": {
+            "label": "Read"
+          }
+        }
+      },
+      "skill": {
+        "FIELDS": {
+          "skilllevel": {
+            "label": "Level"
+          },
+          "skilltype": {
+            "label": "Type"
+          },
+          "exptable": {
+            "label": "Exp Table"
+          },
+          "skillmod": {
+            "label": "Skill Modifier"
+          },
+          "dedicated": {
+            "label": "Dedicated"
+          },
+          "skillexp": {
+            "label": "Required Exp"
+          }
+        }
+      },
       "Otherfeature": {
         "Type": "Feature Type"
       },

@@ -599,6 +599,28 @@
           }
         }
       },
+      "skill": {
+        "FIELDS": {
+          "skilllevel": {
+            "label": "レベル"
+          },
+          "skilltype": {
+            "label": "分類"
+          },
+          "exptable": {
+            "label": "経験点テーブル"
+          },
+          "skillmod": {
+            "label": "技能修正"
+          },
+          "dedicated": {
+            "label": "専心"
+          },
+          "skillexp": {
+            "label": "必要経験点"
+          }
+        }
+      },
       "Otherfeature": {
         "Type": "特技種別"
       },

@@ -691,23 +691,6 @@
       "sectype": "",
       "limcond": ""
     },
-    "skill": {
-      "templates": ["base"],
-      "skilllevel": 1,
-      "skillexp": 0,
-      "exptable": "",
-      "skilltype": "",
-      "skillmod": "0",
-      "skillbase": {
-        "dex": "",
-        "agi": "",
-        "str": "",
-        "vit": "",
-        "int": "",
-        "mnd": ""
-      },
-      "efallskmod": 0
-    },
     "raceability": {
       "templates": ["base", "roll"]
     },
