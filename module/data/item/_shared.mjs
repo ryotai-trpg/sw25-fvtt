@@ -1,5 +1,12 @@
-const { HTMLField, StringField, NumberField, BooleanField, SchemaField } =
-  foundry.data.fields;
+const {
+  AnyField,
+  ArrayField,
+  BooleanField,
+  HTMLField,
+  NumberField,
+  SchemaField,
+  StringField,
+} = foundry.data.fields;
 
 /**
  * すべてのアイテム型の土台。
@@ -31,6 +38,112 @@ export const baseFields = () => ({
   clickitem: new StringField({ required: true, blank: true, initial: "all" }),
 });
 
+/** 入力欄のある数値。空欄を 0 と区別したいものは nullable にする。 */
+const num = (initial = 0) =>
+  new NumberField({ required: true, nullable: false, initial });
+const nullableNum = () =>
+  new NumberField({ required: true, nullable: true, initial: null });
+const bool = (initial = false) => new BooleanField({ initial });
+const str = (initial = "") =>
+  new StringField({ required: true, blank: true, initial });
+
+/**
+ * Item.templates.roll — 判定と威力のロール設定。24 型中 20 型が使う。
+ *
+ * 判定・威力それぞれの ck*bt / pw*bt は、チャットカードに
+ * どのダメージ適用ボタンを出すかの指定。
+ */
+export const rollFields = () => ({
+  /* ---- 判定 ---- */
+  checkskill: str(),
+  checkabi: str(),
+  checkmod: num(),
+  ckpdbt: bool(true),
+  ckmdbt: bool(true),
+  ckcdbt: bool(true),
+  ckhrbt: bool(true),
+  ckmrbt: bool(true),
+
+  /* ---- 威力 ---- */
+  powerskill: str(),
+  powerabi: str(),
+  powermod: num(),
+  pwpdbt: bool(true),
+  pwmdbt: bool(true),
+  pwcdbt: bool(true),
+  pwhrbt: bool(true),
+  pwmrbt: bool(true),
+
+  usepower: bool(),
+  usedice: bool(),
+  customdice: bool(),
+  customformula: str(),
+  power: nullableNum(),
+  cvalue: nullableNum(),
+  showpowmod: bool(),
+  halfpow: bool(),
+  halfpowmod: nullableNum(),
+  lethaltech: nullableNum(),
+  criticalray: str(),
+  pharmtool: nullableNum(),
+  powup: nullableNum(),
+
+  /* ---- 威力表の各行 ----
+     template.json には無いが、シートに name="system.pt3" 〜 pt12 があり
+     powertable の組み立てでも読んでいる。実行時に生えていたので宣言する。 */
+  pt3: nullableNum(),
+  pt4: nullableNum(),
+  pt5: nullableNum(),
+  pt6: nullableNum(),
+  pt7: nullableNum(),
+  pt8: nullableNum(),
+  pt9: nullableNum(),
+  pt10: nullableNum(),
+  pt11: nullableNum(),
+  pt12: nullableNum(),
+
+  /* ---- 適用先 ---- */
+  applycheck: str("-"),
+  applycheck1: str("-"),
+  applycheck2: str("-"),
+  applycheck3: str("-"),
+  applypower: str("on"),
+
+  /* ---- リソース消費 ---- */
+  autouseres: bool(),
+  resuse: str(),
+  resusequantity: num(),
+
+  /* ---- 以下は prepareDerivedData が毎回入れ直す ---- */
+  checkbase: derivedNumber(),
+  powerbase: derivedNumber(),
+  totalcvalue: new NumberField({
+    required: true,
+    nullable: true,
+    initial: null,
+    persisted: false,
+  }),
+  formula: new StringField({
+    required: true,
+    blank: true,
+    initial: "2d6",
+    persisted: false,
+  }),
+  // 数値と criticalray の文字列が混ざるので要素の型は縛らない
+  powertable: new ArrayField(new AnyField(), {
+    required: true,
+    initial: [],
+    persisted: false,
+  }),
+  // シートのセレクト用に組み立てられる一覧
+  skilllist: new StringField({
+    required: true,
+    blank: true,
+    persisted: false,
+  }),
+  itemlist: new StringField({ required: true, blank: true, persisted: false }),
+});
+
 /* -------------------------------------------- */
 /*  派生値                                       */
 /* -------------------------------------------- */
@@ -59,4 +172,12 @@ export const derivedNumber = (initial = 0) =>
 export const derivedSchema = (fields) =>
   new SchemaField(fields, { persisted: false });
 
-export { HTMLField, StringField, NumberField, BooleanField, SchemaField };
+export {
+  AnyField,
+  ArrayField,
+  BooleanField,
+  HTMLField,
+  NumberField,
+  SchemaField,
+  StringField,
+};

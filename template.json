@@ -664,14 +664,6 @@
       "time": 0,
       "resist": ""
     },
-    "check": {
-      "templates": ["base", "roll"],
-      "checkfixmod": "",
-      "showbtcheck": false,
-      "checkmethod": "normal",
-      "efckmod": 0,
-      "efallckmod": 0
-    },
     "resource": {
       "templates": ["base", "item", "roll"]
     },

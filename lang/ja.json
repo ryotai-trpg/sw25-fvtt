@@ -599,6 +599,19 @@
           }
         }
       },
+      "check": {
+        "FIELDS": {
+          "checkfixmod": {
+            "label": "固定値"
+          },
+          "checkmethod": {
+            "label": "判定方法"
+          },
+          "showbtcheck": {
+            "label": "戦闘判定に表示"
+          }
+        }
+      },
       "skill": {
         "FIELDS": {
           "skilllevel": {

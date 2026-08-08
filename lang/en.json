@@ -661,6 +661,19 @@
           }
         }
       },
+      "check": {
+        "FIELDS": {
+          "checkfixmod": {
+            "label": "Fixed Value"
+          },
+          "checkmethod": {
+            "label": "Check Method"
+          },
+          "showbtcheck": {
+            "label": "Show in Battle Checks"
+          }
+        }
+      },
       "skill": {
         "FIELDS": {
           "skilllevel": {
