@@ -621,11 +621,15 @@ export class SW25Actor extends Actor {
       });
     }).flat();
 
-    let totalppmod = null;
-    let totalmppmod = null;
-    let totaldreduce = null;
-    let totalhpmod = null;
-    let totalmpmod = null;
+    // 効果が 1 つも当たらなかったキーは null のまま残す。テンプレートが
+    // `{{#if system.totalppmod}}` で「効果あり」の行を出すかどうかを決める
+    const totals = {
+      totalppmod: null,
+      totalmppmod: null,
+      totaldreduce: null,
+      totalhpmod: null,
+      totalmpmod: null,
+    };
     const processingRules = [
       { key: "system.attributes.efppmod", target: "totalppmod" },
       { key: "system.attributes.efmppmod", target: "totalmppmod" },
@@ -648,19 +652,19 @@ export class SW25Actor extends Actor {
         let value = Number(effects.value);
         switch (effects.type) {
           case "multiply":
-            eval(`${rule.target} *= ${value}`);
+            totals[rule.target] *= value;
             break;
 
           case "add":
-            eval(`${rule.target} += ${value}`);
+            totals[rule.target] += value;
             break;
 
           case "subtract":
-            eval(`${rule.target} -= ${value}`);
+            totals[rule.target] -= value;
             break;
 
           case "override":
-            eval(`${rule.target} = ${value}`);
+            totals[rule.target] = value;
             break;
 
           case "downgrade":
@@ -674,16 +678,9 @@ export class SW25Actor extends Actor {
         }
       }
     });
-    systemData.totalppmod = totalppmod;
-    systemData.totalmppmod = totalmppmod;
-    systemData.totaldreduce = totaldreduce;
-    systemData.totalhpmod = totalhpmod;
-    systemData.totalmpmod = totalmpmod;
-    if (totalppmod > 0) systemData.totalppmod = "+" + totalppmod;
-    if (totalmppmod > 0) systemData.totalmppmod = "+" + totalmppmod;
-    if (totaldreduce > 0) systemData.totaldreduce = "+" + totaldreduce;
-    if (totalhpmod > 0) systemData.totalhpmod = "+" + totalhpmod;
-    if (totalmpmod > 0) systemData.totalmpmod = "+" + totalmpmod;
+    // 表示用。正の値には符号を付けるので、ここから先は文字列になりうる
+    for (const [key, total] of Object.entries(totals))
+      systemData[key] = total > 0 ? `+${total}` : total;
 
     // Set initiative formula
     systemData.initiativeFormula = "0";
