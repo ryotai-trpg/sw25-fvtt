@@ -1,0 +1,15 @@
+{{!-- language のヘッダ固有部分。ラベルはスキーマから引く
+      (`SW25.Item.language.FIELDS.*` — LOCALIZATION_PREFIXES 経由で本体が翻訳済みにしている)。 --}}
+<section class="header__subtitle">
+  <div class="header__checkbox">
+    <input class="checkbox--hidden" id="{{document.id}}system.conversation" type="checkbox"
+           name="system.conversation" data-dtype="Boolean" {{checked system.conversation}}/>
+    <label class="checkbox--label" for="{{document.id}}system.conversation">{{systemFields.conversation.label}}</label>
+
+    <input class="checkbox--hidden" id="{{document.id}}system.reading" type="checkbox"
+           name="system.reading" data-dtype="Boolean" {{checked system.reading}}/>
+    <label class="checkbox--label" for="{{document.id}}system.reading">{{systemFields.reading.label}}</label>
+  </div>
+</section>
+
+<section class="header__activate"></section>

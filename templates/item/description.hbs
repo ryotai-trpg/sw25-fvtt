@@ -1,3 +1,15 @@
-<section class='tab {{tab.cssClass}}' data-group='primary' data-tab='description'>
-  {{formGroup systemFields.description value=system.description}}
+{{!-- 説明タブ。どの型でも同じなので PART として共有する。
+
+     V1 の `{{editor}}` は使わない。v14 の `{{editor}}` は
+     `createEditorInput` に委譲するが、`button=true` で返るのは
+     `<div class="editor">` + `<a class="editor-edit">` で、これを起動する
+     `.editor-content[data-edit]` の配線は **V1 の FormApplication にしか無い**
+     (`appv1/api/form-application-v1.mjs:171`)。AppV2 では鉛筆を押しても何も起きない。
+
+     HTMLField を formInput に通すと `<prose-mirror name="system.description">`
+     になり、`form.submitOnChange` がそのまま拾う。`toggled` が V1 の
+     「鉛筆を押して編集」に当たり、閉じている間は `enriched` を表示する。 --}}
+<section class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  {{formInput systemFields.description value=system.description
+              toggled=true enriched=enrichedDescription}}
 </section>

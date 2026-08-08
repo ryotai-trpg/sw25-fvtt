@@ -21,6 +21,7 @@ import { rollreq } from "./helpers/rollrequest.mjs";
 import { targetRollDialog, targetSelectDialog } from "./helpers/dialogs.mjs";
 import { preparePolyglot } from "./helpers/sw25languageprovider.mjs";
 import { Migrator } from "./helpers/migrator.mjs";
+import { bindTextareaEditors } from "./helpers/textarea-editor.mjs";
 
 import { actorDataModels } from "./data/actor/_module.mjs";
 import { itemDataModels } from "./data/item/_module.mjs";
@@ -104,9 +105,12 @@ Hooks.once("init", function () {
     label: "SW25.SheetLabels.Item",
   });
 
+  // ApplicationV2 へ移した型は、型を絞った登録で V1 の既定を上書きする。
+  // 未移行の型は上の SW25ItemSheet(V1)が既定のまま
   DocumentSheetConfig.registerSheet(Item, "sw25", SW25LanguageSheet, {
     types: ["language"],
-    label: "新言語シート",
+    makeDefault: true,
+    label: "SW25.SheetLabels.Item",
   });
 
   // Register Active effect sheet Class
@@ -1292,19 +1296,10 @@ Hooks.on("getSceneControlButtons", function (controls) {
 // textarea edit hook
 // $() は V1 が渡す jQuery でも ApplicationV2 が渡す HTMLElement でも通るので、
 // シートを AppV2 化してもこのまま動く。document も両世代にある(object は V1 のみ)。
+// V1 シート用。ApplicationV2 のシートはクラス名の連鎖からフック名が作られるので
+// ここには飛ばない — V2 側は SW25DocumentSheetMixin#_onRender が同じ処理を張る
 const onRenderTextareaEditor = (app, element) => {
-  const html = $(element);
-  html.find(".textarea-editor").on("blur", async (event) => {
-    const textarea = $(event.currentTarget);
-    const path = "system." + textarea.data("path");
-    const displaypath = "system.display" + textarea.data("path");
-    const content = textarea.val();
-    const displaycontent = content.replace(/\n/g, "<br>");
-    const updateData = {};
-    updateData[path] = content;
-    updateData[displaypath] = displaycontent;
-    await app.document.update(updateData);
-  });
+  bindTextareaEditors(element instanceof HTMLElement ? element : element[0], app.document);
 };
 Hooks.on("renderSW25ActorSheet", onRenderTextareaEditor);
 Hooks.on("renderSW25ItemSheet", onRenderTextareaEditor);
