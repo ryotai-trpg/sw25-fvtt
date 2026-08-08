@@ -616,7 +616,7 @@ export class SW25Actor extends Actor {
         return {
           key: change.key,
           value: Number(change.value),
-          mode: change.mode,
+          type: change.type,
         };
       });
     }).flat();
@@ -636,31 +636,39 @@ export class SW25Actor extends Actor {
     let ruleMap = Object.fromEntries(
       processingRules.map((rule) => [rule.key, rule])
     );
-    effectsChange.sort((a, b) => a.mode - b.mode);
+    // 適用順は CONST.ACTIVE_EFFECT_CHANGE_TYPES の既定優先度に従う
+    // (custom 0 < multiply 10 < add / subtract 20 < downgrade 30 < upgrade 40 < override 50)。
+    const changeTypePriority = (change) =>
+      CONST.ACTIVE_EFFECT_CHANGE_TYPES[change.type] ?? 0;
+    effectsChange.sort((a, b) => changeTypePriority(a) - changeTypePriority(b));
     effectsChange.forEach((effects) => {
 
       let rule = ruleMap[effects.key];
       if (rule) {
         let value = Number(effects.value);
-        switch (effects.mode) {
-          case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:
+        switch (effects.type) {
+          case "multiply":
             eval(`${rule.target} *= ${value}`);
             break;
 
-          case CONST.ACTIVE_EFFECT_MODES.ADD:
+          case "add":
             eval(`${rule.target} += ${value}`);
             break;
-  
-          case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+
+          case "subtract":
+            eval(`${rule.target} -= ${value}`);
+            break;
+
+          case "override":
             eval(`${rule.target} = ${value}`);
             break;
-  
-          case CONST.ACTIVE_EFFECT_MODES.DOWNGRADE:
-          case CONST.ACTIVE_EFFECT_MODES.UPGRADE:
-          case CONST.ACTIVE_EFFECT_MODES.CUSTOM:
+
+          case "downgrade":
+          case "upgrade":
+          case "custom":
             //未実装
             break;
-  
+
           default:
             break;
         }
@@ -1104,7 +1112,7 @@ export class SW25Actor extends Actor {
         return {
           key: change.key,
           value: Number(change.value),
-          mode: change.mode,
+          type: change.type,
         };
       });
     }).flat();
@@ -1237,7 +1245,11 @@ export class SW25Actor extends Actor {
       processingRules.map((rule) => [rule.key, rule])
     );
 
-    effectsChange.sort((a, b) => a.mode - b.mode);
+    // 適用順は CONST.ACTIVE_EFFECT_CHANGE_TYPES の既定優先度に従う
+    // (custom 0 < multiply 10 < add / subtract 20 < downgrade 30 < upgrade 40 < override 50)。
+    const changeTypePriority = (change) =>
+      CONST.ACTIVE_EFFECT_CHANGE_TYPES[change.type] ?? 0;
+    effectsChange.sort((a, b) => changeTypePriority(a) - changeTypePriority(b));
     effectsChange.forEach((effects) => {
       const keys = this._splitEffectKey(effects.key);
       let rule = keys != null ? ruleMap[keys.keyA] : ruleMap[effects.key];
@@ -1250,25 +1262,29 @@ export class SW25Actor extends Actor {
         }
 
         let newValue = currentValue;
-        switch (effects.mode) {
-          case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:
+        switch (effects.type) {
+          case "multiply":
             newValue = Number(currentValue) * value;
             break;
 
-          case CONST.ACTIVE_EFFECT_MODES.ADD:
+          case "add":
             newValue = Number(currentValue) + value;
             break;
-  
-          case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+
+          case "subtract":
+            newValue = Number(currentValue) - value;
+            break;
+
+          case "override":
             newValue = value;
             break;
-  
-          case CONST.ACTIVE_EFFECT_MODES.DOWNGRADE:
-          case CONST.ACTIVE_EFFECT_MODES.UPGRADE:
-          case CONST.ACTIVE_EFFECT_MODES.CUSTOM:
+
+          case "downgrade":
+          case "upgrade":
+          case "custom":
             //未実装
             break;
-  
+
           default:
             break;
         }
