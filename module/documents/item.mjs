@@ -72,6 +72,108 @@ function abilityBonus(abilities, key, extra = 0) {
 }
 
 /**
+ * 能力値に乗っている「効果ぶんだけ」のボーナス。
+ * `abilityBonus()` と違って素の能力値・種族値・成長は見ない。
+ *
+ * @param {object} abilities  actor.system.abilities(無いこともある)
+ * @param {string} key        dex / agi / str / vit / int / mnd
+ * @returns {number}
+ */
+function abilityEffectBonus(abilities, key) {
+  const abi = abilities?.[key];
+  return Math.floor((abi?.efvaluemodify ?? 0) / 6) + Number(abi?.efmodify ?? 0);
+}
+
+/**
+ * 魔法系統 → 修正値のキーに使う 2 文字。呪文アイテムの `system.type` と、
+ * 魔物能力・行動の判定ラベルの両方がこの 10 種に落ちる。
+ *
+ * `system.type` は choices の無い StringField なので、素のオブジェクトだと
+ * `toString` のような値で Object.prototype を引いてしまう。Map にしておく。
+ */
+const MAGIC_SCHOOLS = new Map([
+  ["sorcerer", "sc"],
+  ["conjurer", "cn"],
+  ["wizard", "wz"],
+  ["priest", "pr"],
+  ["magitech", "mt"],
+  ["fairy", "fr"],
+  ["druid", "dr"],
+  ["daemon", "dm"],
+  ["abyssal", "ab"],
+  ["bibliomancer", "bm"],
+]);
+
+/**
+ * 呪文アイテムに系統ごとの修正値を乗せる。10 系統すべて同じ形。
+ *
+ * @param {object} systemData  呪文アイテムの system
+ * @param {object} attributes  actor.system.attributes
+ * @param {string} key         MAGIC_SCHOOLS の 2 文字キー
+ */
+function applyMagicSchool(systemData, attributes, key) {
+  systemData.checkbase =
+    Number(systemData.checkbase) +
+    Number(attributes[`${key}mod`]) +
+    Number(attributes[`ef${key}mod`]) +
+    Number(attributes[`ef${key}ckmod`]) +
+    Number(attributes.efmckall);
+  systemData.powerbase =
+    Number(systemData.powerbase) +
+    Number(attributes[`${key}mod`]) +
+    Number(attributes[`ef${key}mod`]) +
+    Number(attributes[`ef${key}pwmod`]) +
+    Number(attributes.efmpwall);
+  systemData.mpcost =
+    Number(systemData.basempcost) -
+    Number(attributes[`efmp${key}`]) -
+    Number(attributes.efmpall);
+  if (systemData.mpcost < 1) systemData.mpcost = 1;
+}
+
+/**
+ * 魔物能力・行動の判定ラベル → 魔法系統のキー。
+ *
+ * ラベルはゲーム設定で GM が自由に書き換えられるので、**呼ばれるたびに
+ * 組み直す**(モジュール読み込み時の値で固めると設定変更が効かない)。
+ * 同じ文字列を 2 つの設定に入れることもできてしまうため、置き換え前の
+ * switch と同じく先に並んでいるほうを勝たせる。
+ *
+ * @returns {Map<string, string>}
+ */
+function magicLabelKeys() {
+  const map = new Map();
+  const pairs = [
+    [effectScpMon, "sc"],
+    [effectCnpMon, "cn"],
+    [effectWzpMon, "wz"],
+    [effectPrpMon, "pr"],
+    [effectMtpMon, "mt"],
+    [effectFrpMon, "fr"],
+    [effectDrpMon, "dr"],
+    [effectDmpMon, "dm"],
+    [effectAbpMon, "ab"],
+    [effectBmpMon, "bm"],
+  ];
+  for (const [label, key] of pairs) if (!map.has(label)) map.set(label, key);
+  return map;
+}
+
+/**
+ * 魔物能力・行動の、魔法系統ぶんの効果修正。系統の修正が入っていれば
+ * それに全魔法行使の修正を足し、入っていなければ全魔法行使の修正だけ。
+ *
+ * @param {object} attributes    actor.system.attributes
+ * @param {number|string} allmgpMod  systemData.efallmgpmod
+ * @param {string} key           magicLabelKeys() が返す 2 文字キー
+ * @returns {number}
+ */
+function magicEffectMod(attributes, allmgpMod, key) {
+  const mod = attributes[`ef${key}mod`];
+  return mod ? Number(mod) + Number(allmgpMod) : Number(allmgpMod);
+}
+
+/**
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
@@ -956,200 +1058,9 @@ export class SW25Item extends Item {
         Number(systemData.powerbase) + Number(systemData.efallmgpmod);
 
       systemData.hpcost = systemData.basehpcost;
-      switch (systemData.type) {
-        case "sorcerer":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.scmod) +
-            Number(actorData.attributes.efscmod) +
-            Number(actorData.attributes.efscckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.scmod) +
-            Number(actorData.attributes.efscmod) +
-            Number(actorData.attributes.efscpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpsc) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "conjurer":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.cnmod) +
-            Number(actorData.attributes.efcnmod) +
-            Number(actorData.attributes.efcnckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.cnmod) +
-            Number(actorData.attributes.efcnmod) +
-            Number(actorData.attributes.efcnpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpcn) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "wizard":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.wzmod) +
-            Number(actorData.attributes.efwzmod) +
-            Number(actorData.attributes.efwzckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.wzmod) +
-            Number(actorData.attributes.efwzmod) +
-            Number(actorData.attributes.efwzpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpwz) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "priest":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.prmod) +
-            Number(actorData.attributes.efprmod) +
-            Number(actorData.attributes.efprckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.prmod) +
-            Number(actorData.attributes.efprmod) +
-            Number(actorData.attributes.efprpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmppr) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "magitech":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.mtmod) +
-            Number(actorData.attributes.efmtmod) +
-            Number(actorData.attributes.efmtckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.mtmod) +
-            Number(actorData.attributes.efmtmod) +
-            Number(actorData.attributes.efmtpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpmt) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "fairy":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.frmod) +
-            Number(actorData.attributes.effrmod) +
-            Number(actorData.attributes.effrckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.frmod) +
-            Number(actorData.attributes.effrmod) +
-            Number(actorData.attributes.effrpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpfr) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "druid":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.drmod) +
-            Number(actorData.attributes.efdrmod) +
-            Number(actorData.attributes.efdrckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.drmod) +
-            Number(actorData.attributes.efdrmod) +
-            Number(actorData.attributes.efdrpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpdr) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "daemon":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.dmmod) +
-            Number(actorData.attributes.efdmmod) +
-            Number(actorData.attributes.efdmckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.dmmod) +
-            Number(actorData.attributes.efdmmod) +
-            Number(actorData.attributes.efdmpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpdm) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "abyssal":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.abmod) +
-            Number(actorData.attributes.efabmod) +
-            Number(actorData.attributes.efabckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.abmod) +
-            Number(actorData.attributes.efabmod) +
-            Number(actorData.attributes.efabpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpab) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        case "bibliomancer":
-          systemData.checkbase =
-            Number(systemData.checkbase) +
-            Number(actorData.attributes.bmmod) +
-            Number(actorData.attributes.efbmmod) +
-            Number(actorData.attributes.efbmckmod) +
-            Number(actorData.attributes.efmckall);
-          systemData.powerbase =
-            Number(systemData.powerbase) +
-            Number(actorData.attributes.bmmod) +
-            Number(actorData.attributes.efbmmod) +
-            Number(actorData.attributes.efbmpwmod) +
-            Number(actorData.attributes.efmpwall);
-          systemData.mpcost =
-            Number(systemData.basempcost) -
-            Number(actorData.attributes.efmpbm) -
-            Number(actorData.attributes.efmpall);
-          if (systemData.mpcost < 1) systemData.mpcost = 1;
-          break;
-        default:
-          break;
-      }
+      const schoolKey = MAGIC_SCHOOLS.get(systemData.type);
+      if (schoolKey)
+        applyMagicSchool(systemData, actorData.attributes, schoolKey);
     }
 
     if (itemData.type == "magicalsong") {
@@ -1209,6 +1120,7 @@ export class SW25Item extends Item {
         };
       }
 
+      const magicKeys = magicLabelKeys();
       for (let i = 1; i <= 3; i++) {
         if (actorData.effect.allck)
           systemData.efallckmod = Number(actorData.effect.allck);
@@ -1242,167 +1154,45 @@ export class SW25Item extends Item {
           case effectVitResMon:
             if (actorData.effect.vitres)
               systemData.efmod = Number(actorData.effect.vitres);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.vit?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.vit?.efmodify ?? 0);
+            systemData.efmod += abilityEffectBonus(actorData.abilities, "vit");
             break;
           case effectMndResMon:
             if (actorData.effect.mndres)
               systemData.efmod = Number(actorData.effect.mndres);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.mnd?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.mnd?.efmodify ?? 0);
+            systemData.efmod += abilityEffectBonus(actorData.abilities, "mnd");
             break;
           case effectHitMon:
             if (actorData.attributes.efhitmod)
               systemData.efmod = Number(actorData.attributes.efhitmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.dex?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.dex?.efmodify ?? 0);
+            systemData.efmod += abilityEffectBonus(actorData.abilities, "dex");
             break;
           case effectDmgMon:
             if (actorData.attributes.efdmod)
               systemData.efmod = Number(actorData.attributes.efdmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.str?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.str?.efmodify ?? 0);
+            systemData.efmod += abilityEffectBonus(actorData.abilities, "str");
             systemData.efallckmod = 0;
             break;
           case effectDodgeMon:
             if (actorData.attributes.efdodgemod)
               systemData.efmod = Number(actorData.attributes.efdodgemod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.agi?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.agi?.efmodify ?? 0);
+            systemData.efmod += abilityEffectBonus(actorData.abilities, "agi");
             break;
-          case effectScpMon:
-            if (actorData.attributes.efscmod)
-              systemData.efmod =
-                Number(actorData.attributes.efscmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
+          default: {
+            // 魔法系統 10 種はどれも同じ形
+            const key = magicKeys.get(itemData.system[`label${i}`]);
+            if (!key) {
+              systemData.efmod = 0;
+              break;
+            }
+            systemData.efmod = magicEffectMod(
+              actorData.attributes,
+              systemData.efallmgpmod,
+              key
             );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
+            systemData.efmod += abilityEffectBonus(actorData.abilities, "int");
             systemData.efallckmod = 0;
             break;
-          case effectCnpMon:
-            if (actorData.attributes.efcnmod)
-              systemData.efmod =
-                Number(actorData.attributes.efcnmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectWzpMon:
-            if (actorData.attributes.efwzmod)
-              systemData.efmod =
-                Number(actorData.attributes.efwzmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectPrpMon:
-            if (actorData.attributes.efprmod)
-              systemData.efmod =
-                Number(actorData.attributes.efprmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectMtpMon:
-            if (actorData.attributes.efmtmod)
-              systemData.efmod =
-                Number(actorData.attributes.efmtmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectFrpMon:
-            if (actorData.attributes.effrmod)
-              systemData.efmod =
-                Number(actorData.attributes.effrmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectDrpMon:
-            if (actorData.attributes.efdrmod)
-              systemData.efmod =
-                Number(actorData.attributes.efdrmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectDmpMon:
-            if (actorData.attributes.efdmmod)
-              systemData.efmod =
-                Number(actorData.attributes.efdmmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectAbpMon:
-            if (actorData.attributes.efabmod)
-              systemData.efmod =
-                Number(actorData.attributes.efabmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          case effectBmpMon:
-            if (actorData.attributes.efbmmod)
-              systemData.efmod =
-                Number(actorData.attributes.efbmmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efmod += Math.floor(
-              (actorData.abilities?.int?.efvaluemodify ?? 0) / 6
-            );
-            systemData.efmod += Number(actorData.abilities?.int?.efmodify ?? 0);
-            systemData.efallckmod = 0;
-            break;
-          default:
-            systemData.efmod = 0;
-            break;
+          }
         }
         systemData[`checkbase${i}`] =
           Number(systemData[`checkbasemod${i}`]) +
@@ -1432,90 +1222,14 @@ export class SW25Item extends Item {
           systemData.efallmgpmod = Number(actorData.effect.allmgp);
         else systemData.efallmgpmod = 0;
         systemData.efmod = 0;
-        switch (itemData.system.labelmonpow) {
-          case effectScpMon:
-            if (actorData.attributes.efscmod)
-              systemData.efmod =
-                Number(actorData.attributes.efscmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectCnpMon:
-            if (actorData.attributes.efcnmod)
-              systemData.efmod =
-                Number(actorData.attributes.efcnmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectWzpMon:
-            if (actorData.attributes.efwzmod)
-              systemData.efmod =
-                Number(actorData.attributes.efwzmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectPrpMon:
-            if (actorData.attributes.efprmod)
-              systemData.efmod =
-                Number(actorData.attributes.efprmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectMtpMon:
-            if (actorData.attributes.efmtmod)
-              systemData.efmod =
-                Number(actorData.attributes.efmtmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectFrpMon:
-            if (actorData.attributes.effrmod)
-              systemData.efmod =
-                Number(actorData.attributes.effrmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectDrpMon:
-            if (actorData.attributes.efdrmod)
-              systemData.efmod =
-                Number(actorData.attributes.efdrmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectDmpMon:
-            if (actorData.attributes.efdmmod)
-              systemData.efmod =
-                Number(actorData.attributes.efdmmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectAbpMon:
-            if (actorData.attributes.efabmod)
-              systemData.efmod =
-                Number(actorData.attributes.efabmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          case effectBmpMon:
-            if (actorData.attributes.efbmmod)
-              systemData.efmod =
-                Number(actorData.attributes.efbmmod) +
-                Number(systemData.efallmgpmod);
-            else systemData.efmod = Number(systemData.efallmgpmod);
-            systemData.efallckmod = 0;
-            break;
-          default:
-            systemData.efmod = 0;
-            break;
+        const powKey = magicKeys.get(itemData.system.labelmonpow);
+        if (powKey) {
+          systemData.efmod = magicEffectMod(
+            actorData.attributes,
+            systemData.efallmgpmod,
+            powKey
+          );
+          systemData.efallckmod = 0;
         }
         systemData.powerbase =
           Number(systemData.powermod) +
