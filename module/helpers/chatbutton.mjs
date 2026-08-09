@@ -236,8 +236,10 @@ export async function chatButton(chatMessage, buttonType) {
       if (item.system.powup == null || item.system.powup == 0) powup = 0;
       else powup = item.system.powup;
 
-      let powmod = actor.system.attributes?.powertablemod?.[itemData.type] || 0;
-      powmod += Number(actor.system.attributes?.powerroll?.all) || 0;
+      // 威力表の修正は「アイテム種別ごと」と「全種別(all)」の 2 段。
+      // `documents/item.mjs` の同じ計算(`_prepareItemRollData`)と合わせること。
+      let powmod = actor.system.attributes?.powertablemod?.[item.type] || 0;
+      powmod += Number(actor.system.attributes?.powertablemod?.all) || 0;
 
       item.system.powertable = [
         item.system.power,
