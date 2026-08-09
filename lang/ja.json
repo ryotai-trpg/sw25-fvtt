@@ -488,7 +488,7 @@
         "DiceFormula": "ダイス式"
       },
       "Phasearea": {
-        "Phase": "相",
+        "PhaseMark": "{type}相",
         "Point": "命脈点",
         "Lifeline": "命脈",
         "Ten": "天",

@@ -488,7 +488,7 @@
         "DiceFormula": "다이스 식"
       },
       "Phasearea": {
-        "Phase": "상",
+        "PhaseMark": "{type}상",
         "Point": "명맥점",
         "Lifeline": "명맥",
         "Ten": "천",

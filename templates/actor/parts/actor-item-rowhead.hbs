@@ -1,7 +1,14 @@
 {{!--
   アイテム行の左端。アイコン(クリックでロール)と名前。
   {{#each}} の中(コンテキストはアイテム)から呼ぶ。
-  行動の印を出さない一覧は nomarks=true を渡す。
+
+    nomarks     行動の印を出さない一覧は true を渡す
+    typeMark    名前の前に <呪歌> のように出す種別。未設定("-")なら出さない
+    typeFormat  typeMark をそのまま出さずに通す i18n キー({type} を埋める)。
+                相域だけが「天」→「天相」のように語を足すのに使う
+
+  `<` `>` は実体参照で書くこと。生の山括弧だと、typename が ASCII 英字で
+  始まる言語(en / es)でタグとして解釈されて種別が丸ごと消える。
 --}}
 <div class='item-name'>
   <div class='item-image'>
@@ -12,5 +19,6 @@
   {{#unless nomarks}}
     {{> "systems/sw25/templates/helper/action-marks.hbs"}}
   {{/unless}}
+  {{#if typeMark}}{{#unless (eq typeMark "-")}}&lt;{{#if typeFormat}}{{localize typeFormat type=typeMark}}{{else}}{{typeMark}}{{/if}}&gt;{{/unless}}{{/if}}
   <h4 class="item-label">{{item.name}}</h4>
 </div>

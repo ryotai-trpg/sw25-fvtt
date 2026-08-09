@@ -552,7 +552,7 @@
         "DiceFormula": "Fórmula de dados"
       },
       "Phasearea": {
-        "Phase": "Aspecto",
+        "PhaseMark": "Aspecto {type}",
         "Point": "Puntos de Qi",
         "Lifeline": "Qi",
         "Ten": "Celestial",

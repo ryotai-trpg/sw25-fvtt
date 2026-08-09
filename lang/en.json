@@ -552,7 +552,7 @@
         "DiceFormula": "Dice Formula"
       },
       "Phasearea": {
-        "Phase": "Aspect",
+        "PhaseMark": "{type} Aspect",
         "Point": "Qi point",
         "Lifeline": "Qi",
         "Ten": "Heavenly",
