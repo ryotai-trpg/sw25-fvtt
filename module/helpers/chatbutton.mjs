@@ -1681,7 +1681,7 @@ export async function chatButton(chatMessage, buttonType) {
 
       if (
         checkName == game.i18n.localize("SW25.Resist.Check.Dodge") &&
-        dodgeskill != "-"
+        dodgeskill
       ) {
         label = `${checkName} (${dodgeskill}${game.i18n.localize(
           "SW25.Check"

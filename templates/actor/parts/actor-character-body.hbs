@@ -388,22 +388,19 @@
               <div class="grid-span-3 nobreak">
                 <i class="mgc_knife_fill"></i>
                 <select name="system.hitweapon">
-                  <option value="-"{{#if (eq system.hitweapon "-")}} selected{{/if}}>{{localize "SW25.Selecthitweapon"}}</option>
-                  {{selectOptions battleweapons selected=system.hitweapon valueAttr="name" labelAttr="name"}}
+                  {{selectOptions battleweapons selected=system.hitweapon valueAttr="name" labelAttr="name" localize=true blank="SW25.Selecthitweapon"}}
                 </select>
               </div>
               <div class="grid-span-3 nobreak">
                 <i class="fa-solid fa-bullseye"></i>
                 <select name="system.attackskill">
-                  <option value="-"{{#if (eq system.attackskill "-")}} selected{{/if}}>{{localize "SW25.Selectattackskill"}}</option>
-                  {{selectOptions skills selected=system.attackskill valueAttr="name" labelAttr="name"}}
+                  {{selectOptions skills selected=system.attackskill valueAttr="name" labelAttr="name" localize=true blank="SW25.Selectattackskill"}}
                 </select>
               </div>
               <div class="grid-span-3 nobreak">
                 <i class="fa-solid fa-wind"></i>
                 <select name="system.dodgeskill">
-                  <option value="-"{{#if (eq system.dodgeskill "-")}} selected{{/if}}>{{localize "SW25.Selectdodgeskill"}}</option>
-                  {{selectOptions skills selected=system.dodgeskill valueAttr="name" labelAttr="name"}}
+                  {{selectOptions skills selected=system.dodgeskill valueAttr="name" labelAttr="name" localize=true blank="SW25.Selectdodgeskill"}}
                 </select>
               </div>
               <div>
@@ -581,8 +578,7 @@
           <span class="grid-span-2"></span>
           <span class="grid-span-4" style="text-align: right;">
             <select name="system.scskill">
-              <option value="-"{{#if (eq system.scskill "-")}} selected{{/if}}>{{localize "SW25.Selectspellskill"}}</option>
-              {{selectOptions skills selected=system.scskill valueAttr="name" labelAttr="name"}}
+              {{selectOptions skills selected=system.scskill valueAttr="name" labelAttr="name" localize=true blank="SW25.Selectspellskill"}}
             </select>
           </span>
           <span class="grid-span-2" style="text-align: right;"><label for="{{actor._id}}system.attributes.scmod"><i class="fa-solid fa-angles-up"></i></label><input id="{{actor._id}}system.attributes.scmod" style="max-width: calc(70% - 7px); text-align: center;" type="text" name="system.attributes.scmod" value="{{system.attributes.scmod}}" data-dtype="Number"/></span>
@@ -602,8 +598,7 @@
           <span class="grid-span-2"></span>
           <span class="grid-span-4" style="text-align: right;">
             <select name="system.cnskill">
-              <option value="-"{{#if (eq system.cnskill "-")}} selected{{/if}}>{{localize "SW25.Selectspellskill"}}</option>
-              {{selectOptions skills selected=system.cnskill valueAttr="name" labelAttr="name"}}
+              {{selectOptions skills selected=system.cnskill valueAttr="name" labelAttr="name" localize=true blank="SW25.Selectspellskill"}}
             </select>
           </span>
           <span class="grid-span-2" style="text-align: right;"><label for="{{actor._id}}system.attributes.cnmod"><i class="fa-solid fa-angles-up"></i></label><input id="{{actor._id}}system.attributes.cnmod" style="max-width: calc(70% - 7px); text-align: center;" type="text" name="system.attributes.cnmod" value="{{system.attributes.cnmod}}" data-dtype="Number"/></span>
@@ -783,8 +778,7 @@
           </span>
           <span class="grid-span-4" style="text-align: right;">
             <select name="system.bmskill">
-              <option value="-"{{#if (eq system.bmskill "-")}} selected{{/if}}>{{localize "SW25.Selectspellskill"}}</option>
-              {{selectOptions skills selected=system.bmskill valueAttr="name" labelAttr="name"}}
+              {{selectOptions skills selected=system.bmskill valueAttr="name" labelAttr="name" localize=true blank="SW25.Selectspellskill"}}
             </select>
           </span>
           <span class="grid-span-2" style="text-align: right;"><label for="{{actor._id}}system.attributes.bmmod"><i class="fa-solid fa-angles-up"></i></label><input id="{{actor._id}}system.attributes.bmmod" style="max-width: calc(70% - 7px); text-align: center;" type="text" name="system.attributes.bmmod" value="{{system.attributes.bmmod}}" data-dtype="Number"/></span>

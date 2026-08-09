@@ -36,6 +36,35 @@ function applyChangeValue(current, type, value) {
  * @extends {Actor}
  */
 export class SW25Actor extends Actor {
+  /**
+   * 「未選択」に `"-"` を書いていた選択欄。シートの 13 個の技能・武器の
+   * 選択のうち、この 6 つだけが `<option value="-">` を自前で置いていた。
+   */
+  static #UNSELECTED_DASH = [
+    "hitweapon",
+    "attackskill",
+    "dodgeskill",
+    "scskill",
+    "cnskill",
+    "bmskill",
+  ];
+
+  /**
+   * 「未選択」の保存値を `""` に揃える。
+   *
+   * `documents/item.mjs` の既定の技能・能力値の代入は
+   * `if (actorData.attackskill != "")` の形で守られているので、`"-"` は
+   * 「選択済み」と見なされ、未設定のアイテムに `checkabi` / `powerabi` の
+   * 既定が入ってしまっていた(`""` を書く 7 系統では入らない)。
+   * アイテム側は `SW25Item.migrateData` が同じ正規化を既にしている。
+   */
+  static migrateData(source) {
+    for (const key of SW25Actor.#UNSELECTED_DASH) {
+      if (source?.system?.[key] === "-") source.system[key] = "";
+    }
+    return super.migrateData(source);
+  }
+
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
