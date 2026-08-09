@@ -284,6 +284,18 @@ export async function chatButton(chatMessage, buttonType) {
         targetName = targetName + ``;
       }
 
+      // element tags.
+      const elements = item.system.elements;
+      const damage = actor ? actor.system.attributes.damage : null;
+      const classType = actor ? actor.system.classType : null;
+      const isWeapon = DamageSupporter.getWeaponAttributes(item);
+      const tags = DamageSupporter.createChatTag(
+        elements,
+        damage,
+        classType,
+        isWeapon
+      );
+
       chatData.flags = {
         sw25: {
           total: chatTotal,
@@ -294,6 +306,9 @@ export async function chatButton(chatMessage, buttonType) {
           targetName: targetName,
           dohalf: false,
           orgtotal: chatTotal,
+          elements: elements,
+          damage: damage,
+          tags: tags,
         },
       };
 
@@ -309,6 +324,7 @@ export async function chatButton(chatMessage, buttonType) {
           checktype: checktype,
           resusetext: chatresuse,
           targetName: targetName,
+          tags: tags,
         }
       );
 
@@ -412,6 +428,18 @@ export async function chatButton(chatMessage, buttonType) {
         targetName = targetName + ``;
       }
 
+      // element tags.
+      const elements = item.system.elements;
+      const damage = actor ? actor.system.attributes.damage : null;
+      const classType = actor ? actor.system.classType : null;
+      const isWeapon = DamageSupporter.getWeaponAttributes(item);
+      const tags = DamageSupporter.createChatTag(
+        elements,
+        damage,
+        classType,
+        isWeapon
+      );
+
       chatData.flags = {
         sw25: {
           formula: chatFormula,
@@ -438,6 +466,9 @@ export async function chatButton(chatMessage, buttonType) {
           powertype: powertype,
           target,
           targetName: targetName,
+          elements: elements,
+          damage: damage,
+          tags: tags,
         },
       };
 
@@ -463,6 +494,7 @@ export async function chatButton(chatMessage, buttonType) {
           apply: chatapply,
           powertype: powertype,
           targetName: targetName,
+          tags: tags,
         }
       );
 
