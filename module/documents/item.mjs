@@ -1,6 +1,6 @@
 import { powerRoll } from "../helpers/powerroll.mjs";
 import { createCheckCard, createPowerCard } from "../helpers/rollcard.mjs";
-import { mpCost, hpCost } from "../helpers/mpcost.mjs";
+import { mpCost, hpCost, useRollResource } from "../helpers/mpcost.mjs";
 import { Util } from "../helpers/utils.mjs";
 
 import {
@@ -2387,6 +2387,11 @@ export class SW25Item extends Item {
       this.system.clickitem == "dice2" ||
       this.system.clickitem == "dice3"
     ) {
+      // 消費リソース(矢弾など)。シートの行とチャットカードは前から
+      // 減らしていて、アイコンクリックだけ素通ししていた
+      const used = await useRollResource(this, actor);
+      if (!used.ok) return;
+
       const rollData = this.getRollData();
 
       let baseformula = this.system.formula;
@@ -2425,6 +2430,7 @@ export class SW25Item extends Item {
         apply: chatapply,
         checktype,
         targetTokens,
+        resusetext: used.text,
       });
     }
 

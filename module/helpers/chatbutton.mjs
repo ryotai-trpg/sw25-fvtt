@@ -1,7 +1,7 @@
 // Chat button handler
 import { powerRoll } from "./powerroll.mjs";
 import { createCheckCard, createPowerCard } from "./rollcard.mjs";
-import { mpCost, hpCost } from "./mpcost.mjs";
+import { mpCost, hpCost, useRollResource } from "./mpcost.mjs";
 import { targetSelectDialog } from "../helpers/dialogs.mjs";
 import {
   CHAT_BUTTON_ROLL_KINDS,
@@ -124,29 +124,9 @@ export async function chatButton(chatMessage, buttonType) {
         checkbase = item.system.checkbase;
       }
 
-      let resuse = item.system.resuse;
-      if (resuse !== "" && item.system.autouseres) {
-        let actoritem = actor.items.get(resuse);
-        let resusequantity = item.system.resusequantity;
-        let actoritemquantity = actoritem.system.quantity;
-        let remainingquantity = actoritemquantity - resusequantity;
-        let min = actoritem.system.qmin;
-
-        if (actoritemquantity < resusequantity) {
-          ui.notifications.warn(
-            game.i18n.localize("SW25.Item.Noresquantitiywarn") + actoritem.name
-          );
-          return;
-        } else if (remainingquantity < min) {
-          ui.notifications.warn(
-            game.i18n.localize("SW25.Item.Noresquantitiywarn") + actoritem.name
-          );
-          return;
-        } else {
-          actoritem.update({ "system.quantity": remainingquantity });
-          chatresuse = `<div style="text-align: right;">${actoritem.name}: ${actoritemquantity} >>> ${remainingquantity}</div>`;
-        }
-      }
+      const used = await useRollResource(item, actor);
+      if (!used.ok) return;
+      chatresuse = used.text;
 
       let formula = baseformula + "+" + checkbase;
 

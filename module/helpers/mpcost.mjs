@@ -243,3 +243,41 @@ export async function hpCost(token, cost, max, name, type) {
 
   ChatMessage.create(chatData, { messageMode });
 }
+
+/**
+ * ロールに紐づいた消費リソース(矢弾など)を減らす。
+ *
+ * 〈矢弾〉はルール上「使用するたびに消費」されるが、回収して再利用できる
+ * ものもあるので、自動で減らすかどうかはアイテムの `autouseres` で選べる。
+ * 立っていなければ何もしない。
+ *
+ * @param {Item} item     ロールしたアイテム
+ * @param {Actor} actor   消費リソースを持つアクター
+ * @returns {Promise<{ok: boolean, text: string}>}
+ *   `ok` が false のときは数量が足りない。呼び出し側はロールを中止する
+ */
+export async function useRollResource(item, actor) {
+  const resuse = item.system.resuse;
+  if (resuse === "" || !item.system.autouseres) return { ok: true, text: "" };
+  // アイコンクリックはワールドのアイテム(持ち主なし)からも来る
+  if (!actor) return { ok: true, text: "" };
+
+  const actoritem = actor.items.get(resuse);
+  const resusequantity = item.system.resusequantity;
+  const actoritemquantity = actoritem.system.quantity;
+  const remainingquantity = actoritemquantity - resusequantity;
+  const min = actoritem.system.qmin;
+
+  if (actoritemquantity < resusequantity || remainingquantity < min) {
+    ui.notifications.warn(
+      game.i18n.localize("SW25.Item.Noresquantitiywarn") + actoritem.name
+    );
+    return { ok: false, text: "" };
+  }
+
+  await actoritem.update({ "system.quantity": remainingquantity });
+  return {
+    ok: true,
+    text: `<div style="text-align: right;">${actoritem.name}: ${actoritemquantity} >>> ${remainingquantity}</div>`,
+  };
+}
