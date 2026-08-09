@@ -458,14 +458,14 @@ export class SW25Actor extends Actor {
       }
     });
     systemData.attributes.bmpower =
-      Number(systemData.bmbase) ?? 0 +
-      Number(systemData.attributes.bmmod) ?? 0 +
-      Number(systemData.attributes.efbmmod) ?? 0 +
-      Number(systemData.efallmgpacmod) ?? 0;
+      Number(systemData.bmbase) +
+      Number(systemData.attributes.bmmod) +
+      Number(systemData.attributes.efbmmod) +
+      Number(systemData.efallmgpacmod);
     systemData.attributes.bmcast =
-      Number(systemData.attributes.bmpower) ?? 0 +
-      Number(systemData.attributes.efbmckmod) ?? 0 +
-      Number(systemData.attributes.efmckall) ?? 0;
+      Number(systemData.attributes.bmpower) +
+      Number(systemData.attributes.efbmckmod) +
+      Number(systemData.attributes.efmckall);
 
     systemData.attributes.bibRankMax = [0,0,0,0,0,0];
     if(systemData.bmlv){
