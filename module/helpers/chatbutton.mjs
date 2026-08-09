@@ -80,79 +80,6 @@ export async function chatButton(chatMessage, buttonType) {
     const label3 = item.system.label3;
     const labelmonpow = item.system.labelmonpow;
 
-    // Roll Setting
-    if (buttonType == "buttonpower") {
-      item.system.formula = "2d6";
-
-      if (item.system.cvalue == null || item.system.cvalue == 0)
-        item.system.cvalue = 10;
-      if (!actor.system.effect) actor.system.efcmod = 0;
-      else if (actor.system.effect.efcvalue)
-        actor.system.efcmod = Number(actor.system.effect.efcvalue);
-      else actor.system.efcmod = 0;
-      if (item.type == "spell") {
-        if (!actor.system.effect) actor.system.efcmod = 0;
-        else if (actor.system.effect.efspellcvalue)
-          actor.system.efcmod = Number(actor.system.effect.efspellcvalue);
-        else actor.system.efcmod = 0;
-      }
-      item.system.totalcvalue =
-        Number(item.system.cvalue) + Number(actor.system.efcmod);
-
-      let halfpow, halfpowmod, lethaltech, criticalray, pharmtool, powup;
-      if (item.system.halfpow == true) halfpow = 1;
-      else halfpow = 0;
-      if (item.system.halfpowmod == null || item.system.halfpowmod == 0)
-        halfpowmod = 0;
-      else halfpowmod = item.system.halfpowmod;
-      if (item.type == "weapon" && actor.system.attributes.efwphalfmod)
-        halfpowmod =
-          Number(halfpowmod) + Number(actor.system.attributes.efwphalfmod);
-      if (item.type == "spell" && actor.system.attributes.efsphalfmod)
-        halfpowmod =
-          Number(halfpowmod) + Number(actor.system.attributes.efsphalfmod);
-      if (item.system.lethaltech == null || item.system.lethaltech == 0)
-        lethaltech = 0;
-      else lethaltech = item.system.lethaltech;
-      if (item.system.criticalray == null || item.system.criticalray == 0)
-        criticalray = 0;
-      else criticalray = item.system.criticalray;
-      if (item.system.pharmtool == null || item.system.pharmtool == 0)
-        pharmtool = 0;
-      else pharmtool = item.system.pharmtool;
-      if (item.system.powup == null || item.system.powup == 0) powup = 0;
-      else powup = item.system.powup;
-
-      // 威力表の修正は「アイテム種別ごと」と「全種別(all)」の 2 段。
-      // `documents/item.mjs` の同じ計算(`_prepareItemRollData`)と合わせること。
-      let powmod = actor.system.attributes?.powertablemod?.[item.type] || 0;
-      powmod += Number(actor.system.attributes?.powertablemod?.all) || 0;
-
-      item.system.powertable = [
-        item.system.power,
-        item.system.totalcvalue,
-        0,
-        item.system.pt3,
-        item.system.pt4,
-        item.system.pt5,
-        item.system.pt6,
-        item.system.pt7,
-        item.system.pt8,
-        item.system.pt9,
-        item.system.pt10,
-        item.system.pt11,
-        item.system.pt12,
-        item.system.powerbase,
-        halfpow,
-        halfpowmod,
-        lethaltech,
-        criticalray,
-        pharmtool,
-        powup,
-        powmod,
-      ];
-    }
-
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: actor });
     const messageMode = game.settings.get("core", "messageMode");
@@ -243,10 +170,9 @@ export async function chatButton(chatMessage, buttonType) {
       if (item.type == "monsterability")
         label = label + " (" + labelmonpow + ")";
       else label = label + " (" + game.i18n.localize("SW25.Item.Power") + ")";
-      const formula = item.system.formula;
-      const powertable = item.system.powertable;
-
-      const roll = await powerRoll(formula, powertable);
+      // 威力表は `_prepareItemRollData` / `_prepareCheckData` が毎回
+      // 組み直しているので、ここで組み直さずそれを使う
+      const roll = await powerRoll("2d6", item.system.powertable);
 
       return await createPowerCard({
         actor,
