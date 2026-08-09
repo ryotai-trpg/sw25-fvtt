@@ -4,7 +4,8 @@ import { mpCost, hpCost } from "../helpers/mpcost.mjs";
 import { lootRoll } from "../helpers/lootroll.mjs";
 import { growthCheck } from "../helpers/growthcheck.mjs";
 import { actionRoll } from "../helpers/actionroll.mjs";
-import { targetRollDialog, targetSelectDialog } from "../helpers/dialogs.mjs";
+import { targetSelectDialog } from "../helpers/dialogs.mjs";
+import { rollWithTargets } from "../helpers/targetroll.mjs";
 import { Util, slideToggle, slideUp } from "../helpers/utils.mjs";
 import { DamageSupporter } from "../helpers/damagesupport.mjs";
 
@@ -233,55 +234,14 @@ export const SW25ActorActionsMixin = (base) =>
      * @private
      */
     async _onRoll(event, target) {
-      const element = target;
-      const dataset = element.dataset;
-      const targetTokens = game.user.targets;
-      if (dataset.apply == "-" || !dataset.apply || targetTokens.size === 0) {
-        await this._onRollExec(event, target);
-        return;
-      } else {
-        let label = dataset.label ? `${dataset.label}` : "";
-        const targetRoll = await targetRollDialog(targetTokens, label);
-        if (targetRoll == "cancel") {
-          return;
-        } else if (targetRoll == "once") {
-          await this._onRollExec(event, target, targetTokens);
-          return;
-        } else if (targetRoll == "individual") {
-          let chatMessageId = [];
-          for (const [index, token] of Array.from(targetTokens).entries()) {
-            const targetToken = new Set([token]);
-            await this._onRollExec(event, target, targetToken).then((result) => {
-              chatMessageId.push(result.chatMessageId);
-            });
-          }
-
-          // rendar apply all message
-          const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-          const checktype = dataset.checktype ? dataset.checktype.split(",") : "";
-          let chatData = {
-            speaker: speaker,
-            flavor: `${label} - <b>${game.i18n.localize("SW25.Applyall")}</b>`,
-          };
-          chatData.flags = {
-            sw25: {
-              targetMessage: chatMessageId,
-            },
-          };
-          chatData.content = await foundry.applications.handlebars.renderTemplate(
-            "systems/sw25/templates/roll/roll-applyall.hbs",
-            {
-              apply: dataset.apply,
-              checktype: checktype,
-            }
-          );
-
-          ChatMessage.create(chatData);
-          return;
-        }
-      }
-
-      await this._onRollExec(event, target);
+      const dataset = target.dataset;
+      await rollWithTargets({
+        actor: this.actor,
+        label: dataset.label ? `${dataset.label}` : "",
+        apply: dataset.apply,
+        checktype: dataset.checktype ? dataset.checktype.split(",") : "",
+        exec: (targetTokens) => this._onRollExec(event, target, targetTokens),
+      });
     }
     async _onRollExec(event, element, targetTokens) {
       event.preventDefault();
@@ -438,55 +398,15 @@ export const SW25ActorActionsMixin = (base) =>
      * @private
      */
     async _onPowerRoll(event, target) {
-      const element = target;
-      const dataset = element.dataset;
-      const targetTokens = game.user.targets;
-      if (dataset.apply == "-" || !dataset.apply || targetTokens.size === 0) {
-        await this._onPowerRollExec(event, target);
-        return;
-      } else {
-        let label = dataset.label ? `${dataset.label}` : "";
-        const targetRoll = await targetRollDialog(targetTokens, label);
-        if (targetRoll == "cancel") {
-          return;
-        } else if (targetRoll == "once") {
-          await this._onPowerRollExec(event, target, targetTokens);
-          return;
-        } else if (targetRoll == "individual") {
-          let chatMessageId = [];
-          for (const [index, token] of Array.from(targetTokens).entries()) {
-            const targetToken = new Set([token]);
-            await this._onPowerRollExec(event, target, targetToken).then((result) => {
-              chatMessageId.push(result.chatMessageId);
-            });
-          }
-
-          // rendar apply all message
-          const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-          const powertype = dataset.powertype ? dataset.powertype.split(",") : "";
-          let chatData = {
-            speaker: speaker,
-            flavor: `${label} - <b>${game.i18n.localize("SW25.Applyall")}</b>`,
-          };
-          chatData.flags = {
-            sw25: {
-              targetMessage: chatMessageId,
-            },
-          };
-          chatData.content = await foundry.applications.handlebars.renderTemplate(
-            "systems/sw25/templates/roll/roll-applyall.hbs",
-            {
-              apply: dataset.apply,
-              powertype: powertype,
-            }
-          );
-
-          ChatMessage.create(chatData);
-          return;
-        }
-      }
-
-      await this._onPowerRollExec(event, target);
+      const dataset = target.dataset;
+      await rollWithTargets({
+        actor: this.actor,
+        label: dataset.label ? `${dataset.label}` : "",
+        apply: dataset.apply,
+        powertype: dataset.powertype ? dataset.powertype.split(",") : "",
+        exec: (targetTokens) =>
+          this._onPowerRollExec(event, target, targetTokens),
+      });
     }
     async _onPowerRollExec(event, element, targetTokens) {
       event.preventDefault();

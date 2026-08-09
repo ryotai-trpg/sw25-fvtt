@@ -1,7 +1,12 @@
 // Chat button handler
 import { powerRoll } from "./powerroll.mjs";
 import { mpCost, hpCost } from "./mpcost.mjs";
-import { targetRollDialog, targetSelectDialog } from "../helpers/dialogs.mjs";
+import { targetSelectDialog } from "../helpers/dialogs.mjs";
+import {
+  CHAT_BUTTON_ROLL_KINDS,
+  itemRollTargets,
+  rollWithTargets,
+} from "./targetroll.mjs";
 import { DamageSupporter } from "../helpers/damagesupport.mjs";
 import { Util } from "./utils.mjs";
 
@@ -28,104 +33,17 @@ export async function chatButton(chatMessage, buttonType) {
   const item = actor ? actor.items.get(itemId) : null;
 
   // Item roll button
-  if (
-    buttonType == "buttoncheck" ||
-    buttonType == "buttoncheck1" ||
-    buttonType == "buttoncheck2" ||
-    buttonType == "buttoncheck3" ||
-    buttonType == "buttonpower"
-  ) {
-    const targetTokens = game.user.targets;
-    let apply = "-";
-    if (buttonType == "buttoncheck") apply = item.system.applycheck;
-    if (buttonType == "buttoncheck1") apply = item.system.applycheck1;
-    if (buttonType == "buttoncheck2") apply = item.system.applycheck2;
-    if (buttonType == "buttoncheck3") apply = item.system.applycheck3;
-    if (buttonType == "buttonpower") apply = item.system.applypower;
-    if (apply == "-" || targetTokens.size === 0) {
-      await chatRoll();
-      return;
-    } else {
-      let label = `${item.name}`;
-      const label0 = game.i18n.localize("SW25.Check");
-      const label1 = item.system.label1;
-      const label2 = item.system.label2;
-      const label3 = item.system.label3;
-      const labelmonpow = item.system.labelmonpow;
-      if (buttonType == "buttoncheck") label = label + " (" + label0 + ")";
-      if (buttonType == "buttoncheck1") label = label + " (" + label1 + ")";
-      if (buttonType == "buttoncheck2") label = label + " (" + label2 + ")";
-      if (buttonType == "buttoncheck3") label = label + " (" + label3 + ")";
-      let powlabel = game.i18n.localize("SW25.Item.Power");
-      if (item.type == "monsterability") powlabel = labelmonpow;
-      if (buttonType == "buttonpower") label = label + " (" + powlabel + ")";
+  const rollKind = CHAT_BUTTON_ROLL_KINDS[buttonType];
+  if (rollKind) {
+    await rollWithTargets({
+      actor,
+      ...itemRollTargets(item, rollKind),
+      exec: (targetTokens) => chatRoll(targetTokens),
+    });
+    return;
+  }
 
-      const targetRoll = await targetRollDialog(targetTokens, label);
-      if (targetRoll == "cancel") {
-        return;
-      } else if (targetRoll == "once") {
-        await chatRoll(targetTokens);
-        return;
-      } else if (targetRoll == "individual") {
-        let chatMessageId = [];
-        for (const [index, token] of Array.from(targetTokens).entries()) {
-          const targetToken = new Set([token]);
-          await chatRoll(targetToken).then((result) => {
-            chatMessageId.push(result.chatMessageId);
-          });
-        }
-
-        // rendar apply all message
-        const speaker = ChatMessage.getSpeaker({ actor: actor });
-        let chatapply = "-";
-        let checktype = null;
-        let powertype = null;
-        if (buttonType == "buttoncheck") {
-          chatapply = item.system.applycheck;
-          checktype = item.system.checkTypesButton;
-        }
-        if (buttonType == "buttoncheck1") {
-          chatapply = item.system.applycheck1;
-          checktype = item.system.checkTypesButton1;
-        }
-        if (buttonType == "buttoncheck2") {
-          chatapply = item.system.applycheck2;
-          checktype = item.system.checkTypesButton2;
-        }
-        if (buttonType == "buttoncheck3") {
-          chatapply = item.system.applycheck3;
-          checktype = item.system.checkTypesButton3;
-        }
-        if (buttonType == "buttonpower") {
-          chatapply = item.system.applypower;
-          powertype = item.system.powerTypesButton;
-        }
-
-        let chatData = {
-          speaker: speaker,
-          flavor: `${label} - <b>${game.i18n.localize("SW25.Applyall")}</b>`,
-        };
-        chatData.flags = {
-          sw25: {
-            targetMessage: chatMessageId,
-          },
-        };
-        chatData.content = await foundry.applications.handlebars.renderTemplate(
-          "systems/sw25/templates/roll/roll-applyall.hbs",
-          {
-            apply: chatapply,
-            checktype: checktype,
-            powertype: powertype,
-          }
-        );
-
-        ChatMessage.create(chatData);
-        return;
-      }
-    }
-
-    await chatRoll();
-  } else if (buttonType == "target-select") {
+  if (buttonType == "target-select") {
     const selectedTokens = await targetSelectDialog(chatMessage.flavor);
     
     if (selectedTokens.length === 0) {
