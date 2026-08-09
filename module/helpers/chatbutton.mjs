@@ -81,38 +81,6 @@ export async function chatButton(chatMessage, buttonType) {
     const labelmonpow = item.system.labelmonpow;
 
     // Roll Setting
-    if (buttonType == "buttoncheck") {
-      item.system.checkbase = item.system.checkbase;
-      if (item.system.usefix == true) {
-        item.system.formula = 7;
-      } else if (item.system.customdice == true)
-        item.system.formula = item.system.customformula;
-      else item.system.formula = "2d6";
-    }
-    if (buttonType == "buttoncheck1") {
-      item.system.checkbase1 = item.system.checkbase1;
-      if (item.system.usefix1 == true) {
-        item.system.formula1 = 7;
-      } else if (item.system.customdice1 == true)
-        item.system.formula1 = item.system.customformula1;
-      else item.system.formula1 = "2d6";
-    }
-    if (buttonType == "buttoncheck2") {
-      item.system.checkbase2 = item.system.checkbase2;
-      if (item.system.usefix2 == true) {
-        item.system.formula2 = 7;
-      } else if (item.system.customdice2 == true)
-        item.system.formula2 = item.system.customformula2;
-      else item.system.formula2 = "2d6";
-    }
-    if (buttonType == "buttoncheck3") {
-      item.system.checkbase3 = item.system.checkbase3;
-      if (item.system.usefix3 == true) {
-        item.system.formula3 = 7;
-      } else if (item.system.customdice3 == true)
-        item.system.formula3 = item.system.customformula3;
-      else item.system.formula3 = "2d6";
-    }
     if (buttonType == "buttonpower") {
       item.system.formula = "2d6";
 
