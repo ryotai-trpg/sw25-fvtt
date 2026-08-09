@@ -595,6 +595,7 @@ export async function chatButton(chatMessage, buttonType) {
             total: chatMessage.flags.sw25.orgtotal,
             aftermod: aftermod,
             powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
             elements: chatMessage.flags.sw25.elements,
             damage: chatMessage.flags.sw25.damage,
             tags: chatMessage.flags.sw25.tags,
@@ -622,6 +623,7 @@ export async function chatButton(chatMessage, buttonType) {
             shownoc: chatMessage.flags.sw25.shownoc,
             apply: chatMessage.flags.sw25.apply,
             powertype: chatMessage.flags.sw25.powertype,
+            targetName: chatMessage.flags.sw25.targetName,
             tags: chatMessage.flags.sw25.tags,
           }
         ),
