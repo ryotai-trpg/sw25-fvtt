@@ -251,7 +251,13 @@ export class SW25Item extends Item {
     const itemData = this;
     const systemData = itemData.system;
     const flags = itemData.flags || {};
-    const actor = itemData.actor ? game.actors.get(itemData.actor._id) : null;
+    // 持ち主は `this.actor`(= parent)を直接使う。`game.actors` を id で
+    // 引き直すと、ワールドのコレクションに載っていない持ち主 —— clone / 未保存 /
+    // compendium のアクター —— で undefined になり、下の派生値が丸ごと
+    // 既定値のまま止まる(エラーは出ない)。
+    // unlinked token の合成アクターは id が元アクターと同じなので今までも
+    // 非 null が返っていたが、返っていたのは合成前の元アクターだった。
+    const actor = itemData.actor;
     if (actor) {
       this._prepareSkillData(itemData, actor);
       this._prepareCheckData(itemData, actor);
