@@ -32,7 +32,7 @@ export async function actionRoll(element, actor) {
     chatData.rolls = [roll];
   } else {
     result = dataset.result;
-    chatData.type = CONST.CHAT_MESSAGE_STYLES.OTHER;
+    chatData.style = CONST.CHAT_MESSAGE_STYLES.OTHER;
   }
 
   // action setting

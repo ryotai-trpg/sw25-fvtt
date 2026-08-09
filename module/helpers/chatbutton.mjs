@@ -2203,7 +2203,7 @@ export async function chatButton(chatMessage, buttonType) {
       const content = actor.system.canceldialog;
       let chatData = {
         speaker: ChatMessage.getSpeaker({ actor: actor }),
-        type: CONST.CHAT_MESSAGE_STYLES.IC,
+        style: CONST.CHAT_MESSAGE_STYLES.IC,
         content: content,
       };
       ChatMessage.create(chatData);
@@ -2212,7 +2212,7 @@ export async function chatButton(chatMessage, buttonType) {
         const content = item.system.dialog;
         let chatData = {
           speaker: ChatMessage.getSpeaker({ actor: actor }),
-          type: CONST.CHAT_MESSAGE_STYLES.IC,
+          style: CONST.CHAT_MESSAGE_STYLES.IC,
           content: content,
         };
         ChatMessage.create(chatData);
