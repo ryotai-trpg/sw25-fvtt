@@ -1,6 +1,6 @@
 // Chat button handler
 import { powerRoll } from "./powerroll.mjs";
-import { createPowerCard } from "./rollcard.mjs";
+import { createCheckCard, createPowerCard } from "./rollcard.mjs";
 import { mpCost, hpCost } from "./mpcost.mjs";
 import { targetSelectDialog } from "../helpers/dialogs.mjs";
 import {
@@ -258,85 +258,17 @@ export async function chatButton(chatMessage, buttonType) {
       let roll = new Roll(formula, rollData);
       await roll.evaluate();
 
-      let chatData = {
-        speaker: speaker,
-        flavor: label,
-        rolls: [roll],
-      };
-
-      let chatFormula = roll.formula;
-      let chatCritical = null;
-      let chatFumble = null;
-      let chatTotal = roll.total;
-      if (roll.terms[0].total == 12) chatCritical = 1;
-      if (roll.terms[0].total == 2) chatFumble = 1;
-      // when selected target
-      let target = null;
-      let targetName = null;
-      if (targetTokens) {
-        const targetArray = Array.from(targetTokens);
-        target = targetArray.map((target) => target.id);
-        let targetNames = targetArray.map((target) => target.document.name);
-        targetName = ``;
-        for (let i = 0; i < targetNames.length; i++) {
-          if (i != 0) targetName = targetName + `<br>`;
-          targetName = targetName + `>>> ${targetNames[i]}`;
-        }
-        targetName = targetName + ``;
-      }
-
-      // element tags.
-      const elements = item.system.elements;
-      const damage = actor ? actor.system.attributes.damage : null;
-      const classType = actor ? actor.system.classType : null;
-      const isWeapon = DamageSupporter.getWeaponAttributes(item);
-      const tags = DamageSupporter.createChatTag(
-        elements,
-        damage,
-        classType,
-        isWeapon
-      );
-
-      chatData.flags = {
-        sw25: {
-          total: chatTotal,
-          apply: chatapply,
-          formula: chatFormula,
-          rolls: roll,
-          tooltip: await roll.getTooltip(),
-          checktype: checktype,
-          target,
-          targetName: targetName,
-          dohalf: false,
-          orgtotal: chatTotal,
-          elements: elements,
-          damage: damage,
-          tags: tags,
-        },
-      };
-
-      chatData.content = await foundry.applications.handlebars.renderTemplate(
-        "systems/sw25/templates/roll/roll-check.hbs",
-        {
-          formula: chatFormula,
-          tooltip: await roll.getTooltip(),
-          critical: chatCritical,
-          fumble: chatFumble,
-          total: chatTotal,
-          apply: chatapply,
-          checktype: checktype,
-          resusetext: chatresuse,
-          targetName: targetName,
-          tags: tags,
-        }
-      );
-
-      let chatMessageId;
-      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
-        chatMessageId = chatMessage.id;
+      return await createCheckCard({
+        actor,
+        item,
+        roll,
+        label,
+        apply: chatapply,
+        checktype,
+        targetTokens,
+        resusetext: chatresuse,
+        dohalf: false,
       });
-
-      return { roll, chatMessageId };
     }
 
     if (buttonType == "buttonpower") {

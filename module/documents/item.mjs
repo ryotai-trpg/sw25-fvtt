@@ -1,7 +1,6 @@
 import { powerRoll } from "../helpers/powerroll.mjs";
-import { createPowerCard } from "../helpers/rollcard.mjs";
+import { createCheckCard, createPowerCard } from "../helpers/rollcard.mjs";
 import { mpCost, hpCost } from "../helpers/mpcost.mjs";
-import { DamageSupporter } from "../helpers/damagesupport.mjs";
 import { Util } from "../helpers/utils.mjs";
 
 import {
@@ -2398,24 +2397,12 @@ export class SW25Item extends Item {
       let roll = new Roll(formula, rollData);
       await roll.evaluate();
 
-      let chatData = {
-        speaker: speaker,
-        flavor: label,
-        rolls: [roll],
-      };
-
       let chatapply = "-";
       if (this.system.clickitem == "dice") chatapply = this.system.applycheck;
       if (this.system.clickitem == "dice1") chatapply = this.system.applycheck1;
       if (this.system.clickitem == "dice2") chatapply = this.system.applycheck2;
       if (this.system.clickitem == "dice3") chatapply = this.system.applycheck3;
 
-      let chatFormula = roll.formula;
-      let chatCritical = null;
-      let chatFumble = null;
-      let chatTotal = roll.total;
-      if (roll.terms[0].total == 12) chatCritical = 1;
-      if (roll.terms[0].total == 2) chatFumble = 1;
       let checktype = [];
       if (this.system.clickitem == "dice")
         checktype = this.system.checkTypesButton;
@@ -2426,71 +2413,15 @@ export class SW25Item extends Item {
       if (this.system.clickitem == "dice3")
         checktype = this.system.checkTypesButton3;
 
-      // when selected target
-      let target = null;
-      let targetName = null;
-      if (targetTokens) {
-        const targetArray = Array.from(targetTokens);
-        target = targetArray.map((target) => target.id);
-        let targetNames = targetArray.map((target) => target.document.name);
-        targetName = ``;
-        for (let i = 0; i < targetNames.length; i++) {
-          if (i != 0) targetName = targetName + `<br>`;
-          targetName = targetName + `>>> ${targetNames[i]}`;
-        }
-        targetName = targetName + ``;
-      }
-
-      // element tags.
-      const elements = this.system.elements;
-      const damage = actor ? actor.system.attributes.damage : null;
-      const classType = actor ? actor.system.classType : null;
-      const isWeapon = DamageSupporter.getWeaponAttributes(this);
-      const tags = DamageSupporter.createChatTag(
-        elements,
-        damage,
-        classType,
-        isWeapon
-      );
-
-      chatData.flags = {
-        sw25: {
-          total: chatTotal,
-          orgtotal: chatTotal,
-          formula: roll.formula,
-          rolls: roll,
-          tooltip: await roll.getTooltip(),
-          apply: chatapply,
-          checktype: checktype,
-          target,
-          targetName: targetName,
-          elements: elements,
-          damage: damage,
-          tags: tags,
-        },
-      };
-
-      chatData.content = await foundry.applications.handlebars.renderTemplate(
-        "systems/sw25/templates/roll/roll-check.hbs",
-        {
-          formula: chatFormula,
-          tooltip: await roll.getTooltip(),
-          critical: chatCritical,
-          fumble: chatFumble,
-          total: chatTotal,
-          apply: chatapply,
-          checktype: checktype,
-          targetName: targetName,
-          tags: tags,
-        }
-      );
-
-      let chatMessageId;
-      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
-        chatMessageId = chatMessage.id;
+      return await createCheckCard({
+        actor,
+        item: this,
+        roll,
+        label,
+        apply: chatapply,
+        checktype,
+        targetTokens,
       });
-
-      return { roll, chatMessageId };
     }
 
     if (this.system.clickitem == "power") {

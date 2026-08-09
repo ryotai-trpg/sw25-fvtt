@@ -1,6 +1,6 @@
 import { onManageActiveEffect } from "../helpers/effects.mjs";
 import { powerRoll } from "../helpers/powerroll.mjs";
-import { createPowerCard } from "../helpers/rollcard.mjs";
+import { createCheckCard, createPowerCard } from "../helpers/rollcard.mjs";
 import { mpCost, hpCost } from "../helpers/mpcost.mjs";
 import { lootRoll } from "../helpers/lootroll.mjs";
 import { growthCheck } from "../helpers/growthcheck.mjs";
@@ -8,7 +8,6 @@ import { actionRoll } from "../helpers/actionroll.mjs";
 import { targetSelectDialog } from "../helpers/dialogs.mjs";
 import { rollWithTargets } from "../helpers/targetroll.mjs";
 import { Util, slideToggle, slideUp } from "../helpers/utils.mjs";
-import { DamageSupporter } from "../helpers/damagesupport.mjs";
 
 /**
  * アクターシートの操作。`actor-sheet-V2.mjs` の 3 型に被せる。
@@ -302,36 +301,6 @@ export const SW25ActorActionsMixin = (base) =>
           }
         }
 
-        const messageMode = game.settings.get("core", "messageMode");
-        let chatData = {
-          speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-          flavor: label,
-          rolls: [roll],
-        };
-
-        let chatCritical = null;
-        let chatFumble = null;
-        if (roll.terms[0].total == 12) chatCritical = 1;
-        if (roll.terms[0].total == 2) chatFumble = 1;
-
-        let chatapply = dataset.apply;
-        let chatspell = dataset.spell;
-
-        // when selected target
-        let target = null;
-        let targetName = null;
-        if (targetTokens) {
-          const targetArray = Array.from(targetTokens);
-          target = targetArray.map((target) => target.id);
-          let targetNames = targetArray.map((target) => target.document.name);
-          targetName = ``;
-          for (let i = 0; i < targetNames.length; i++) {
-            if (i != 0) targetName = targetName + `<br>`;
-            targetName = targetName + `>>> ${targetNames[i]}`;
-          }
-          targetName = targetName + ``;
-        }
-
         let resistData = null;
         if (dataset.resist && dataset.resistresult != "none") {
           resistData = {
@@ -340,56 +309,18 @@ export const SW25ActorActionsMixin = (base) =>
           };
         }
 
-        const item = itemId ? this.actor.items.get(itemId) : null;
-        const elements = item ? item.system.elements : null;
-        const damage = this.actor ? this.actor.system.attributes.damage : null;
-        const classType = this.actor ? this.actor.system.classType : null;
-        const isWeapon = DamageSupporter.getWeaponAttributes(item);
-        const tags = DamageSupporter.createChatTag(elements, damage, classType, isWeapon);
-      
-        chatData.flags = {
-          sw25: {
-            total: roll.total,
-            orgtotal: roll.total,
-            formula: roll.formula,
-            rolls: roll,
-            tooltip: await roll.getTooltip(),
-            apply: chatapply,
-            spell: chatspell,
-            checktype: checktype,
-            target,
-            targetName: targetName,
-            resist: resistData,
-            elements: elements,
-            damage: damage,
-            tags: tags,
-          },
-        };
-
-        chatData.content = await foundry.applications.handlebars.renderTemplate(
-          "systems/sw25/templates/roll/roll-check.hbs",
-          {
-            formula: roll.formula,
-            tooltip: await roll.getTooltip(),
-            critical: chatCritical,
-            fumble: chatFumble,
-            total: roll.total,
-            apply: chatapply,
-            spell: chatspell,
-            checktype: checktype,
-            resusetext: chatresuse,
-            targetName: targetName,
-            resist: resistData,
-            tags: tags,
-          }
-        );
-
-        let chatMessageId;
-        await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
-          chatMessageId = chatMessage.id;
+        return await createCheckCard({
+          actor: this.actor,
+          item: itemId ? this.actor.items.get(itemId) : null,
+          roll,
+          label,
+          apply: dataset.apply,
+          checktype,
+          targetTokens,
+          resusetext: chatresuse,
+          resist: resistData,
+          spell: dataset.spell,
         });
-
-        return { roll, chatMessageId };
       }
     }
 

@@ -39,6 +39,106 @@ function elementTags(actor, item) {
 }
 
 /**
+ * 判定ロールのカードを出す。
+ *
+ * 威力側と同じく入口が 3 つある。入口ごとに違うのは発言者・見出し・
+ * 適用先・ボタンの種別・対象のコマ、それに下 4 つの任意項目だけ。
+ *
+ * 任意項目は入口によって出す / 出さないが決まっている:
+ *   resusetext … シートの行とチャットカードだけ(消費リソースの増減)
+ *   resist     … シートの行だけ(抵抗ボタン)
+ *   spell      … シートの行だけ。roll-check.hbs 側は今コメントアウトされている
+ *   dohalf     … チャットカードだけが false で初期化する
+ * どれも渡さなければキーごと出ない(= 変更前の 3 実装と同じ形になる)。
+ *
+ * @param {object} options
+ * @param {Actor|null} options.actor
+ * @param {Item|null} options.item          属性タグを引くアイテム
+ * @param {Roll} options.roll               評価済みの Roll
+ * @param {string} options.label            カードの見出し
+ * @param {string} options.apply            適用先("-" / "on" / "custom")
+ * @param {string[]|string} options.checktype  custom のときに出すボタン
+ * @param {Set<Token>} [options.targetTokens]
+ * @param {string} [options.resusetext]
+ * @param {?{name: string, result: string}} [options.resist]
+ * @param {string} [options.spell]
+ * @param {boolean} [options.dohalf]
+ * @returns {Promise<{roll: Roll, chatMessageId: string}>}
+ */
+export async function createCheckCard({
+  actor,
+  item,
+  roll,
+  label,
+  apply,
+  checktype,
+  targetTokens,
+  resusetext,
+  resist,
+  spell,
+  dohalf,
+}) {
+  let chatCritical = null;
+  let chatFumble = null;
+  if (roll.terms[0].total == 12) chatCritical = 1;
+  if (roll.terms[0].total == 2) chatFumble = 1;
+
+  const { target, targetName } = targetInfo(targetTokens);
+  const { elements, damage, tags } = elementTags(actor, item);
+  const tooltip = await roll.getTooltip();
+
+  const chatData = {
+    speaker: ChatMessage.getSpeaker({ actor }),
+    flavor: label,
+    rolls: [roll],
+    flags: {
+      sw25: {
+        total: roll.total,
+        orgtotal: roll.total,
+        formula: roll.formula,
+        rolls: roll,
+        tooltip: tooltip,
+        apply: apply,
+        spell: spell,
+        checktype: checktype,
+        target,
+        targetName: targetName,
+        resist: resist,
+        dohalf: dohalf,
+        elements: elements,
+        damage: damage,
+        tags: tags,
+      },
+    },
+    content: await foundry.applications.handlebars.renderTemplate(
+      "systems/sw25/templates/roll/roll-check.hbs",
+      {
+        formula: roll.formula,
+        tooltip: tooltip,
+        critical: chatCritical,
+        fumble: chatFumble,
+        total: roll.total,
+        apply: apply,
+        spell: spell,
+        checktype: checktype,
+        resusetext: resusetext,
+        targetName: targetName,
+        resist: resist,
+        tags: tags,
+      }
+    ),
+  };
+
+  const messageMode = game.settings.get("core", "messageMode");
+  let chatMessageId;
+  await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
+    chatMessageId = chatMessage.id;
+  });
+
+  return { roll, chatMessageId };
+}
+
+/**
  * 威力ロールのカードを出す。
  *
  * 入口は 3 つ(アイテムのアイコン / アクターシートの行 / チャットカードの
