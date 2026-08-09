@@ -672,7 +672,17 @@ Handlebars.registerHelper(
 
 Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
-  Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
+  //
+  // `Hooks.call` は同期で、ハンドラが **その場で** false を返したときだけ
+  // core の既定処理(`Hotbar#_onDrop`)を止められる。`createItemMacro` は
+  // async なので戻り値は必ず Promise = 真で、core が先へ進んで
+  // `_createDocumentSheetToggle`(シートを開くだけのマクロ)を作り、
+  // こちらが割り当てたロールマクロを上書きしていた。
+  Hooks.on("hotbarDrop", (bar, data, slot) => {
+    if (data?.type !== "Item") return;
+    createItemMacro(data, slot);
+    return false;
+  });
 
   // Prepare gamesystem settings.
   game.settings.register("sw25", "effectVitResPC", {
