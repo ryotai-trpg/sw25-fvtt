@@ -22,14 +22,25 @@ export async function targetRollDialog(targetTokens, label) {
   return rollMethod ?? "cancel";
 }
 
-// Select Target Dialog
+/**
+ * 対象のコマを選ばせる。
+ *
+ * **常に配列を返す。** 選ばなかった / キャンセルした / 場面にコマが 1 つも
+ * 無い場合は空配列。呼び出し側は 4 箇所とも配列前提で `map` / `forEach` を
+ * 叩くので、`ui.notifications.warn()` の戻り値(Notification)を素通しすると
+ * その場で TypeError になる。
+ *
+ * @param {string} title  ウィンドウタイトルに添える文言
+ * @returns {Promise<Token[]>}
+ */
 export async function targetSelectDialog(title) {
   // get all tokens
   const tokens = canvas.tokens.placeables;
 
   // no token error
   if (tokens.length === 0) {
-    return ui.notifications.warn(game.i18n.localize("SW25.NotTokenwarn"));
+    ui.notifications.warn(game.i18n.localize("SW25.NotTokenwarn"));
+    return [];
   }
 
   // categorize tokens

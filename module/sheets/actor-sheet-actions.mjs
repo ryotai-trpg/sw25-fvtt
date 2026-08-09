@@ -673,10 +673,8 @@ export const SW25ActorActionsMixin = (base) =>
       if (!item.system.selfbuff && targetedToken.size === 0) {
         const title = `${item.name} (${game.i18n.localize("SW25.Effectslong")})`;
         const selectedTokens = await targetSelectDialog(title);
+        if (selectedTokens.length === 0) return;
         selectedTokens.forEach((token) => game.user.targets.add(token));
-        if (!selectedTokens) {
-          return;
-        }
       }
 
       // Effect name stock for chat message
