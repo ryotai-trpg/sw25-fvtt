@@ -28,39 +28,7 @@
         <div class='hpcost item-prop flexrow flex-group-center' style="flex: 0 0 50px;" data-cost="{{item.system.hpcost}}" data-max="{{item.system.maxhpcost}}" data-label="{{item.name}}" data-type="{{item.type}}">
           {{system.hpcost}}{{#if system.maxhpcost}} ({{system.maxhpcost}}){{/if}}
         </div>
-        {{#if ../isOwner}}
-          <div class='item-controls'>
-            <a class='item-control item-edit' title='{{localize "DOCUMENT.Update" type=(localize "TYPES.Item.essenceweave")}}'>
-              <i class='fas fa-edit'></i>
-            </a>
-            {{#if ../system.isEdit}}
-              <a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type=(localize "TYPES.Item.essenceweave")}}'>
-                <i class='fas fa-trash'></i>
-              </a>
-            {{else}}
-              <div class="item-equip">
-                {{#if system.useequip}}
-                <label class="equip-toggle">
-                  <input class="eq-change" type="checkbox" name="system.equip" data-dtype="Boolean" {{#if system.equip}} checked {{/if}}/>
-                </label>
-                {{/if}}
-              </div>
-            {{/if}}
-          </div>
-        {{else}}
-          <div class='item-controls'>
-            <a class='item-control item-edit' title='{{localize "DOCUMENT.View" type=(localize "TYPES.Item.essenceweave")}}'>
-              <i class='fa-solid fa-eye'></i>
-            </a>
-            <div class="item-equip">
-              {{#if system.useequip}}
-              <label class="equip-toggle">
-                <input class="eq-change" type="checkbox" name="system.equip" data-dtype="Boolean" {{#if system.equip}} checked {{/if}}/>
-              </label>
-              {{/if}}
-            </div>
-          </div>
-        {{/if}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="essenceweave" mode="equip" viewLabel="DOCUMENT.View" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>

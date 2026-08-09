@@ -20,24 +20,7 @@
         <div class="flex-group-center" style="flex: 0 0 30px;">
           <input class="rd-change" type="checkbox" name="system.reading" data-dtype="Boolean" {{#if system.reading}} checked {{/if}}{{#unless ../system.isEdit}} disabled{{/unless}}/>
         </div>
-        {{#if ../isOwner}}
-          <div class='item-controls'>
-            <a class='item-control item-edit' title='{{localize "DOCUMENT.Update" type=(localize "TYPES.Item.language")}}'>
-              <i class='fas fa-edit'></i>
-            </a>
-            {{#if ../system.isEdit}}
-            <a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type=(localize "TYPES.Item.language")}}'>
-              <i class='fas fa-trash'></i>
-            </a>
-            {{/if}}
-          </div>
-        {{else}}
-          <div class='item-controls'>
-            <a class='item-control item-edit' title='{{localize "DOCUMENT.Update" type=(localize "TYPES.Item.language")}}'>
-              <i class='fa-solid fa-eye'></i>
-            </a>
-          </div>
-        {{/if}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="language" mode="isEdit" viewLabel="DOCUMENT.Update" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
     </li>
   {{/each}}
