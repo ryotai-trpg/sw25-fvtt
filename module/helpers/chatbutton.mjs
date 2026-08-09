@@ -300,7 +300,9 @@ export async function chatButton(chatMessage, buttonType) {
         sw25: {
           total: chatTotal,
           apply: chatapply,
+          formula: chatFormula,
           rolls: roll,
+          tooltip: await roll.getTooltip(),
           checktype: checktype,
           target,
           targetName: targetName,
