@@ -558,6 +558,10 @@ export class SW25Item extends Item {
     if (systemData.checkmethod == "power") {
       systemData.formula = "2d6";
     }
+    // check 型は `_prepareItemRollData` の対象外なので、そちらが入れる
+    // `checkformula` がここでも要る。入れないと初期値の "2d6" のまま残り、
+    // それを読むチャットカードの「判定」ボタンだけカスタム式を無視する。
+    systemData.checkformula = systemData.formula;
 
     if (systemData.cvalue == null || systemData.cvalue == 0)
       systemData.cvalue = 10;
