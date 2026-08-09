@@ -95,6 +95,8 @@
     "Multiselectwarn": "Múltiples tokens seleccionados.",
     "SummonMpwarn": "Selecciona el token del invocador.",
     "Itemmacrowarn": "El módulo Item Macro no está activado.",
+    "Ownedmacrowarn": "Solo puedes crear macros para objetos que pertenezcan a un actor.",
+    "Itemnotfoundwarn": "No se ha encontrado el objeto {name}. Puede que necesites borrar y volver a crear esta macro.",
     "InputPlaceHolder": "Introduce aquí...",
     "NotTokenwarn": "No hay tokens en el lienzo.",
     "StartMigration": "Iniciando migración de datos...",

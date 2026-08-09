@@ -95,6 +95,8 @@
     "Multiselectwarn": "Multi Tokens selected.",
     "SummonMpwarn": "Select the summoner token.",
     "Itemmacrowarn": "The Item Macro module is not enabled.",
+    "Ownedmacrowarn": "You can only create macro buttons for owned Items.",
+    "Itemnotfoundwarn": "Could not find item {name}. You may need to delete and recreate this macro.",
     "InputPlaceHolder": "Input here.",
     "NotTokenwarn": "No Token in canvas.",
     "StartMigration": "Start data migration...",
