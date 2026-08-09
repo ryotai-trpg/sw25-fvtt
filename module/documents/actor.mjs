@@ -1,5 +1,36 @@
 import { effectInitPC } from "../sw25.mjs";
 import { PT } from "../helpers/powerroll.mjs";
+
+/**
+ * ActiveEffect の change 1 件ぶんの演算。
+ *
+ * 同じ計算を 2 箇所でしている —— シートの「効果あり」の行に出す合計と、
+ * バフ一覧の `modParams`。書き込み先が違うだけなのでここに 1 本化する。
+ *
+ * `downgrade` / `upgrade` / `custom` はこの集計では未実装で、現在値を
+ * そのまま返す。**種別の選択肢には core の 7 種すべてが出る**ので、
+ * この 3 つを選ぶとバフ一覧に出ない(値そのものの適用は core が行う)。
+ *
+ * @param {number|null} current  現在値。効果がまだ 1 つも当たっていなければ null
+ * @param {string} type          CONST.ACTIVE_EFFECT_CHANGE_TYPES のキー
+ * @param {number} value         効果の値
+ * @returns {number|null}
+ */
+function applyChangeValue(current, type, value) {
+  switch (type) {
+    case "multiply":
+      return current * value;
+    case "add":
+      return current + value;
+    case "subtract":
+      return current - value;
+    case "override":
+      return value;
+    default:
+      return current;
+  }
+}
+
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -649,33 +680,11 @@ export class SW25Actor extends Actor {
 
       let rule = ruleMap[effects.key];
       if (rule) {
-        let value = Number(effects.value);
-        switch (effects.type) {
-          case "multiply":
-            totals[rule.target] *= value;
-            break;
-
-          case "add":
-            totals[rule.target] += value;
-            break;
-
-          case "subtract":
-            totals[rule.target] -= value;
-            break;
-
-          case "override":
-            totals[rule.target] = value;
-            break;
-
-          case "downgrade":
-          case "upgrade":
-          case "custom":
-            //未実装
-            break;
-
-          default:
-            break;
-        }
+        totals[rule.target] = applyChangeValue(
+          totals[rule.target],
+          effects.type,
+          Number(effects.value)
+        );
       }
     });
     // 表示用。正の値には符号を付けるので、ここから先は文字列になりうる
@@ -1258,33 +1267,11 @@ export class SW25Actor extends Actor {
           currentValue = 0;
         }
 
-        let newValue = currentValue;
-        switch (effects.type) {
-          case "multiply":
-            newValue = Number(currentValue) * value;
-            break;
-
-          case "add":
-            newValue = Number(currentValue) + value;
-            break;
-
-          case "subtract":
-            newValue = Number(currentValue) - value;
-            break;
-
-          case "override":
-            newValue = value;
-            break;
-
-          case "downgrade":
-          case "upgrade":
-          case "custom":
-            //未実装
-            break;
-
-          default:
-            break;
-        }
+        const newValue = applyChangeValue(
+          Number(currentValue),
+          effects.type,
+          value
+        );
         foundry.utils.setProperty(modParams, `${path}.value`, newValue);
         
         if (rule.localize) {
