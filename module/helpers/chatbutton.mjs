@@ -1,5 +1,6 @@
 // Chat button handler
 import { powerRoll } from "./powerroll.mjs";
+import { createPowerCard } from "./rollcard.mjs";
 import { mpCost, hpCost } from "./mpcost.mjs";
 import { targetSelectDialog } from "../helpers/dialogs.mjs";
 import {
@@ -345,167 +346,17 @@ export async function chatButton(chatMessage, buttonType) {
       const formula = item.system.formula;
       const powertable = item.system.powertable;
 
-      let roll = await powerRoll(formula, powertable);
+      const roll = await powerRoll(formula, powertable);
 
-      let cValueFormula = "@" + roll.cValue;
-      let halfFormula = "";
-      let lethalTechFormula = "";
-      let criticalRayFormula = "";
-      let pharmToolFormula = "";
-      let powupFormula = "";
-      if (roll.cValue == 100) cValueFormula = "@13";
-      if (roll.halfPow == 1) halfFormula = "h+" + roll.halfPowMod;
-      else if (roll.halfPowMod && roll.halfPowMod != 0)
-        halfFormula = "+" + roll.halfPowMod;
-      if (roll.lethalTech != 0) lethalTechFormula = "#" + roll.lethalTech;
-      if (roll.criticalRay > 0) criticalRayFormula = "$+" + roll.criticalRay;
-      else if (roll.criticalRay != 0)
-        criticalRayFormula = "$" + roll.criticalRay;
-      if (roll.pharmTool != 0) pharmToolFormula = "tf" + roll.pharmTool;
-      if (roll.powup != 0) powupFormula = "r" + roll.powup;
-
-      let chatFormula =
-        "k" +
-        roll.power +
-        cValueFormula +
-        "+" +
-        roll.powMod +
-        lethalTechFormula +
-        criticalRayFormula +
-        pharmToolFormula +
-        powupFormula +
-        halfFormula;
-
-      let chatPower = roll.power;
-      let chatLethalTech = null;
-      let chatCriticalRay = null;
-      let chatPharmTool = null;
-      let chatPowup = null;
-      let chatResult = roll.eachPowerResult;
-      let chatMod = roll.powMod;
-      let chatModTotal = roll.powMod;
-      if (roll.halfPow == 0 && roll.halfPowMod && roll.halfPowMod != 0)
-        chatModTotal += roll.halfPowMod;
-      let chatHalf = null;
-      let chatResults = roll.rawPowerResult;
-      let chatTotal = roll.powerResult;
-      let chatExtraRoll = null;
-      let chatFumble = null;
-      if (roll.halfPow == 1) chatHalf = roll.halfPowMod;
-      if (roll.lethalTech != 0) chatLethalTech = roll.lethalTech;
-      if (roll.criticalRay != 0) chatCriticalRay = roll.criticalRay;
-      if (roll.pharmTool != 0) chatPharmTool = roll.pharmTool;
-      if (roll.powup != 0) chatPowup = roll.powup;
-      if (roll.rollCount > 0) chatExtraRoll = roll.rollCount;
-      if (roll.fumble == 1) chatFumble = roll.fumble;
-
-      let chatData = {
-        speaker: speaker,
-        flavor: label,
-        rolls: [roll.fakeResult],
-      };
-
-      let showhalf = true;
-      let shownoc = true;
-      if (roll.halfPow == 1) {
-        showhalf = false;
-        shownoc = false;
-      }
-      if (roll.cValue == 100 || chatExtraRoll == null) shownoc = false;
-      let chatapply = item.system.applypower;
-      let powertype = item.system.powerTypesButton;
-
-      // when selected target
-      let target = null;
-      let targetName = null;
-      if (targetTokens) {
-        const targetArray = Array.from(targetTokens);
-        target = targetArray.map((target) => target.id);
-        let targetNames = targetArray.map((target) => target.document.name);
-        targetName = ``;
-        for (let i = 0; i < targetNames.length; i++) {
-          if (i != 0) targetName = targetName + `<br>`;
-          targetName = targetName + `>>> ${targetNames[i]}`;
-        }
-        targetName = targetName + ``;
-      }
-
-      // element tags.
-      const elements = item.system.elements;
-      const damage = actor ? actor.system.attributes.damage : null;
-      const classType = actor ? actor.system.classType : null;
-      const isWeapon = DamageSupporter.getWeaponAttributes(item);
-      const tags = DamageSupporter.createChatTag(
-        elements,
-        damage,
-        classType,
-        isWeapon
-      );
-
-      chatData.flags = {
-        sw25: {
-          formula: chatFormula,
-          tooltip: await roll.fakeResult.getTooltip(),
-          power: chatPower,
-          lethalTech: chatLethalTech,
-          criticalRay: chatCriticalRay,
-          pharmTool: chatPharmTool,
-          powup: chatPowup,
-          result: chatResult,
-          mod: chatMod,
-          modTotal: chatModTotal,
-          half: chatHalf,
-          results: chatResults,
-          total: chatTotal,
-          extraRoll: chatExtraRoll,
-          fumble: chatFumble,
-          orghalf: roll.halfPowMod,
-          orgtotal: chatTotal,
-          orgextraRoll: chatExtraRoll,
-          showhalf: showhalf,
-          shownoc: shownoc,
-          apply: chatapply,
-          powertype: powertype,
-          target,
-          targetName: targetName,
-          elements: elements,
-          damage: damage,
-          tags: tags,
-        },
-      };
-
-      chatData.content = await foundry.applications.handlebars.renderTemplate(
-        "systems/sw25/templates/roll/roll-power.hbs",
-        {
-          formula: chatFormula,
-          tooltip: await roll.fakeResult.getTooltip(),
-          power: chatPower,
-          lethalTech: chatLethalTech,
-          criticalRay: chatCriticalRay,
-          pharmTool: chatPharmTool,
-          powup: chatPowup,
-          result: chatResult,
-          mod: chatModTotal,
-          half: chatHalf,
-          results: chatResults,
-          total: chatTotal,
-          extraRoll: chatExtraRoll,
-          fumble: chatFumble,
-          showhalf: showhalf,
-          shownoc: shownoc,
-          apply: chatapply,
-          powertype: powertype,
-          targetName: targetName,
-          tags: tags,
-        }
-      );
-
-      let chatMessageId;
-      await ChatMessage.create(chatData, { messageMode }).then((chatMessage) => {
-        chatMessageId = chatMessage.id;
+      return await createPowerCard({
+        actor,
+        item,
+        roll,
+        label,
+        apply: item.system.applypower,
+        powertype: item.system.powerTypesButton,
+        targetTokens,
       });
-
-      return { roll, chatMessageId };
     }
   }
   if (buttonType == "buttonhalf") {
