@@ -5,12 +5,7 @@
     <div class='item-element' style="flex: 1 0 0;">{{localize "SW25.Item.Category"}}</div>
     <div class='item-element' style="flex: 0 0 50px;">{{localize "SW25.Item.Reqstr"}}</div>
     <div class='item-element' style="flex: 0 0 60px;">{{localize "SW25.Quantity"}}</div>
-    <div class='item-controls'>
-      <a class='item-control item-create' title='{{localize "DOCUMENT.Create" type=(localize "TYPES.Item.armor")}}' data-type='armor'>
-        <i class='fas fa-plus'></i>
-        {{localize 'DOCUMENT.New' type=''}}
-      </a>
-    </div>
+    {{> "systems/sw25/templates/actor/parts/actor-item-create.hbs" type="armor"}}
   </li>
   {{#each armors as |item id|}}
     <li class='item' data-item-id='{{item._id}}'>
@@ -63,15 +58,7 @@
           </div>
         {{/if}}
       </div>
-      <div class="item-description nogapmargin">
-        <div class="flexrow">
-          <div style="flex: 0 0 60px;"></div>
-          <div style="font-size: 0.8em;">
-            {{{system.description}}}
-          </div>
-          <div style="flex: 0 0 50px;"></div>
-        </div>
-      </div>
+      {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>
   {{/each}}
 </ol>

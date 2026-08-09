@@ -627,25 +627,12 @@
     <div class='item-element' style="flex: 0 0 120px;">{{localize "SW25.Cost"}}</div>
     <div class='item-element sidebar-hidden' style="flex: 0 0 120px;">{{localize "SW25.Rangeshape"}}</div>
     <div class='item-element sidebar-hidden' style="flex: 0 0 40px;">{{localize "SW25.Item.Resist"}}</div>
-    <div class='item-controls'>
-      <a class='item-control item-create' title='{{localize "DOCUMENT.Create" type=(localize "TYPES.Item.alchemytech")}}' data-type='alchemytech'>
-        <i class='fas fa-plus'></i>
-        {{localize 'DOCUMENT.New' type=''}}
-      </a>
-    </div>
+    {{> "systems/sw25/templates/actor/parts/actor-item-create.hbs" type="alchemytech"}}
   </li>
   {{#each alchemytechs as |item id|}}
     <li class='item' data-item-id='{{item._id}}'>
       <div class="flexrow flex-group-center">
-        <div class='item-name'>
-          <div class='item-image'>
-            <a class='rollable' data-roll-type='item'>
-              <img class="roll-icon" src='{{item.img}}' title='{{item.name}}'/>
-            </a>
-          </div>
-          {{> "systems/sw25/templates/helper/action-marks.hbs"}}
-          <h4 class="item-label">{{item.name}}</h4>
-        </div>
+        {{> "systems/sw25/templates/actor/parts/actor-item-rowhead.hbs" item=item}}
         {{> "systems/sw25/templates/actor/parts/actor-useitems.hbs" item=item}}
         <div class='item-prop flexrow flex-group-center' style="flex: 0 0 60px;">
           {{#unless (eq system.red 0)}} {{localize "SW25.Item.Alchemytech.Red"}}{{system.red}}{{/unless}}
@@ -700,15 +687,7 @@
           </div>
         {{/if}}
       </div>
-      <div class="item-description nogapmargin">
-        <div class="flexrow">
-          <div style="flex: 0 0 60px;"></div>
-          <div style="font-size: 0.8em;">
-            {{{system.description}}}
-          </div>
-          <div style="flex: 0 0 50px;"></div>
-        </div>
-      </div>
+      {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>
   {{/each}}
 </ol>

@@ -2,24 +2,12 @@
   <li class='item flexrow items-header'>
     <div class='item-name'>{{localize "TYPES.Item.item"}}</div>
     <div class='item-element' style="flex: 0 0 60px;">{{localize "SW25.Quantity"}}</div>
-    <div class='item-controls'>
-      <a class='item-control item-create' title='{{localize "DOCUMENT.Create" type=(localize "TYPES.Item.item")}}' data-type='item' >
-        <i class='fas fa-plus'></i>
-        {{localize 'DOCUMENT.New' type=''}}
-      </a>
-    </div>
+    {{> "systems/sw25/templates/actor/parts/actor-item-create.hbs" type="item"}}
   </li>
   {{#each gear as |item id|}}
     <li class='item' data-item-id='{{item._id}}'>
       <div class="flexrow flex-group-center">
-        <div class='item-name'>
-          <div class='item-image'>
-            <a class='rollable' data-roll-type='item'>
-              <img class="roll-icon" src='{{item.img}}' title='{{item.name}}'/>
-            </a>
-          </div>
-          <h4 class="item-label">{{item.name}}</h4>
-        </div>
+        {{> "systems/sw25/templates/actor/parts/actor-item-rowhead.hbs" item=item nomarks=true}}
         {{> "systems/sw25/templates/actor/parts/actor-useitems.hbs" item=item}}
         <div class='item-quantity item-prop flexrow flex-group-center' style="flex: 0 0 60px;">
           <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
@@ -49,15 +37,7 @@
           </div>
         {{/if}}
       </div>
-      <div class="item-description nogapmargin">
-        <div class="flexrow">
-          <div style="flex: 0 0 60px;"></div>
-          <div style="font-size: 0.8em;">
-            {{{system.description}}}
-          </div>
-          <div style="flex: 0 0 50px;"></div>
-        </div>
-      </div>
+      {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>
   {{/each}}
 </ol>

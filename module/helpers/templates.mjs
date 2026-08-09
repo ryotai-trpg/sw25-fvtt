@@ -71,6 +71,10 @@ export const preloadHandlebarsTemplates = async function () {
     "systems/sw25/templates/item/parts/item-elements.hbs",
     "systems/sw25/templates/item/parts/item-usepower.hbs",
     "systems/sw25/templates/item/parts/item-usedice.hbs",
+    // アイテム一覧の共通部品
+    "systems/sw25/templates/actor/parts/actor-item-rowhead.hbs",
+    "systems/sw25/templates/actor/parts/actor-item-create.hbs",
+    "systems/sw25/templates/actor/parts/actor-item-description.hbs",
     // Dialog
     "systems/sw25/templates/roll/rollreq-dialog.hbs",
     // Helper

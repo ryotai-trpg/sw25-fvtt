@@ -1,0 +1,16 @@
+{{!--
+  アイテム行の左端。アイコン(クリックでロール)と名前。
+  {{#each}} の中(コンテキストはアイテム)から呼ぶ。
+  行動の印を出さない一覧は nomarks=true を渡す。
+--}}
+<div class='item-name'>
+  <div class='item-image'>
+    <a class='rollable' data-roll-type='item'>
+      <img class="roll-icon" src='{{item.img}}' title='{{item.name}}'/>
+    </a>
+  </div>
+  {{#unless nomarks}}
+    {{> "systems/sw25/templates/helper/action-marks.hbs"}}
+  {{/unless}}
+  <h4 class="item-label">{{item.name}}</h4>
+</div>

@@ -24,12 +24,7 @@
     <div class='item-checklabel item-element'>{{localize "SW25.Ability.Mnd.abbr"}}</div>
     <div class='item-scmod'>{{localize "SW25.Modifier"}}</div>
     {{#if system.isEdit}}
-    <div class='item-controls'>
-      <a class='item-control item-create' title='{{localize "DOCUMENT.Create" type=(localize "TYPES.Item.skill")}}' data-type='skill'>
-        <i class='fas fa-plus'></i>
-        {{localize 'DOCUMENT.New' type=''}}
-      </a>
-    </div>
+    {{> "systems/sw25/templates/actor/parts/actor-item-create.hbs" type="skill"}}
     {{/if}}
   </li>
   <li class='item flexrow'>

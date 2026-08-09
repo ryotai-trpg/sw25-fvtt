@@ -1,0 +1,7 @@
+{{!-- 一覧のヘッダに出す「新規作成」。type にアイテムの型名を渡す --}}
+<div class='item-controls'>
+  <a class='item-control item-create' title='{{localize "DOCUMENT.Create" type=(localize (concat "TYPES.Item." type))}}' data-type='{{type}}'>
+    <i class='fas fa-plus'></i>
+    {{localize 'DOCUMENT.New' type=''}}
+  </a>
+</div>
