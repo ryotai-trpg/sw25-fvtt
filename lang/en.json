@@ -114,7 +114,8 @@
     "TokenImage": "Token Image",
     "Hp": "HP",
     "Mp": "MP",
-    "Race": {
+    "Race": "Race",
+    "Races": {
       "Human": "Human",
       "Elf": "Elf",
       "Dwarf": "Dwarf",

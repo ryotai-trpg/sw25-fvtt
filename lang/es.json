@@ -114,7 +114,8 @@
     "TokenImage": "Imagen del token",
     "Hp": "PV",
     "Mp": "PM",
-    "Race": {
+    "Race": "Raza",
+    "Races": {
       "Human": "Humano",
       "Elf": "Elfo",
       "Dwarf": "Enano",
