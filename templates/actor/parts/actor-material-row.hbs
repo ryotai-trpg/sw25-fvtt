@@ -1,0 +1,31 @@
+{{!--
+  素材カードの 1 色ぶんの行。賦術タブの 5 色ぶんがこの形をしている。
+
+    color  行に付けるクラス(red / green / black / white / gold)
+    icon   見出しのアイコン
+    label  見出しの i18n キー
+    ranks  materials.<色>(b / a / s / ss を持つ)
+--}}
+<div class='item flexrow {{color}}'>
+  <div class='item-name'><i class="fa-solid {{icon}}"></i>{{localize label}}</div>
+  <div class='quantity'>
+    {{#each ranks.b as |item id|}}
+      {{> "systems/sw25/templates/actor/parts/actor-material-cell.hbs" item=item isOwner=../isOwner isEdit=../isEdit}}
+    {{/each}}
+  </div>
+  <div class='quantity'>
+    {{#each ranks.a as |item id|}}
+      {{> "systems/sw25/templates/actor/parts/actor-material-cell.hbs" item=item isOwner=../isOwner isEdit=../isEdit}}
+    {{/each}}
+  </div>
+  <div class='quantity'>
+    {{#each ranks.s as |item id|}}
+      {{> "systems/sw25/templates/actor/parts/actor-material-cell.hbs" item=item isOwner=../isOwner isEdit=../isEdit}}
+    {{/each}}
+  </div>
+  <div class='quantity'>
+    {{#each ranks.ss as |item id|}}
+      {{> "systems/sw25/templates/actor/parts/actor-material-cell.hbs" item=item isOwner=../isOwner isEdit=../isEdit}}
+    {{/each}}
+  </div>
+</div>

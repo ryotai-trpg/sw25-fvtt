@@ -77,6 +77,8 @@ export const preloadHandlebarsTemplates = async function () {
     "systems/sw25/templates/actor/parts/actor-item-description.hbs",
     "systems/sw25/templates/actor/parts/actor-item-controls.hbs",
     "systems/sw25/templates/actor/parts/actor-item-equip.hbs",
+    "systems/sw25/templates/actor/parts/actor-material-row.hbs",
+    "systems/sw25/templates/actor/parts/actor-material-cell.hbs",
     // Dialog
     "systems/sw25/templates/roll/rollreq-dialog.hbs",
     // Helper
