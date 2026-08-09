@@ -1570,7 +1570,7 @@ export class SW25Item extends Item {
     }
     if (systemData.clickitem == "dice3") {
       systemData.checkbase = systemData.checkbase3;
-      if (systemData.usefix2 == true) {
+      if (systemData.usefix3 == true) {
         systemData.formula = 7;
       } else if (systemData.customdice3 == true)
         systemData.formula = systemData.customformula3;
