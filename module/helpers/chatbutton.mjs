@@ -1609,6 +1609,10 @@ export async function chatButton(chatMessage, buttonType) {
         tooltip: await roll.getTooltip(),
         total: chatTotal,
         chatLootItem,
+        // 判定カードの体裁を借りているだけで flags.sw25 を持たない。
+        // readonly を立てないと ± と対象選択のボタンが描かれ、
+        // 押すとハンドラが flags.sw25 を読んで落ちる
+        readonly: true,
       }
     );
 
@@ -1890,6 +1894,8 @@ export async function chatButton(chatMessage, buttonType) {
           tooltip: await roll.getTooltip(),
           total: chatTotal,
           resultText,
+          // 入手品カードと同じく flags.sw25 を持たない。readonly が要る
+          readonly: true,
         }
       );
 
