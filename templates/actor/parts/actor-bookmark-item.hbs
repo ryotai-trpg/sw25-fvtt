@@ -28,15 +28,7 @@
     {{/if}}
 
     {{#if (eq type "item")}}
-    <div class='item-quantity item-prop flexrow flex-group-center' style="flex-shrink:0; flex-basis: 40px;">
-      <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
-        <i class="fas fa-minus"></i>
-      </a>
-      <input class="qt-change" type="text" name="quantityInput" value="{{item.system.quantity}}" data-dtype="Number"/>
-      <a class="quantity-button" data-action="increase" data-property="item.system.quantity">
-        <i class="fas fa-plus"></i>
-      </a>
-  </div>
+    {{> "systems/sw25/templates/actor/parts/actor-item-quantity.hbs" item=item style="flex-shrink:0; flex-basis: 40px;"}}
     {{/if}}
 
     {{#if (eq type "magicalsong")}}
@@ -122,15 +114,7 @@
   {{/if}}
 
   {{#if (eq type "resource")}}
-    <div class='item-quantity item-prop flexrow flex-group-center' style="flex-shrink:0; flex-basis: 40px;">
-      <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
-        <i class="fas fa-minus"></i>
-      </a>
-      <input class="qt-change" type="text" name="quantityInput" value="{{item.system.quantity}}" data-dtype="Number"/>
-      <a class="quantity-button" data-action="increase" data-property="item.system.quantity">
-        <i class="fas fa-plus"></i>
-      </a>
-  </div>
+    {{> "systems/sw25/templates/actor/parts/actor-item-quantity.hbs" item=item style="flex-shrink:0; flex-basis: 40px;"}}
   {{/if}}
 
   {{#if (eq type "check")}}

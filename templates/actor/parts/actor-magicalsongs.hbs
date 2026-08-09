@@ -15,15 +15,7 @@
               <h4 class="item-label">{{item.name}}</h4>
             </div>
             {{#if ../isOwner}}
-              <div class='item-quantity item-prop flexrow flex-group-center' style="flex: 0 0 80px;">
-                <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
-                  <i class="fas fa-minus"></i>
-                </a>
-                <input class="qt-change" type="text" name="quantityInput" value="{{item.system.quantity}}" data-dtype="Number"/>
-                <a class="quantity-button" data-action="increase" data-property="item.system.quantity">
-                  <i class="fas fa-plus"></i>
-                </a>
-              </div>
+              {{> "systems/sw25/templates/actor/parts/actor-item-quantity.hbs" item=item style="flex: 0 0 80px;"}}
               {{#if ../system.isEdit}}
               <div class='item-controls'>
                 <a class='item-control item-edit' title='{{localize "DOCUMENT.Update" type=(localize "TYPES.Item.resource")}}'>

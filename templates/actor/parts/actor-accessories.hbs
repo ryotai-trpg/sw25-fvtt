@@ -26,15 +26,7 @@
         <div style="text-align: center; flex: 0 0 80px;">
           {{item.system.accpartname}}
         </div>
-        <div class='item-quantity item-prop flexrow flex-group-center' style="flex: 0 0 60px;">
-          <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
-            <i class="fas fa-minus"></i>
-          </a>
-          <input class="qt-change" type="text" name="quantityInput" value="{{item.system.quantity}}" data-dtype="Number"/>
-          <a class="quantity-button" data-action="increase" data-property="item.system.quantity">
-            <i class="fas fa-plus"></i>
-          </a>
-        </div>
+        {{> "systems/sw25/templates/actor/parts/actor-item-quantity.hbs" item=item style="flex: 0 0 60px;"}}
         {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="accessory" mode="isEdit" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}

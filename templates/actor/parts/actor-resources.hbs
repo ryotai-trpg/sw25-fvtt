@@ -8,15 +8,7 @@
     <li class='item' data-item-id='{{item._id}}'>
       <div class="flexrow flex-group-center">
         <div class='item-name' style="flex: 3;" data-tooltip="{{item.name}}"><h4 class="item-label">{{item.name}}</h4></div>
-        <div class='item-quantity item-prop flexrow flex-group-center' style="flex-shrink:0; flex-basis: 40px;">
-          <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
-            <i class="fas fa-minus"></i>
-          </a>
-          <input class="qt-change" type="text" name="quantityInput" value="{{item.system.quantity}}" data-dtype="Number"/>
-          <a class="quantity-button" data-action="increase" data-property="item.system.quantity">
-            <i class="fas fa-plus"></i>
-          </a>
-        </div>
+        {{> "systems/sw25/templates/actor/parts/actor-item-quantity.hbs" item=item style="flex-shrink:0; flex-basis: 40px;"}}
         {{#if ../isOwner}}
           {{#if ../system.isEdit}}
             <div class='item-controls'>

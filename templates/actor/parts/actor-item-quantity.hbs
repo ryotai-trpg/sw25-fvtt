@@ -1,0 +1,14 @@
+{{!--
+  個数の増減。{{#each}} の中から item=item style="…" を渡して呼ぶ。
+  **{{#each x as |item|}} のブロック引数はパーシャルのコンテキストに
+  入らない**ので、item は明示的に渡すこと(渡し忘れると入力欄が空になる)。
+--}}
+<div class='item-quantity item-prop flexrow flex-group-center' style="{{style}}">
+  <a class="quantity-button" data-action="decrease" data-property="item.system.quantity">
+    <i class="fas fa-minus"></i>
+  </a>
+  <input class="qt-change" type="text" name="quantityInput" value="{{item.system.quantity}}" data-dtype="Number"/>
+  <a class="quantity-button" data-action="increase" data-property="item.system.quantity">
+    <i class="fas fa-plus"></i>
+  </a>
+</div>
