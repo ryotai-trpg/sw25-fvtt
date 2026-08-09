@@ -20,7 +20,7 @@
         <div class="flex-group-center" style="flex: 0 0 30px;">
           <input class="rd-change" type="checkbox" name="system.reading" data-dtype="Boolean" {{#if system.reading}} checked {{/if}}{{#unless ../system.isEdit}} disabled{{/unless}}/>
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="language" mode="isEdit" viewLabel="DOCUMENT.Update" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="language" mode="isEdit" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
     </li>
   {{/each}}

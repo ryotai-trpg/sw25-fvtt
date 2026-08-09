@@ -12,7 +12,7 @@
         <div class='item-prop flexrow flex-group-center sidebar-hidden' style="flex: 1 0 0;">
           {{#if system.app}}{{system.app}}{{else}}-{{/if}} / {{#if system.risk}}{{system.risk}}{{else}}-{{/if}}
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="combatability" mode="equip" viewLabel="DOCUMENT.View" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="combatability" mode="equip" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       <div class="item-description nogapmargin">
         <div class="flexrow">

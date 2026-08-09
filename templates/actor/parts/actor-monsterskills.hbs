@@ -24,7 +24,7 @@
         <div class='item-prop flexrow flex-group-center' style="flex: 0 0 100px;">
           {{system.time}} 
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" viewLabel="DOCUMENT.Update" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>
@@ -65,7 +65,7 @@
         <div class='item-prop flexrow flex-group-center' style="flex: 0 0 80px;">
           {{system.propname}}
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" viewLabel="DOCUMENT.Update" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>
@@ -102,7 +102,7 @@
         <div class='item-prop flexrow flex-group-center' style="flex: 0 0 90px;">
           {{#if (eq system.type "camp")}}{{system.cond}}{{/if}}
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" viewLabel="DOCUMENT.Update" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>
@@ -137,7 +137,7 @@
         <div class='item-prop flexrow flex-group-center' style="flex: 0 0 100px;">
           {{system.type}} 
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" viewLabel="DOCUMENT.Update" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="enhancearts" mode="always" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>

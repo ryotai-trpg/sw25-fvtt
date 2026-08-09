@@ -10,8 +10,7 @@
     isEdit  編集 +(編集モードのときだけ)削除
     equip   編集 +(編集モードなら削除、そうでなければ装備チェック)
 
-  style      枠に付ける追加のスタイル(battle タブの一覧だけ幅を固定している)
-  viewLabel  持ち主でないときのツールチップ。呼び出し側の実態に合わせる
+  style   枠に付ける追加のスタイル(battle タブの一覧だけ幅を固定している)
 --}}
 {{#if isOwner}}
   <div class='item-controls'{{#if style}} style="{{style}}"{{/if}}>
@@ -36,7 +35,7 @@
   </div>
 {{else}}
   <div class='item-controls'{{#if style}} style="{{style}}"{{/if}}>
-    <a class='item-control item-edit' title='{{localize viewLabel type=(localize (concat "TYPES.Item." type))}}'>
+    <a class='item-control item-edit' title='{{localize "DOCUMENT.View" type=(localize (concat "TYPES.Item." type))}}'>
       <i class='fa-solid fa-eye'></i>
     </a>
     {{#if (eq mode "equip")}}

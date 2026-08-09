@@ -28,7 +28,7 @@
         <div class='hpcost item-prop flexrow flex-group-center' style="flex: 0 0 50px;" data-cost="{{item.system.hpcost}}" data-max="{{item.system.maxhpcost}}" data-label="{{item.name}}" data-type="{{item.type}}">
           {{system.hpcost}}{{#if system.maxhpcost}} ({{system.maxhpcost}}){{/if}}
         </div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="essenceweave" mode="equip" viewLabel="DOCUMENT.View" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="essenceweave" mode="equip" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
       {{> "systems/sw25/templates/actor/parts/actor-item-description.hbs"}}
     </li>

@@ -23,7 +23,7 @@
           {{item.system.checkbase}}
         </span>
         <div class='item-checkmod item-prop input'><input class="cm-change" type="text" name="checkmodInput" value="{{item.system.checkmod}}" data-dtype="Number"/></div>
-        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="check" mode="isEdit" viewLabel="DOCUMENT.View" isOwner=../isOwner isEdit=../system.isEdit}}
+        {{> "systems/sw25/templates/actor/parts/actor-item-controls.hbs" type="check" mode="isEdit" isOwner=../isOwner isEdit=../system.isEdit}}
       </div>
     </li>
   {{/each}}
