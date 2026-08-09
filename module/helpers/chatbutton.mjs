@@ -1263,16 +1263,10 @@ export async function chatButton(chatMessage, buttonType) {
   }
 
   if (buttonType == "buttonmp") {
-    const selectedTokens = await Util.getControlledActorFromUser();
-
-    if (selectedTokens.length === 0) {
-      ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-      return;
-    } else if (selectedTokens.length > 1) {
-      ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-      return;
-    }
-    const token = selectedTokens[0];
+    const token = Util.requireSingleToken(
+      await Util.getControlledActorFromUser()
+    );
+    if (!token) return;
     const cost = item.system.mpcost;
     const name = item.name;
     const type = item.type;
@@ -1281,16 +1275,10 @@ export async function chatButton(chatMessage, buttonType) {
   }
 
   if (buttonType == "buttonhp") {
-    const selectedTokens = await Util.getControlledActorFromUser();
-
-    if (selectedTokens.length === 0) {
-      ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-      return;
-    } else if (selectedTokens.length > 1) {
-      ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-      return;
-    }
-    const token = selectedTokens[0];
+    const token = Util.requireSingleToken(
+      await Util.getControlledActorFromUser()
+    );
+    if (!token) return;
     const cost = item.system.hpcost;
     const max = item.system.maxhpcost;
     const name = item.name;
@@ -1463,16 +1451,11 @@ export async function chatButton(chatMessage, buttonType) {
   }
 
   if (buttonType == "buttonloot") {
-    const selectedTokens = await Util.getControlledActorFromUser();
-
-    if (selectedTokens.length === 0) {
-      ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-      return;
-    } else if (selectedTokens.length > 1) {
-      ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-      return;
-    }
-    const lootActor = selectedTokens[0].actor;
+    const token = Util.requireSingleToken(
+      await Util.getControlledActorFromUser()
+    );
+    if (!token) return;
+    const lootActor = token.actor;
     const lootItems = chatMessage.flags.sw25.loot;
     const speaker = ChatMessage.getSpeaker({ actor: lootActor });
     const messageMode = game.settings.get("core", "messageMode");

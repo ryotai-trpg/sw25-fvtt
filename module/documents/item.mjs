@@ -2166,16 +2166,10 @@ export class SW25Item extends Item {
     }
 
     if (this.system.clickitem == "mpcost") {
-      const selectedTokens = await Util.getControlledActorFromUser();
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-        return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
-      const token = selectedTokens[0];
+      const token = Util.requireSingleToken(
+        await Util.getControlledActorFromUser()
+      );
+      if (!token) return;
       const cost = item.system.mpcost;
       const name = item.name;
       const type = item.type;
@@ -2184,16 +2178,10 @@ export class SW25Item extends Item {
     }
 
     if (this.system.clickitem == "hpcost") {
-      const selectedTokens = await Util.getControlledActorFromUser();
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-        return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
-      const token = selectedTokens[0];
+      const token = Util.requireSingleToken(
+        await Util.getControlledActorFromUser()
+      );
+      if (!token) return;
       const cost = item.system.hpcost;
       const max = item.system.maxhpcost;
       const name = item.name;

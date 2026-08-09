@@ -479,16 +479,10 @@ export const SW25ActorActionsMixin = (base) =>
       event.preventDefault();
       const element = target;
       const dataset = element.dataset;
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-        return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
-      const token = selectedTokens[0];
+      const token = Util.requireSingleToken(
+        await Util.getControlledActor(this.actor)
+      );
+      if (!token) return;
       const cost = dataset.cost;
       const name = dataset.label;
       const type = dataset.type;
@@ -507,16 +501,10 @@ export const SW25ActorActionsMixin = (base) =>
       event.preventDefault();
       const element = target;
       const dataset = element.dataset;
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-        return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
-      const token = selectedTokens[0];
+      const token = Util.requireSingleToken(
+        await Util.getControlledActor(this.actor)
+      );
+      if (!token) return;
       const cost = dataset.cost;
       const max = dataset.max;
       const name = dataset.label;
@@ -1104,14 +1092,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onUsePhasearea(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
       let cost = item.system.mincost ? item.system.mincost : 0;
@@ -1124,15 +1106,10 @@ export const SW25ActorActionsMixin = (base) =>
     }
 
     async _applyPhasearea(item, cost) {
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
-        return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
+      const token = Util.requireSingleToken(
+        await Util.getControlledActor(this.actor)
+      );
+      if (!token) return;
 
       const orgActor = this.actor.name;
       const orgId = this.actor._id;
@@ -1193,9 +1170,9 @@ export const SW25ActorActionsMixin = (base) =>
 
       // Apply
       if (game.user.isGM) {
-        selectedTokens[0].actor.createEmbeddedDocuments("ActiveEffect", effects);
+        token.actor.createEmbeddedDocuments("ActiveEffect", effects);
       } else {
-        const targetTokenId = Array.from(selectedTokens, (target) => target.id);
+        const targetTokenId = [token.id];
         game.socket.emit("system.sw25", {
           method: "applyEffect",
           targetTokens: targetTokenId,
@@ -1208,7 +1185,7 @@ export const SW25ActorActionsMixin = (base) =>
       // Chat message
       const speaker = ChatMessage.getSpeaker({ actor: this.actor });
       let label = game.i18n.localize("SW25.Effectslong");
-      let chatActorName = ">>> " + selectedTokens[0].actor.name + "<br>";
+      let chatActorName = ">>> " + token.actor.name + "<br>";
       let chatEffectName =
         effects[0].name +
         "(" +
@@ -1270,15 +1247,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onMaterialcardCost(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
 
@@ -1391,15 +1361,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onNotesGet(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
 
@@ -1428,15 +1391,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onNotesCost(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
 
@@ -1465,15 +1421,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onNotesAddGet(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
 
@@ -1502,15 +1451,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onTacspowerGet(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
 
@@ -1524,15 +1466,8 @@ export const SW25ActorActionsMixin = (base) =>
 
     async _onTacspowerCost(event, target) {
       event.preventDefault();
-      const selectedTokens = await Util.getControlledActor(this.actor);
-
-      if (selectedTokens.length === 0) {
-        ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      if (!Util.requireSingleToken(await Util.getControlledActor(this.actor)))
         return;
-      } else if (selectedTokens.length > 1) {
-        ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
-        return;
-      }
 
       const item = this._itemFromTarget(target);
 

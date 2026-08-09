@@ -36,6 +36,29 @@ export class Util {
   }
 
   /**
+   * 「コマがちょうど 1 体選ばれている」を要求する定型。
+   * 0 体なら未選択、2 体以上なら選びすぎの警告を出して null を返す。
+   *
+   * コマの集め方は `getControlledActor()`(そのアクターのコマで補う)と
+   * `getControlledActorFromUser()`(ユーザーの担当キャラクターで補う)で
+   * 別物なので、**どちらで集めたかは呼び出し側に残す**。
+   *
+   * @param {Token[]} tokens  上の 2 つのどちらかの戻り値
+   * @returns {Token|null}
+   */
+  static requireSingleToken(tokens) {
+    if (tokens.length === 0) {
+      ui.notifications.warn(game.i18n.localize("SW25.Noselectwarn"));
+      return null;
+    }
+    if (tokens.length > 1) {
+      ui.notifications.warn(game.i18n.localize("SW25.Multiselectwarn"));
+      return null;
+    }
+    return tokens[0];
+  }
+
+  /**
    * Get Controlled Actor or This Actor
    */
   static async getControlledActor(actor) {
